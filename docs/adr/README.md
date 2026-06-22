@@ -78,10 +78,33 @@ Status possíveis:
 ```text
 Proposto
 Aceito
+Aceito com revisão
 Rejeitado
 Substituído
 Complementado
 Obsoleto
+```
+
+`Aceito com revisão` significa que a decisão está aceita como direção inicial do projeto, pode orientar implementação futura, mas deve ser reavaliada em uma fase, milestone ou condição futura explicitamente registrada.
+
+Usar:
+
+- `Aceito` para decisões já consolidadas e aplicadas;
+- `Aceito com revisão` para decisões adotadas como direção inicial, mas dependentes de validação no MVP, capacidade operacional, experiência de uso ou evolução técnica;
+- `Proposto` para hipóteses futuras que ainda não devem orientar implementação obrigatória.
+
+Todo ADR com status `Aceito com revisão` deve conter:
+
+```markdown
+## Revisão futura obrigatória
+
+### Motivo da revisão futura
+
+### Fase ou condição de revisão
+
+### Gatilhos que podem mudar a decisão
+
+### Impactos previstos
 ```
 
 ## 6. Estrutura sugerida de ADR
