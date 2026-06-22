@@ -1,0 +1,7 @@
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "user"
+allow_login_shell = false
+
+[sandbox_workspace_write]
+network_access = false
