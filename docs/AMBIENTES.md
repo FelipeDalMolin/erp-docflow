@@ -48,13 +48,84 @@ Ferramentas previstas:
 - uv;
 - Codex extension ou Codex CLI.
 
-Diretório local padrão:
+## 3. Diretriz WSL para múltiplos projetos
+
+A máquina pode ter mais de um projeto usando WSL.
+
+A diretriz inicial é **não criar uma distribuição WSL para cada projeto**.
+
+O padrão será usar uma distribuição Ubuntu principal como ambiente técnico compartilhado e isolar os projetos por pasta, ambiente virtual, versão Node, Docker Compose, variáveis de ambiente e diretórios de dados.
+
+Distribuição principal esperada:
 
 ```text
-C:\Users\Felipe\projetos\erp-docflow
+Ubuntu-24.04
 ```
 
-## 3. Ambiente CI
+ou, se já instalada e funcional:
+
+```text
+Ubuntu-20.04
+```
+
+A distribuição `docker-desktop` pertence ao Docker Desktop e não deve ser usada como shell principal de desenvolvimento.
+
+### 3.1 Diretórios padrão
+
+Código do projeto:
+
+```text
+~/projetos/erp-docflow
+```
+
+Logs brutos de execução Codex:
+
+```text
+~/codex-runs/erp-docflow
+```
+
+Dados operacionais e documentos fora do Git:
+
+```text
+E:\erp-docflow-data
+```
+
+No WSL:
+
+```text
+/mnt/e/erp-docflow-data
+```
+
+### 3.2 Regra de separação
+
+```text
+Código e execução técnica: WSL
+Documentos, exports e backups: disco Windows dedicado
+Versionamento: GitHub
+Containers: Docker Desktop com integração WSL2
+```
+
+### 3.3 Quando criar uma WSL dedicada
+
+Criar uma distribuição WSL dedicada apenas quando houver motivo real, como:
+
+- dependências incompatíveis entre projetos;
+- necessidade de simular ambiente on-prem-lab isolado;
+- stack muito diferente;
+- requisito forte de segurança ou separação;
+- experimentos destrutivos;
+- necessidade de export/import independente;
+- operação contínua separada do ambiente de desenvolvimento.
+
+Enquanto o projeto estiver em MVP documental leve, a WSL principal compartilhada é suficiente.
+
+Documento detalhado:
+
+```text
+docs/WSL_MULTI_PROJETOS.md
+```
+
+## 4. Ambiente CI
 
 O ambiente `ci` será executado no GitHub Actions.
 
@@ -89,7 +160,7 @@ Validações futuras:
 - Docker Compose config;
 - testes de integração.
 
-## 4. Ambiente onprem-lab
+## 5. Ambiente onprem-lab
 
 O ambiente `onprem-lab` será um ambiente local dedicado ou servidor pequeno para simular operação real.
 
@@ -123,7 +194,7 @@ Docker: sim
 Backup: obrigatório
 ```
 
-## 5. Ambiente prod-onprem
+## 6. Ambiente prod-onprem
 
 O ambiente `prod-onprem` será o ambiente futuro de produção on-prem.
 
@@ -155,7 +226,7 @@ Antes de existir produção, devem existir:
 - plano de rollback;
 - baseline de segurança.
 
-## 6. Estratégia cloud-like
+## 7. Estratégia cloud-like
 
 Mesmo sendo on-prem first, o sistema deve usar conceitos cloud-like:
 
@@ -174,7 +245,7 @@ Mesmo sendo on-prem first, o sistema deve usar conceitos cloud-like:
 
 On-prem first não significa improvisado. Significa que a operação principal deve poder rodar sob controle local.
 
-## 7. Regras de configuração
+## 8. Regras de configuração
 
 Nenhum segredo deve ser salvo no Git.
 
@@ -200,7 +271,7 @@ Exemplos de dados que não devem ir para o Git:
 - dados reais de clientes;
 - documentos reais.
 
-## 8. Deploy
+## 9. Deploy
 
 No início, o deploy será manual.
 
@@ -216,7 +287,7 @@ deploy manual em prod-onprem
 
 Automação de deploy só deve entrar depois que CI, branch protection e estratégia de backup estiverem maduros.
 
-## 9. Backup e restore
+## 10. Backup e restore
 
 Backup não é opcional para este projeto.
 
@@ -232,7 +303,7 @@ No futuro, devem ser cobertos:
 
 Restore deve ser testado, não apenas documentado.
 
-## 10. Diretriz final
+## 11. Diretriz final
 
 A ordem de maturidade dos ambientes será:
 
