@@ -1,0 +1,38 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0002 Phase 0 antes de código de produto
+' - ADR-0003 Fluxo Git por Issue, branch, PR e revisão
+' - ADR-0005 Uso controlado do Codex
+' - ADR-0007 CI estrutural antes de branch protection
+' Guardrail: representa fluxo real de trabalho documental da Phase 0.
+
+title Phase 0 - Fluxo de entrega por slice
+
+start
+:Issue clara e executável;
+:Criar branch curta;
+:Realizar alterações documentais;
+:Validar escopo e restrições;
+if (CI existe?) then (sim)
+  :Executar checks disponíveis;
+else (não)
+  :Registrar validação manual;
+endif
+:Abrir Pull Request;
+:Revisão humana;
+if (Aprovado?) then (sim)
+  :Squash merge;
+  stop
+else (não)
+  :Ajustar PR dentro do escopo;
+  :Nova revisão humana;
+  stop
+endif
+
+note right
+  Fluxo: Issue -> branch -> PR -> revisão humana -> squash merge.
+  Não há merge automático.
+end note
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0002 Phase 0 antes de código de produto
+' - ADR-0003 Fluxo Git por Issue, branch, PR e revisão
+' - ADR-0004 Desenvolvimento local com Windows, WSL e VS Code
+' - ADR-0005 Uso controlado do Codex
+' - ADR-0006 Governança de ADRs e rastreabilidade
+' Guardrail: representa o sistema operacional do projeto na Phase 0, não o ERP/GED implementado.
+
+title Phase 0 - Contexto operacional do projeto
+
+actor "Humano revisor" as Human
+rectangle "Sistema operacional do projeto" as ProjectOps {
+  folder "Documentação operacional" as Docs
+  folder "ADRs" as ADRs
+  folder "Mapas de rastreabilidade" as Traceability
+  folder "UML baseline" as UML
+}
+
+cloud "GitHub\nIssues / Branches / PRs" as GitHub
+node "VS Code remoto WSL" as VSCode
+node "Codex extension" as Codex
+
+Human --> GitHub : cria Issue e revisa PR
+Human --> VSCode : trabalha no workspace
+VSCode --> Codex : assistência controlada
+VSCode --> ProjectOps : edita docs da Phase 0
+ProjectOps --> GitHub : versionado por branch e PR
+ADRs --> Traceability : decisões alimentam mapas
+ADRs --> UML : decisões orientam diagramas
+Traceability --> UML : mapas indicam relações
+
+note bottom
+  Não há backend, frontend, banco, rotas ou módulos de produto neste diagrama.
+end note
+
+@enduml

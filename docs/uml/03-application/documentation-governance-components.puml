@@ -1,0 +1,31 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0002 Phase 0 antes de código de produto
+' - ADR-0003 Fluxo Git por Issue, branch, PR e revisão
+' - ADR-0006 Governança de ADRs e rastreabilidade
+' Guardrail: componentes documentais reais da Phase 0, não componentes de produto.
+
+title Componentes documentais da governança
+
+component "Docs operacionais" as OperationalDocs
+component "ADRs" as ADRs
+component "Traceability maps" as Maps
+component "UML baseline" as UML
+component "Issues" as Issues
+component "Pull Requests" as PRs
+actor "Revisão humana" as Review
+
+Issues --> PRs : escopo do slice
+PRs --> Review : revisão obrigatória
+OperationalDocs --> ADRs : decisões relevantes
+ADRs --> Maps : relações e impacto
+ADRs --> UML : contexto para diagramas
+Maps --> UML : vínculos documentais
+Review --> PRs : aprova ou solicita ajustes
+
+note bottom
+  Nenhum componente técnico de produto é representado como implementado.
+end note
+
+@enduml
