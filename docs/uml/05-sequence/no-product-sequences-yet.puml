@@ -18,7 +18,7 @@ note over FutureUser, FutureFlow
   rotas ou workflows implementados para representar sequência real.
 end note
 
-note bottom
+note over FutureUser, FutureFlow
   Sequências reais serão criadas quando houver implementação e ADRs aplicáveis.
 end note
 
