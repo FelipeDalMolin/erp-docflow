@@ -112,13 +112,13 @@ Exemplos possíveis:
 - servidor local;
 - NAS com suporte a containers.
 
-Requisitos estimados futuros:
+Requisitos estimados Atual/Futuros:
 
 ```text
 CPU: 4 a 8 cores
-RAM: 16 GB recomendado
+RAM: 8 GB / 16 GB recomendado
 Disco: SSD/NVMe
-Sistema: Ubuntu Server LTS
+Sistema: WSL / Ubuntu Server LTS
 Docker: sim
 Backup: obrigatório
 ```

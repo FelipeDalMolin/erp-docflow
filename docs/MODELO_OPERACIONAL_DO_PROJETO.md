@@ -173,7 +173,7 @@ Os diagramas devem apoiar o entendimento do sistema e devem ser atualizados quan
 
 ## 9. Papel do Codex
 
-O Codex será usado como apoio para execução e revisão, mas não será a fonte de decisão arquitetural.
+O Codex será usado como apoio para execução e revisão.
 
 O Codex poderá atuar em:
 
@@ -185,7 +185,7 @@ O Codex poderá atuar em:
 - geração de testes;
 - apoio em CI/CD.
 
-O Codex não deve decidir sozinho:
+O Codex não deve decidir sozinho: Mas deve solicitar ao usuário orientação e aprovação em:
 
 - mudança de arquitetura;
 - troca de banco;
@@ -195,6 +195,8 @@ O Codex não deve decidir sozinho:
 - mudança em deploy;
 - alteração de ADR aceito;
 - implementação fora do escopo da Issue.
+
+Além de indicar e atualizar as documentações.
 
 O uso do Codex deve respeitar:
 
