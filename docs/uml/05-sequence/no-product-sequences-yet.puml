@@ -1,0 +1,25 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0012 DocumentEnvelope como núcleo GED
+' - ADR-0013 Revisão humana, aceite e override
+' Guardrail: placeholder; ainda não há sequências de produto implementadas.
+
+title Placeholder - Ainda não há sequências de produto
+
+actor "Usuário futuro" as FutureUser
+participant "Fluxos de produto\nnão implementado" as FutureFlow
+
+FutureUser -> FutureFlow : interação futura não especificada
+FutureFlow --> FutureUser : sem contrato nesta Phase 0
+
+note over FutureUser, FutureFlow
+  Ainda não há backend, frontend, workers, banco, storage,
+  rotas ou workflows implementados para representar sequência real.
+end note
+
+note bottom
+  Sequências reais serão criadas quando houver implementação e ADRs aplicáveis.
+end note
+
+@enduml

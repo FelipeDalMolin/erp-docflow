@@ -1,0 +1,23 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0012 DocumentEnvelope como núcleo GED
+' - ADR-0013 Revisão humana, aceite e override
+' Guardrail: placeholder; ainda não há state machines de produto implementadas.
+
+title Placeholder - Ainda não há state machines de produto
+
+[*] --> "Sem estado de produto implementado"
+"Sem estado de produto implementado" --> [*]
+
+note right of "Sem estado de produto implementado"
+  Ainda não há DocumentEnvelope implementado.
+  Ainda não há workflow de revisão ou aceite.
+  Ainda não há jobs de processamento.
+end note
+
+note bottom
+  Estados reais serão definidos somente quando entidades e fluxos existirem.
+end note
+
+@enduml

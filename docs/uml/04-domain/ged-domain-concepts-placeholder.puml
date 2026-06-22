@@ -1,0 +1,33 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0009 Arquitetura inicial como modular monolith
+' - ADR-0010 PostgreSQL como banco relacional principal
+' - ADR-0011 Object storage S3-compatible
+' - ADR-0012 DocumentEnvelope como núcleo GED
+' - ADR-0013 Revisão humana, aceite e override
+' - ADR-0015 Estratégia futura de autenticação, autorização e segurança
+' Guardrail: conceitos futuros não implementados; não declara tabelas, módulos reais, rotas ou contratos.
+
+title GED - Conceitos futuros não implementados
+
+class "DocumentEnvelope\n<<future concept>>\nnão implementado" as DocumentEnvelope
+class "DocumentVersion\n<<future concept>>\nnão implementado" as DocumentVersion
+class "FileObject\n<<future concept>>\nnão implementado" as FileObject
+class "ReviewDecision\n<<future concept>>\nnão implementado" as ReviewDecision
+class "AcceptanceCheck\n<<future concept>>\nnão implementado" as AcceptanceCheck
+class "AuditEvent\n<<future concept>>\nnão implementado" as AuditEvent
+class "User / Permission\n<<future concept>>\nnão implementado" as UserPermission
+
+DocumentEnvelope .. DocumentVersion : conceito futuro
+DocumentVersion .. FileObject : conceito futuro
+DocumentEnvelope .. ReviewDecision : conceito futuro
+ReviewDecision .. AcceptanceCheck : conceito futuro
+ReviewDecision .. AuditEvent : conceito futuro
+UserPermission .. ReviewDecision : depende de ADR futuro
+
+note bottom
+  Este diagrama não cria entidade, schema, state machine, API ou módulo real.
+end note
+
+@enduml

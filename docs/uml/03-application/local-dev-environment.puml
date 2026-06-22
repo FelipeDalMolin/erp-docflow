@@ -1,0 +1,33 @@
+@startuml
+' S0.07 UML baseline
+' Related ADRs:
+' - ADR-0004 Desenvolvimento local com Windows, WSL e VS Code
+' - ADR-0005 Uso controlado do Codex
+' - ADR-0008 Docker Compose para local e onprem-lab
+' Guardrail: mostra ambiente local atual; Docker/Compose aparecem apenas como integração futura prevista.
+
+title Ambiente local atual - Windows + WSL + VS Code + Codex
+
+node "Windows host" as Windows {
+  node "VS Code" as VSCode
+  folder "Dados fora do Git\nE:\\erp-docflow-data" as Data
+  node "Docker Desktop\nintegração futura prevista" as Docker
+}
+
+node "Ubuntu-20.04 WSL compartilhada" as WSL {
+  folder "Workspace Git\n~/projetos/erp-docflow" as Workspace
+  node "Git / gh" as GitTools
+  node "Codex extension\nvia VS Code remoto WSL" as Codex
+}
+
+VSCode --> WSL : remoto WSL
+Codex --> Workspace : leitura e edição controlada
+GitTools --> Workspace : branch, commit, push
+Workspace ..> Data : dados operacionais ficam fora do Git
+Docker ..> WSL : integração WSL2 quando houver serviços
+
+note bottom
+  Não cria Docker Compose, backend, frontend, banco ou serviços.
+end note
+
+@enduml
