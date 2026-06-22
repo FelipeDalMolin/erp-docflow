@@ -62,16 +62,16 @@ Para o `erp-docflow`, a WSL dedicada pode ser considerada futuramente quando o p
 
 ## 4. Nomes recomendados
 
-Distribuição WSL principal:
-
-```text
-Ubuntu-24.04
-```
-
-ou, se já instalada e funcional:
+Distribuição WSL principal atual:
 
 ```text
 Ubuntu-20.04
+```
+
+Distribuição futura recomendada para migração controlada, não obrigatória neste momento:
+
+```text
+Ubuntu-24.04
 ```
 
 Diretórios:
@@ -137,7 +137,7 @@ WSL Ubuntu
 └── ferramentas compartilhadas
     ├── git
     ├── gh
-    ├── codex
+    ├── codex opcional
     ├── python
     ├── node/nvm
     └── docker cli
@@ -221,16 +221,16 @@ wsl -l -v
 wsl --set-default-version 2
 ```
 
-### 8.3 Definir a distribuição principal
+### 8.3 Definir a distribuição principal atual
 
-Se a distribuição atual for `Ubuntu-20.04`:
+Para o setup atual do projeto, usar `Ubuntu-20.04` como distribuição principal:
 
 ```powershell
 wsl --set-version Ubuntu-20.04 2
 wsl --set-default Ubuntu-20.04
 ```
 
-Se for instalar uma nova Ubuntu:
+Uma migração futura para `Ubuntu-24.04` pode ser considerada depois, em tarefa própria e com validação controlada:
 
 ```powershell
 wsl --install -d Ubuntu-24.04
@@ -241,13 +241,13 @@ wsl --set-default Ubuntu-24.04
 
 A distribuição `docker-desktop` pertence ao Docker Desktop. Ela não deve ser usada como shell principal de desenvolvimento.
 
-Ambiente de trabalho deve ser:
+Ambiente de trabalho atual:
 
 ```text
 Ubuntu-20.04
 ```
 
-ou:
+Ambiente futuro possível, mediante migração controlada:
 
 ```text
 Ubuntu-24.04
@@ -335,6 +335,8 @@ sudo apt install -y \
   poppler-utils
 ```
 
+Esses pacotes preparam o ambiente técnico, mas não autorizam início de código de produto fora dos gates da Phase 0.
+
 ### 8.10 Instalar Node via nvm
 
 ```bash
@@ -383,25 +385,40 @@ code .
 
 O VS Code deve abrir em modo remoto WSL.
 
-Se abrir no Windows puro, conferir o canto inferior esquerdo do VS Code. O esperado é algo como:
-
-```text
-WSL: Ubuntu-24.04
-```
-
-ou:
+Se abrir no Windows puro, conferir o canto inferior esquerdo do VS Code. O esperado no setup atual é:
 
 ```text
 WSL: Ubuntu-20.04
 ```
 
+Futuramente, após migração controlada, pode ser:
+
+```text
+WSL: Ubuntu-24.04
+```
+
 ## 10. Como o Codex deve ser usado nesse modelo
 
-Codex deve rodar dentro da pasta do projeto no WSL:
+Uso principal no setup atual:
+
+```text
+VS Code conectado ao WSL + Codex extension no workspace /home/felipe/projetos/erp-docflow
+```
+
+O Codex deve operar no projeto aberto em modo remoto WSL. O objetivo é que leitura de arquivos, comandos, Git, testes e edições ocorram no ambiente Linux do projeto, não em um workspace Windows.
+
+Uso secundário/opcional, quando necessário:
 
 ```bash
 cd ~/projetos/erp-docflow
 codex
+```
+
+ou, em modo não interativo:
+
+```bash
+cd ~/projetos/erp-docflow
+codex exec "Leia AGENTS.md e proponha um plano. Não implemente."
 ```
 
 Logs brutos devem ficar fora do Git:
@@ -430,10 +447,13 @@ Para esta máquina e este estágio do `erp-docflow`:
 
 ```text
 Uma WSL principal compartilhada.
+Ubuntu-20.04 como distro atual.
+Ubuntu-24.04 como migração futura possível.
 Isolamento por projeto.
 Código no filesystem Linux.
 Dados operacionais em disco Windows dedicado.
 Docker integrado apenas à distribuição de trabalho.
-Codex dentro do WSL.
+Codex principalmente via VS Code em WSL.
+Codex CLI apenas como opção complementar.
 Docs e ADRs como fonte de decisão.
 ```
