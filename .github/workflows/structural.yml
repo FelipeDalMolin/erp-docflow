@@ -1,0 +1,95 @@
+name: Structural CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  structural:
+    name: Validate Phase 0 structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required documentation files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_files=(
+            "README.md"
+            "AGENTS.md"
+            ".codex/config.toml"
+            "docs/MODELO_OPERACIONAL_DO_PROJETO.md"
+            "docs/ROADMAP.md"
+            "docs/ESTRATEGIA_GIT.md"
+            "docs/FLUXO_GITHUB_PROJECT.md"
+            "docs/FLUXO_VSCODE_GIT_GITHUB_CLI.md"
+            "docs/AMBIENTES.md"
+            "docs/WSL_MULTI_PROJETOS.md"
+            "docs/templates/epic.md"
+            "docs/templates/issue-slice.md"
+            "docs/templates/sub-issue.md"
+            "docs/templates/pr.md"
+            "docs/adr/README.md"
+            "docs/adr/0001-on-prem-first-cloud-like.md"
+            "docs/adr/0002-phase-0-before-product-code.md"
+            "docs/adr/0003-git-flow-issue-branch-pr-review.md"
+            "docs/adr/0004-local-dev-windows-wsl-vscode.md"
+            "docs/adr/0005-controlled-codex-usage.md"
+            "docs/adr/0006-adr-and-traceability-governance.md"
+            "docs/adr/0007-structural-ci-and-branch-protection.md"
+            "docs/adr/0008-docker-compose-for-local-and-onprem-lab.md"
+            "docs/adr/0009-modular-monolith-initial-architecture.md"
+            "docs/adr/0010-postgresql-primary-relational-database.md"
+            "docs/adr/0011-s3-compatible-object-storage-minio.md"
+            "docs/adr/0012-document-envelope-ged-core.md"
+            "docs/adr/0013-human-review-acceptance-and-override.md"
+            "docs/adr/0014-backup-and-restore-required.md"
+            "docs/adr/0015-auth-authorization-security-strategy.md"
+            "docs/traceability/README.md"
+            "docs/traceability/adr-index.md"
+            "docs/traceability/decision-map.md"
+            "docs/traceability/document-map.md"
+            "docs/traceability/impact-matrix.md"
+            "docs/traceability/module-map.md"
+            "docs/traceability/entity-map.md"
+            "docs/traceability/route-map.md"
+            "docs/uml/README.md"
+          )
+
+          missing=0
+
+          for path in "${required_files[@]}"; do
+            if [[ ! -f "$path" ]]; then
+              echo "::error file=$path::Required Phase 0 file is missing"
+              missing=1
+            fi
+          done
+
+          if [[ "$missing" -ne 0 ]]; then
+            exit 1
+          fi
+
+      - name: Check UML baseline diagrams
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          puml_count="$(find docs/uml -type f -name '*.puml' | wc -l)"
+
+          if [[ "$puml_count" -eq 0 ]]; then
+            echo "::error file=docs/uml::Expected at least one PlantUML diagram"
+            exit 1
+          fi
+
+          echo "Found $puml_count PlantUML diagram(s)."
