@@ -185,7 +185,9 @@ O Codex poderá atuar em:
 - geração de testes;
 - apoio em CI/CD.
 
-O Codex não deve decidir sozinho: Mas deve solicitar ao usuário orientação e aprovação em:
+O Codex deve ter autonomia para selecionar e executar slices prontos dentro de um envelope aprovado.
+
+O Codex não deve decidir sozinho mudanças de direção. Deve solicitar orientação e aprovação em:
 
 - mudança de arquitetura;
 - troca de banco;
@@ -206,6 +208,8 @@ O uso do Codex deve respeitar:
 - condição de execução verificada;
 - modo de execução definido;
 - revisão humana.
+
+A aprovação humana pode abranger um lote de slices. O fim de um slice não exige nova aprovação quando o próximo item já está pronto, pertence ao mesmo envelope e não introduz decisão, risco ou conflito novo.
 
 ## 10. Condição de Execução
 
@@ -228,6 +232,8 @@ Uma Issue só deve ser executada quando:
 Condição de Execução = Condições Verificadas
 ```
 
+Quando várias Issues com condições verificadas pertencem a um envelope aprovado, elas formam uma fila de pull. O Codex pode escolher a próxima por prioridade e dependência sem pedir autorização a cada transição.
+
 ## 11. Modo de Execução
 
 O campo `Modo de Execução` indica como a Issue será trabalhada.
@@ -243,6 +249,50 @@ Pareamento / Chat + Humano
 ```
 
 O modo de execução não substitui a revisão humana. Mesmo tarefas assistidas por Codex devem passar por PR e revisão.
+
+No modo `Assistido por Codex`, a Issue pode participar do loop contínuo quando estiver no envelope aprovado. `Pareamento / Chat + Humano` deve ser usado quando os checkpoints esperados fizerem parte do próprio trabalho.
+
+## 11.1 Loop de continuidade
+
+O fluxo operacional completo é:
+
+```text
+Plan Mode
+→ aprovação do envelope
+→ puxar slice pronto
+→ executar
+→ validar
+→ preparar PR
+→ avaliar continuidade
+   ├── CONTINUE
+   ├── AWAIT_DEPENDENCY
+   ├── CHECKPOINT
+   └── STOP
+```
+
+O envelope deve registrar apenas o necessário:
+
+- objetivo;
+- conjunto ou critério de seleção dos slices;
+- áreas autorizadas e excluídas;
+- dependências;
+- validações;
+- checkpoints;
+- condição de encerramento.
+
+`CONTINUE` é permitido quando o próximo slice estiver pronto, dentro do envelope, sem dependência pendente, sem conflito e sem decisão nova.
+
+`AWAIT_DEPENDENCY` é usado quando o próximo item depende de PR, decisão ou entrega ainda não concluída.
+
+`CHECKPOINT` é usado quando houver mudança de direção, risco, ambiguidade, falha que amplie escopo ou área protegida não autorizada.
+
+`STOP` é usado quando o envelope terminar ou não houver candidato elegível.
+
+Um slice fica tecnicamente concluído quando implementação, validações, documentação e PR draft estão preparados. Ele só fica `Done` depois de revisão, merge e fechamento da Issue.
+
+O Codex pode iniciar outro slice independente enquanto um PR aguarda revisão, desde que parta da `main`, não dependa do PR pendente, não sobreponha mudanças relevantes e o envelope permita.
+
+O Codex nunca faz merge automático.
 
 ## 12. Fases do projeto
 

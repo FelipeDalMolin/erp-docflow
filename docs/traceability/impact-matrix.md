@@ -6,9 +6,9 @@ Guia de revisão de impacto. Não substitui ADRs.
 | --- | --- | --- | --- | --- |
 | estratégia on-prem/cloud-like | ADR-0001, 0014, 0016 | arquitetura, ambientes, roadmap | decision/document/impact + deployment | sim, se mudar direção |
 | iniciar código antes da Phase 0 | ADR-0002 | roadmap, modelo operacional, AGENTS | decision/impact | sim |
-| Git/PR/revisão do projeto | ADR-0003, 0007 | estratégia Git, modelo operacional | decision/document/impact | sim, se mudar regra |
+| Git/PR/revisão do projeto | ADR-0003, 0007, 0017 | estratégia Git, modelo operacional, fluxo Project | decision/document/impact + loop operacional | sim, se mudar regra |
 | ambiente WSL/local | ADR-0004, 0008 | ambientes, WSL | document/impact + deployment | sim, se mudar ambiente oficial |
-| Codex/configuração | ADR-0005 | AGENTS, .codex, modelo operacional | document/impact | sim, se mudar política |
+| Codex/configuração/continuidade | ADR-0005, 0017 | AGENTS, .codex, modelo operacional, fluxo Project, templates | decision/document/impact + loop operacional | sim, se mudar política ou revisão humana |
 | CI/branch protection | ADR-0003, 0007 | estratégia Git, ambientes, roadmap | decision/impact | sim, se mudar ordem/regra |
 | Docker Compose/processos | ADR-0008, 0009 | arquitetura, ambientes, roadmap | module/impact + deployment | sim, se mudar direção |
 | modular monolith/microservices | ADR-0009, 0016 | arquitetura, provider strategy | decision/module/impact + componentes | sim |

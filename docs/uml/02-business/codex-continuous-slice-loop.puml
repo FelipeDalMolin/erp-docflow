@@ -1,0 +1,47 @@
+@startuml
+' Issue #24
+' Related ADRs: ADR-0003, ADR-0005, ADR-0017
+' Guardrail: operational workflow; does not authorize automerge or product decisions.
+
+title Loop contínuo de slices pelo Codex
+
+start
+:Plan Mode propõe envelope;
+:Humano aprova objetivo, limites e checkpoints;
+
+repeat
+  :Ler fila Ready for execution;
+
+  if (Existe slice elegível?) then (sim)
+    :Selecionar por prioridade e dependência;
+    :Criar/usar branch da Issue;
+    :Executar e validar;
+    :Preparar PR draft e registrar evidências;
+
+    if (Próximo slice depende deste PR?) then (sim)
+      :AWAIT_DEPENDENCY;
+      :Solicitar review/merge humano;
+      stop
+    elseif (Surgiu decisão, risco ou conflito?) then (sim)
+      :CHECKPOINT;
+      :Apresentar fato, impacto e opções;
+      stop
+    else (não)
+      :CONTINUE;
+    endif
+  else (não)
+    :STOP;
+    stop
+  endif
+repeat while (Envelope ainda válido?) is (sim)
+
+:Checkpoint de fim do envelope;
+stop
+
+note right
+  O fim do slice não é gate automático.
+  O Codex nunca faz merge automático.
+end note
+
+@enduml
+

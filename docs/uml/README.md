@@ -32,6 +32,7 @@ docs/uml/
 | --- | --- |
 | [project-context.puml](01-context/project-context.puml) | contexto operacional de Issue, GitHub, VS Code, Codex e documentação |
 | [documentation-governance-components.puml](03-application/documentation-governance-components.puml) | componentes documentais da governança |
+| [codex-continuous-slice-loop.puml](02-business/codex-continuous-slice-loop.puml) | Plan aprova envelope; Codex puxa slices e pede checkpoint em fronteiras reais |
 
 ### Produto planejado — Issue #22
 

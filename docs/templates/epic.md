@@ -33,6 +33,32 @@ Explicar por que esta Epic existe e qual problema ou frente ela organiza.
 - Risco ou decisão pendente 1
 - Risco ou decisão pendente 2
 
+## Envelope de execução do Codex
+
+Objetivo do lote:
+
+- <objetivo>
+
+Slices ou critério de seleção:
+
+- <slice/critério>
+
+Áreas permitidas:
+
+- <área>
+
+Fora do envelope:
+
+- <exclusão>
+
+Checkpoints humanos:
+
+- <condição real de decisão>
+
+Condição de encerramento:
+
+- <condição>
+
 ## Observações de rastreabilidade
 
 ADRs relacionados:
