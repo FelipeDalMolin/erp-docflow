@@ -1,0 +1,40 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0012, ADR-0013
+' Guardrail: candidate lifecycle for review; not an implemented state machine.
+
+title DocumentEnvelope - estados planejados
+
+[*] --> RECEIVED
+RECEIVED --> MATERIALIZED : original + hash + versão
+MATERIALIZED --> PROCESSING : job solicitado
+PROCESSING --> REVIEW_REQUIRED : gate / conflito / baixa confiança
+PROCESSING --> ACCEPTED : autoaceite permitido
+PROCESSING --> QUARANTINED : política / segurança
+PROCESSING --> REJECTED : entrada/uso inválido
+
+REVIEW_REQUIRED --> PROCESSING : reprocessar
+REVIEW_REQUIRED --> ACCEPTED : aceitar / corrigir / override
+REVIEW_REQUIRED --> REJECTED : rejeitar
+REVIEW_REQUIRED --> QUARANTINED : bloquear
+
+ACCEPTED --> LINKED : vínculo confirmado
+ACCEPTED --> ARCHIVED : sem efeito adicional
+LINKED --> ARCHIVED
+
+QUARANTINED --> REVIEW_REQUIRED : liberar para análise
+REJECTED --> ARCHIVED : retenção conforme política
+
+ARCHIVED --> [*]
+
+note right of ACCEPTED
+  Significa interpretação aceita para uma finalidade.
+  Não significa pagamento executado.
+end note
+
+note left of MATERIALIZED
+  Original preservado e documento identificado.
+end note
+
+@enduml
+

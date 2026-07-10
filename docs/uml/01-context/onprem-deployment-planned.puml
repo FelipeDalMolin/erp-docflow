@@ -1,0 +1,54 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0001, ADR-0008, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016 (proposed)
+' Guardrail: target deployment view; no service/container is implemented.
+
+title ERP Docflow - Deployment on-prem planejado
+
+node "Cliente" as Client {
+  artifact "Browser" as Browser
+}
+
+node "Ambiente on-prem\n<<planejado>>" as OnPrem {
+  node "Entrada / reverse proxy" as Edge
+  node "Frontend" as Frontend
+  node "API modular monolith" as API
+  node "Workers de processamento" as Workers
+  queue "Fila / cache" as Queue
+  database "PostgreSQL" as Postgres
+  storage "Object storage\nS3-compatible / MinIO candidato" as Objects
+  node "Stirling / OCR local\nquando elegível" as LocalProviders
+  node "Observabilidade" as Observability
+}
+
+cloud "Providers externos elegíveis\nDocument AI / OpenAI / outros" as CloudProviders
+storage "Backup separado" as Backup
+
+Browser --> Edge
+Edge --> Frontend
+Edge --> API
+API --> Postgres
+API --> Objects
+API --> Queue
+Queue --> Workers
+Workers --> LocalProviders
+Workers --> CloudProviders : somente por política
+Workers --> Postgres
+Workers --> Objects
+API --> Observability
+Workers --> Observability
+Postgres --> Backup
+Objects --> Backup
+
+note right of CloudProviders
+  Envio externo depende de classificação,
+  tenant, residência, secrets e ADR de segurança.
+end note
+
+note bottom
+  Modular monolith descreve boundaries do produto.
+  Workers podem rodar em processos/containers separados.
+end note
+
+@enduml
+

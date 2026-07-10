@@ -1,171 +1,88 @@
 # Rastreabilidade
 
-Esta pasta armazena os mapas de rastreabilidade do projeto.
+Esta pasta conecta decisões, documentação, módulos, entidades, rotas, diagramas, Issues e Pull Requests.
 
-A rastreabilidade conecta decisões, documentação, módulos, entidades, rotas, diagramas, Issues e Pull Requests.
+## 1. Hierarquia de fontes
 
-## 1. Objetivo
-
-A rastreabilidade existe para responder:
-
-- qual decisão justifica esta parte do sistema?
-- qual ADR afeta este módulo?
-- qual entidade está relacionada a este fluxo?
-- qual rota altera esta entidade?
-- qual diagrama representa este comportamento?
-- qual documentação precisa ser atualizada se esta decisão mudar?
-- qual Issue ou PR introduziu determinada alteração?
-
-## 2. Por que isso importa
-
-Este projeto combina ERP e GED.
-
-Isso significa que teremos:
-
-- documentos;
-- arquivos;
-- versões;
-- OCR;
-- extrações;
-- revisões;
-- aceite humano;
-- auditoria;
-- lançamentos financeiros;
-- pagamentos;
-- geração documental;
-- integrações.
-
-Sem rastreabilidade, o sistema pode virar um conjunto de arquivos, rotas, tabelas e decisões difíceis de relacionar.
-
-## 3. Mapas previstos
-
-Arquivos previstos:
+Quando houver divergência:
 
 ```text
-adr-index.md
-decision-map.md
-module-map.md
-route-map.md
-entity-map.md
-document-map.md
-impact-matrix.md
+ADR aceito
+  -> documento canônico vigente
+  -> mapa de rastreabilidade
+  -> diagrama
+  -> review/registro de descoberta
 ```
 
-## 4. adr-index.md
+- ADR `Proposto` representa decisão pendente.
+- Documento `planejado` orienta descoberta, não contrato implementado.
+- Código/testes descrevem comportamento real quando existirem, mas não substituem decisão arquitetural necessária.
+- Chat não deve permanecer como única fonte de decisão.
 
-Lista todos os ADRs, seus status e relacionamentos.
+## 2. Perguntas que os mapas respondem
 
-Deve responder:
+- qual ADR justifica esta direção?
+- o status permite implementação?
+- qual documento define o conceito?
+- qual módulo/entidade será afetado?
+- qual UML representa o fluxo?
+- que outros artefatos precisam mudar?
+- qual Issue/PR introduziu a mudança?
 
-- quais ADRs existem?
-- quais estão aceitos?
-- quais foram substituídos?
-- quais foram complementados?
+## 3. Mapas
 
-## 5. decision-map.md
+| Arquivo | Finalidade |
+| --- | --- |
+| `adr-index.md` | ADRs, status, relações e condição de revisão |
+| `decision-map.md` | dependências entre decisões |
+| `document-map.md` | documentos canônicos, ADRs, UMLs e fases |
+| `module-map.md` | boundaries planejados/implementados |
+| `entity-map.md` | conceitos/entidades, estados e ADRs |
+| `route-map.md` | rotas reais quando existirem |
+| `impact-matrix.md` | checklist de artefatos afetados por tema |
 
-Mostra relações entre decisões.
+## 4. Status de produto
 
-Exemplo:
+Usar de forma explícita:
 
-```text
-ADR-0001 — On-prem first
-├── ADR-0003 — Object storage
-├── ADR-0008 — Docker Compose
-└── ADR-0010 — Backup
-```
+| Status | Significado |
+| --- | --- |
+| planejado | desenho para decisão/implementação futura |
+| não implementado | não existe em código/infra |
+| parcial | existe apenas no slice indicado |
+| implementado | existe, tem validação e referência de PR |
+| substituído | artefato/decisão sucedido, preservado no histórico |
 
-## 6. module-map.md
+Não registrar módulo, entidade ou rota como implementado sem evidência no repositório.
 
-Relaciona módulos do sistema com responsabilidades, ADRs e documentação.
+## 5. Quando atualizar
 
-Exemplo futuro:
+Atualizar os mapas quando houver mudança em:
 
-```text
-documents
-├── Responsabilidade: DocumentEnvelope
-├── ADRs: ADR-0003, ADR-0005
-├── Docs: DOCUMENT_WORKFLOW.md
-└── Entidades: DocumentEnvelope, DocumentVersion
-```
-
-## 7. route-map.md
-
-Relaciona rotas com módulos, entidades e ADRs.
-
-Exemplo futuro:
-
-```text
-POST /documents/upload
-├── Módulo: documents/files
-├── Entidades: DocumentEnvelope, FileObject
-├── ADRs: ADR-0003, ADR-0004
-└── Descrição: cria documento materializado
-```
-
-## 8. entity-map.md
-
-Relaciona entidades com tabelas, módulos, state machines e ADRs.
-
-Exemplo futuro:
-
-```text
-DocumentEnvelope
-├── Tabela: documents
-├── Módulo: documents
-├── State machine: sim
-└── ADRs: ADR-0004
-```
-
-## 9. document-map.md
-
-Relaciona documentos de arquitetura com ADRs, UMLs, módulos e fases.
-
-Exemplo futuro:
-
-```text
-DOCUMENT_WORKFLOW.md
-├── ADRs: ADR-0004, ADR-0005
-├── UMLs: document-workflow-activity.puml
-└── Módulos: documents, review, audit
-```
-
-## 10. impact-matrix.md
-
-Ajuda a avaliar impacto de mudanças.
-
-Exemplo futuro:
-
-```text
-Mudança: storage oficial
-Afeta:
-- ADR de storage
-- FileObject
-- DocumentVersion
-- upload
-- backup
-- restore
-- MinIO
-```
-
-## 11. Quando atualizar rastreabilidade
-
-Atualizar rastreabilidade quando houver mudança em:
-
-- ADR;
-- módulo;
-- entidade;
-- rota;
-- fluxo;
+- ADR ou status;
+- documento canônico;
+- módulo/boundary;
+- entidade/estado;
+- rota/contrato;
+- workflow;
 - diagrama UML;
 - infraestrutura;
-- workflow documental;
-- CI/CD;
-- segurança;
-- integração.
+- segurança/LGPD;
+- provider/modelo com impacto estrutural;
+- integração;
+- Issue/PR que materialize conceito planejado.
 
-## 12. Diretriz final
+## 6. Procedimento mínimo
 
-A rastreabilidade deve ser leve, mas constante.
+1. identificar decisão e status;
+2. abrir Issue com escopo e critérios;
+3. atualizar fonte canônica;
+4. atualizar mapas afetados;
+5. atualizar/renderizar UML quando aplicável;
+6. validar links, nomes e guardrails;
+7. relacionar PR e ADR.
 
-Não precisa ser perfeita no início, mas deve existir desde a Phase 0 para evitar perda de contexto.
+## 7. Diretriz final
+
+A rastreabilidade deve ser leve, mas suficiente para impedir decisões invisíveis e para explicar o impacto de mudar o `DocumentEnvelope`, o fluxo de review, um provider ou um efeito financeiro.
+

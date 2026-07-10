@@ -1,0 +1,53 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
+' Guardrail: planned sequence; capabilities, messages and states are not implemented contracts.
+
+title Processamento, revisão e aceite - planejado
+
+participant "Processing Orchestrator" as Orchestrator
+participant "Routing Policy" as Router
+participant "Provider Adapter" as Provider
+participant "Validation" as Validation
+participant "Review" as Review
+actor "Revisor" as Human
+participant "Documents" as Documents
+participant "Linking / ERP" as Linking
+participant "Audit" as Audit
+
+Orchestrator -> Router : resolver próxima capability
+Router --> Orchestrator : provider elegível + policy version
+Orchestrator -> Provider : executar capability
+Provider --> Orchestrator : raw artifact + normalized result
+Orchestrator -> Validation : validar output
+Validation --> Orchestrator : passes, warnings e conflicts
+Orchestrator -> Router : avaliar qualidade, risco e gates
+
+alt revisão obrigatória
+  Router --> Review : abrir ReviewCase
+  Review -> Human : original + evidência + sugestões
+  Human -> Review : aceitar / corrigir / override / rejeitar / reprocessar
+  Review -> Audit : registrar decisão e antes/depois
+  alt aceito
+    Review -> Documents : criar AcceptedSnapshot
+  else reprocessar
+    Review -> Orchestrator : nova tentativa
+  else rejeitado
+    Review -> Documents : atualizar estado auditável
+  end
+else autoaceite explicitamente permitido
+  Router --> Documents : criar AcceptedSnapshot por política
+  Documents -> Audit : registrar decisão automática e policy
+end
+
+opt snapshot aceito e efeito autorizado
+  Documents -> Linking : sugerir/confirmar vínculo
+  Linking -> Audit : registrar vínculo/efetivação
+end
+
+note bottom
+  Um output de modelo não efetiva pagamento ou lançamento sozinho.
+end note
+
+@enduml
+

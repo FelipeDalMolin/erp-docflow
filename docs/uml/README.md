@@ -1,42 +1,18 @@
 # UML
 
-Esta pasta armazena diagramas do projeto.
+Esta pasta armazena diagramas operacionais da Phase 0 e diagramas de produto **planejado/não implementado**.
 
-Os diagramas ajudam a representar arquitetura, fluxos, entidades, estados e interações entre componentes.
+## 1. Regra de leitura
 
-## 1. Objetivo
+Cada diagrama deve declarar no cabeçalho:
 
-Os diagramas existem para tornar o sistema mais compreensível antes, durante e depois da implementação.
+- Issue de origem;
+- ADRs relacionados;
+- guardrail de status.
 
-Eles devem apoiar:
+`planned` representa arquitetura, domínio ou fluxo candidato para revisão. Não define API, tabela, módulo implementado ou autorização para código de produto.
 
-- entendimento arquitetural;
-- revisão de decisões;
-- onboarding futuro;
-- análise de impacto;
-- comunicação com Codex;
-- documentação de fluxos;
-- validação de estados;
-- planejamento de entidades e rotas.
-
-## 2. Tipos de diagramas previstos
-
-Tipos previstos:
-
-```text
-contexto
-deployment
-casos de uso
-atividades
-componentes
-classes de domínio
-sequência
-estados
-```
-
-## 3. Estrutura prevista
-
-Estrutura esperada:
+## 2. Estrutura
 
 ```text
 docs/uml/
@@ -48,147 +24,69 @@ docs/uml/
 └── 06-state/
 ```
 
-## 4. Diagramas de contexto
+## 3. Catálogo atual
 
-Representam o sistema em relação a usuários, ferramentas externas e integrações.
+### Phase 0 — operação do projeto
 
-Exemplos:
+| Diagrama | Escopo |
+| --- | --- |
+| [project-context.puml](01-context/project-context.puml) | contexto operacional de Issue, GitHub, VS Code, Codex e documentação |
+| [documentation-governance-components.puml](03-application/documentation-governance-components.puml) | componentes documentais da governança |
 
-- usuário operacional;
-- administrador;
-- contador;
-- Google Drive;
-- OneDrive;
-- e-mail;
-- banco;
-- storage externo.
+### Produto planejado — Issue #22
 
-## 5. Diagramas de deployment
+| Diagrama | Tipo | Decisão/fluxo representado |
+| --- | --- | --- |
+| [erp-docflow-system-context-planned.puml](01-context/erp-docflow-system-context-planned.puml) | contexto | atores, entradas, providers e integrações |
+| [onprem-deployment-planned.puml](01-context/onprem-deployment-planned.puml) | deployment | destino on-prem com API, workers, dados e providers |
+| [document-processing-activity-planned.puml](02-business/document-processing-activity-planned.puml) | atividade | intake → processamento → review → efeito |
+| [document-processing-components-planned.puml](03-application/document-processing-components-planned.puml) | componentes | boundaries lógicos no modular monolith |
+| [document-processing-domain-planned.puml](04-domain/document-processing-domain-planned.puml) | domínio | envelope, versões, tentativas, resultados e decisões |
+| [ingest-to-envelope-planned.puml](05-sequence/ingest-to-envelope-planned.puml) | sequência | materialização documental |
+| [process-review-accept-planned.puml](05-sequence/process-review-accept-planned.puml) | sequência | provider, validação, revisão e aceite |
+| [document-envelope-state-planned.puml](06-state/document-envelope-state-planned.puml) | estados | ciclo candidato do envelope |
+| [processing-job-state-planned.puml](06-state/processing-job-state-planned.puml) | estados | ciclo candidato de job e retry |
 
-Representam onde os componentes rodam.
+## 4. Tipos previstos
 
-Exemplos:
+- contexto e deployment;
+- casos de uso e atividades;
+- componentes;
+- classes/conceitos de domínio;
+- sequência;
+- estados.
 
-- ambiente local;
-- onprem-lab;
-- prod-onprem;
-- NGINX;
-- API;
-- frontend;
-- workers;
-- PostgreSQL;
-- Redis;
-- MinIO.
+Novos diagramas devem responder uma pergunta concreta e evitar duplicar texto sem ganho visual.
 
-## 6. Diagramas de atividades
+## 5. Relação com ADRs e rastreabilidade
 
-Representam fluxos de negócio.
+Diagramas não criam decisão. A decisão primária permanece no ADR aplicável.
 
-Exemplos:
+Quando um fluxo, estado ou boundary mudar:
 
-- upload documental;
-- OCR;
-- extração;
-- classificação;
-- revisão humana;
-- aceite;
-- geração de lançamento;
-- arquivamento como evidência.
+1. verificar se exige novo ADR;
+2. atualizar documento canônico;
+3. atualizar diagrama;
+4. atualizar `docs/traceability/`;
+5. registrar Issue/PR que introduziu a mudança.
 
-## 7. Diagramas de componentes
+## 6. Formato e validação
 
-Representam blocos técnicos da aplicação.
+PlantUML é o formato preferencial neste baseline.
 
-Exemplos futuros:
+Antes do merge:
 
-- frontend;
-- backend;
-- documents module;
-- files module;
-- review module;
-- audit module;
-- finance module;
-- OCR worker;
-- generation worker.
+- verificar `@startuml` e `@enduml`;
+- renderizar quando a ferramenta estiver disponível;
+- revisar relações, nomes e legibilidade;
+- confirmar que o status planejado/implementado está correto;
+- conferir links no catálogo.
 
-## 8. Diagramas de classes de domínio
+## 7. Documentos relacionados
 
-Representam entidades principais.
+- [Arquitetura](../ARCHITECTURE.md)
+- [Pipeline](../DOCUMENT_PIPELINE.md)
+- [Baseline de dados](../DATA_MODEL_BASELINE.md)
+- [Estratégia de providers](../PROVIDER_STRATEGY.md)
+- [Glossário](../GLOSSARIO_DOCUMENTAL.md)
 
-Exemplos futuros:
-
-- DocumentEnvelope;
-- DocumentVersion;
-- FileObject;
-- OCRResult;
-- ExtractionResult;
-- ClassificationResult;
-- ReviewDecision;
-- AcceptanceCheck;
-- FinancialEntry;
-- PaymentIntent;
-- AuditEvent.
-
-## 9. Diagramas de sequência
-
-Representam interações entre usuário, frontend, backend, workers, banco e storage.
-
-Exemplos futuros:
-
-- upload até DocumentEnvelope;
-- OCR, Extract e Classify;
-- Review, Override e Acceptance;
-- criação de FinancialEntry;
-- geração de recibo ou contrato.
-
-## 10. Diagramas de estados
-
-Representam ciclos de vida.
-
-Exemplos futuros:
-
-- DocumentEnvelope;
-- ProcessingJob;
-- ReviewDecision;
-- AcceptanceCheck;
-- FinancialEntry;
-- PaymentIntent;
-- GeneratedDocument.
-
-## 11. Relação com ADRs
-
-Sempre que possível, diagramas devem indicar ADRs relacionados.
-
-Exemplo:
-
-```plantuml
-' Related ADRs:
-' - ADR-0004 DocumentEnvelope
-' - ADR-0005 Human review and acceptance
-```
-
-## 12. Relação com rastreabilidade
-
-Diagramas relevantes devem ser citados nos mapas de rastreabilidade.
-
-Especialmente em:
-
-```text
-decision-map.md
-module-map.md
-entity-map.md
-document-map.md
-impact-matrix.md
-```
-
-## 13. Formato
-
-O formato preferencial será PlantUML ou Mermaid.
-
-A escolha final pode variar conforme a ferramenta e a facilidade de renderização no GitHub ou no VS Code.
-
-## 14. Diretriz final
-
-Diagramas não devem ser desenhos decorativos.
-
-Eles devem ajudar a entender, revisar e manter o sistema.

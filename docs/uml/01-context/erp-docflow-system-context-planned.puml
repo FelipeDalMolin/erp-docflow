@@ -1,0 +1,36 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0001, ADR-0012, ADR-0013, ADR-0015, ADR-0016 (proposed)
+' Guardrail: planned product context; no component or integration is implemented.
+
+title ERP Docflow - Contexto de produto planejado
+
+left to right direction
+
+actor "Usuário operacional" as Operator
+actor "Revisor / aprovador" as Reviewer
+actor "Administrador" as Admin
+actor "Contador / financeiro" as FinanceUser
+
+rectangle "ERP Docflow\n<<planejado / não implementado>>" as System
+
+cloud "Fontes documentais\nUpload / Drive / OneDrive / E-mail" as Sources
+cloud "Providers de processamento\nlocais / self-hosted / cloud" as Providers
+cloud "Sistemas financeiros,\ncontábeis e bancários" as ExternalSystems
+
+Operator --> System : envia e acompanha documentos
+Reviewer --> System : revisa, corrige, aceita ou rejeita
+Admin --> System : governa perfis, acesso e operação
+FinanceUser --> System : confirma vínculos e efeitos autorizados
+
+Sources --> System : entradas documentais
+System --> Providers : capabilities elegíveis
+System --> ExternalSystems : integrações após gates
+
+note bottom of System
+  Núcleo: DocumentEnvelope, versões, processamento,
+  revisão humana, aceite, vínculos e auditoria.
+end note
+
+@enduml
+

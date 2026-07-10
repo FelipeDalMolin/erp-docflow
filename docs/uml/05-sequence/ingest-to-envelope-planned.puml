@@ -1,0 +1,38 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0011, ADR-0012
+' Guardrail: planned sequence; messages are not API contracts.
+
+title Intake até DocumentEnvelope - planejado
+
+actor "Usuário / canal" as Source
+participant "Inbox / Intake" as Intake
+participant "Documents" as Documents
+participant "Files" as Files
+database "Metadados" as DB
+collections "Object storage" as Objects
+participant "Processing" as Processing
+participant "Audit" as Audit
+
+Source -> Intake : entrega arquivo + contexto
+Intake -> Intake : validar limites e calcular SHA-256
+Intake -> Files : registrar original
+Files -> Objects : armazenar objeto imutável
+Objects --> Files : object reference + integrity
+Files --> Intake : FileObject
+Intake -> Documents : materializar documento
+Documents -> DB : Envelope + versão + referência
+DB --> Documents : IDs/version
+Documents -> Audit : DocumentMaterialized
+Documents -> Processing : solicitar processamento
+Processing --> Documents : job reference
+Documents --> Intake : envelope + estado
+Intake --> Source : recebimento confirmado
+
+note over Intake, Documents
+  Materialização documental ocorre aqui.
+  Nenhuma interpretação ou operação financeira é aceita neste ponto.
+end note
+
+@enduml
+

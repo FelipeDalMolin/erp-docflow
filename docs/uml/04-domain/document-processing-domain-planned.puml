@@ -1,0 +1,48 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0010, ADR-0011, ADR-0012, ADR-0013, ADR-0015, ADR-0016 (proposed)
+' Guardrail: conceptual model only; no class, table or schema is implemented.
+
+title Domínio documental planejado
+
+class DocumentEnvelope <<planned>>
+class DocumentVersion <<planned>>
+class FileObject <<planned>>
+class ProcessingJob <<planned>>
+class ProcessingAttempt <<planned>>
+class ProviderExecution <<planned>>
+class RecognitionArtifact <<planned>>
+class ExtractionResult <<planned>>
+class ClassificationResult <<planned>>
+class ValidationResult <<planned>>
+class ReviewCase <<planned>>
+class ReviewDecision <<planned>>
+class AcceptedSnapshot <<planned>>
+class EntityLink <<planned>>
+class AuditEvent <<planned>>
+
+DocumentEnvelope "1" o-- "1..*" DocumentVersion
+DocumentVersion "1" o-- "1..*" FileObject
+DocumentEnvelope "1" o-- "0..*" ProcessingJob
+ProcessingJob "1" o-- "1..*" ProcessingAttempt
+ProcessingAttempt "1" o-- "0..*" ProviderExecution
+DocumentVersion "1" o-- "0..*" RecognitionArtifact
+DocumentVersion "1" o-- "0..*" ExtractionResult
+DocumentVersion "1" o-- "0..*" ClassificationResult
+ExtractionResult "1" o-- "0..*" ValidationResult
+ClassificationResult "1" o-- "0..*" ValidationResult
+DocumentEnvelope "1" o-- "0..*" ReviewCase
+ReviewCase "1" o-- "1..*" ReviewDecision
+ReviewDecision "1" --> "0..1" AcceptedSnapshot : cria
+DocumentEnvelope "1" o-- "0..*" AcceptedSnapshot
+DocumentEnvelope "1" o-- "0..*" EntityLink
+DocumentEnvelope "1" o-- "0..*" AuditEvent
+
+note bottom
+  Resultado de provider não é snapshot aceito.
+  Snapshot aceito não é entidade financeira.
+  Original e tentativas anteriores permanecem auditáveis.
+end note
+
+@enduml
+
