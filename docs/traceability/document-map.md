@@ -4,10 +4,12 @@ Mapa entre documentos, ADRs, diagramas e fases. Registra vínculos documentais; 
 
 | Documento | Papel | ADRs | UMLs/artefatos relacionados | Fase |
 | --- | --- | --- | --- | --- |
-| `AGENTS.md` | operação do Codex e guardrails | ADR-0002, 0005, 0015 | — | 0 |
+| `AGENTS.md` | operação, guardrails e loop de continuidade do Codex | ADR-0002, 0005, 0015, 0017 | loop contínuo de slices | 0 |
 | `.codex/config.toml` | configuração operacional Codex | ADR-0005 | — | 0 |
-| `docs/MODELO_OPERACIONAL_DO_PROJETO.md` | governança e forma de trabalho | ADR-0001 a 0015 conforme seção | contexto operacional | 0 |
-| `docs/ROADMAP.md` | fases, gates e resultados | ADR-0001, 0002, 0007–0016 | todos os planejados | 0–7 |
+| `docs/MODELO_OPERACIONAL_DO_PROJETO.md` | governança, forma de trabalho e continuidade | ADR-0001 a 0017 conforme seção | contexto e loop operacional | 0 |
+| `docs/FLUXO_GITHUB_PROJECT.md` | fila de pull, prontidão e estados do trabalho | ADR-0003, 0005, 0017 | loop contínuo de slices | 0–7 |
+| `docs/ESTRATEGIA_GIT.md` | branches/PRs por Issue e continuidade independente | ADR-0003, 0005, 0017 | loop contínuo de slices | 0–7 |
+| `docs/ROADMAP.md` | fases, gates e resultados | ADR-0001, 0002, 0007–0017 | todos os planejados | 0–7 |
 | `docs/ARCHITECTURE.md` | arquitetura lógica, boundaries, dados e operação | ADR-0001, 0008–0016 | contexto, deployment, componentes | 0 / destino |
 | `docs/DOCUMENT_PIPELINE.md` | fluxo canônico e gates | ADR-0012, 0013, 0016 | atividade, sequências, estados | 0 / fases 2–5 |
 | `docs/PROVIDER_STRATEGY.md` | capabilities, adapters, routing e benchmark | ADR-0016 | componentes e sequência de processamento | 0 / fase 3 |
@@ -17,6 +19,7 @@ Mapa entre documentos, ADRs, diagramas e fases. Registra vínculos documentais; 
 | `docs/AMBIENTES.md` | local, CI, on-prem, backup | ADR-0001, 0004, 0007, 0008, 0010, 0011, 0014 | deployment planejado | 0–produção |
 | `docs/adr/README.md` | governança de decisões | ADR-0006 | — | 0 |
 | `docs/adr/0016-capability-based-document-processing-providers.md` | proposta de providers por capability | ADR-0016 | componentes/processamento | 0 / fase 3 |
+| `docs/adr/0017-codex-continuous-slice-loop.md` | continuidade autônoma dentro de envelope aprovado | ADR-0017 | `codex-continuous-slice-loop.puml` | 0–7 |
 | `docs/traceability/README.md` | regras dos mapas | ADR-0006 | — | 0 |
 | `docs/uml/README.md` | catálogo e status dos diagramas | ADR-0006, 0012, 0013, 0016 | `docs/uml/**/*.puml` | 0 / destino |
 

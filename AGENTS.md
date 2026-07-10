@@ -38,7 +38,7 @@ Regras:
 
 - nao trabalhar sem Issue clara;
 - nao trabalhar direto na `main`;
-- confirmar escopo, fora de escopo e criterios de aceite antes de editar;
+- confirmar escopo, fora de escopo e criterios de aceite pela Issue e pelo envelope aprovado antes de editar;
 - manter PRs pequenos e revisaveis;
 - nao fazer merge automatico;
 - nao criar codigo de produto durante a Phase 0;
@@ -46,6 +46,49 @@ Regras:
 - nao usar secrets;
 - nao alterar ADR aceito sem novo ADR;
 - nao usar `danger-full-access` como padrao.
+
+## Loop de continuidade
+
+O Codex pode operar em loop dentro de um envelope de execucao aprovado em Plan Mode.
+
+O envelope pode abranger mais de um slice e deve indicar:
+
+- objetivo do lote;
+- slices ou criterios de selecao;
+- areas permitidas;
+- fora de escopo;
+- dependencias;
+- validacoes;
+- checkpoints humanos;
+- condicao de encerramento.
+
+Aprovado o envelope, o Codex nao deve pedir nova autorizacao mecanica ao fim de cada slice.
+
+Depois de preparar a entrega tecnica de um slice, deve avaliar a fila e registrar uma das decisoes:
+
+```text
+CONTINUE
+AWAIT_DEPENDENCY
+CHECKPOINT
+STOP
+```
+
+Pode usar `CONTINUE` quando o proximo slice:
+
+- esta pronto para execucao;
+- pertence ao envelope aprovado;
+- tem dependencias satisfeitas ou e independente;
+- nao depende de PR ainda nao mergeado;
+- nao conflita com branch ou PR em andamento;
+- nao introduz decisao nova;
+- nao toca area excluida ou protegida;
+- tem validacoes conhecidas.
+
+O Codex pode iniciar um slice independente enquanto outro PR aguarda review, partindo da `main`, sem sobreposicao relevante e quando o envelope permitir.
+
+Slice dependente deve aguardar o merge. Branch ou PR empilhado exige autorizacao explicita no envelope.
+
+O loop seleciona e executa trabalho. Ele nao autoriza automerge, merge pelo Codex ou expansao silenciosa de escopo.
 
 ## Escopo explicito obrigatorio
 
@@ -119,6 +162,8 @@ So pode ser usado como excecao explicita, temporaria e justificada pelo humano.
 
 ## Quando parar e pedir decisao humana
 
+O fim de um slice, isoladamente, nao e motivo para parar.
+
 O Codex deve parar e pedir decisao humana quando:
 
 - a Issue estiver vaga;
@@ -139,6 +184,13 @@ O Codex deve parar e pedir decisao humana quando:
 - for necessario escrever fora do workspace;
 - for necessario acesso amplo de rede;
 - for necessario alterar `.codex/`, `AGENTS.md`, CI, ADR aceito ou branch protection sem escopo explicito na Issue.
+
+O checkpoint deve ser curto e conter:
+
+- fato observado;
+- impacto no envelope ou no proximo slice;
+- opcoes viaveis;
+- recomendacao do Codex.
 
 ## Comandos permitidos
 
@@ -243,4 +295,5 @@ Antes de concluir uma tarefa, o Codex deve verificar:
 - documentacao afetada foi atualizada;
 - ADR e rastreabilidade foram considerados quando aplicavel;
 - nao foram criados secrets, deploy, automerge ou codigo de produto indevido.
+- a decisao de continuidade foi registrada como `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP`.
 

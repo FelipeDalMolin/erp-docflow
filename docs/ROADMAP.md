@@ -312,5 +312,22 @@ Issue clara
   -> squash merge
 ```
 
+Plan Mode pode aprovar um envelope com vários slices da mesma frente. Dentro desse envelope, o Codex pode puxar o próximo item pronto sem nova aprovação mecânica, mantendo Issue, branch e PR por slice.
+
+Depois de cada entrega técnica, o Codex deve decidir:
+
+```text
+CONTINUE
+AWAIT_DEPENDENCY
+CHECKPOINT
+STOP
+```
+
+Checkpoints são exigidos por mudança de direção, risco, dependência, área protegida ou gate de Phase — não apenas porque um slice terminou.
+
+O Codex pode iniciar trabalho independente enquanto outro PR aguarda review. Trabalho dependente aguarda merge, salvo estratégia de PR empilhado explicitamente aprovada.
+
+Merge permanece humano.
+
 Spikes respondem perguntas e produzem evidência; não promovem automaticamente a hipótese a decisão aceita.
 

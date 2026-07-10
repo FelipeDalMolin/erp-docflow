@@ -36,10 +36,13 @@ entrada
 
 - não trabalhar diretamente na `main`;
 - seguir Issue → branch → PR → CI → revisão humana → squash merge;
+- permitir que o Codex puxe o próximo slice pronto dentro de envelope aprovado, sem nova autorização mecânica;
 - não iniciar código de produto antes dos critérios da Phase 0;
 - não transformar proposta ou diagrama planejado em contrato implementado;
 - não alterar ADR aceito como documento vivo;
 - não usar dados reais, secrets ou providers externos sem decisão e controles aplicáveis.
+
+O fim de um slice não é, sozinho, um gate. Mudança de direção, risco, dependência ou área protegida exige checkpoint; merge permanece humano.
 
 Consulte [AGENTS.md](AGENTS.md) antes de executar uma Issue com Codex.
 

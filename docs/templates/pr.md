@@ -77,6 +77,17 @@ Resultado:
 
 - #<numero> — <descrição>
 
+## Decisão de continuidade do Codex
+
+Selecionar uma:
+
+- [ ] `CONTINUE` — próximo slice elegível:
+- [ ] `AWAIT_DEPENDENCY` — dependência:
+- [ ] `CHECKPOINT` — decisão/orientação necessária:
+- [ ] `STOP` — envelope encerrado ou sem candidato:
+
+Esta decisão não faz merge do PR nem move automaticamente a Issue para `Done`.
+
 ## Merge
 
 Este PR deve aguardar revisão humana. Não usar merge automático.

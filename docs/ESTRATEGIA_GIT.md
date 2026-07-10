@@ -40,6 +40,32 @@ Cada Issue executável deve preferencialmente gerar:
 
 Uma branch pode ter vários commits.
 
+## 3.1 Continuidade entre Issues
+
+O Codex pode executar uma sequência de Issues pertencentes a um envelope aprovado sem solicitar nova autorização ao fim de cada slice.
+
+Isso não transforma o lote em uma branch longa. O padrão continua:
+
+```text
+Issue A -> branch A -> PR A
+Issue B -> branch B -> PR B
+```
+
+Depois de preparar o PR A, o Codex pode iniciar a Issue B quando ela:
+
+- está pronta;
+- é independente do PR A;
+- pertence ao mesmo envelope;
+- parte da `main`;
+- não sobrepõe arquivos ou decisões relevantes;
+- não exige checkpoint humano.
+
+Se B depende de A, deve aguardar o merge do PR A.
+
+Branches ou PRs empilhados só podem ser usados quando autorizados explicitamente no envelope de execução.
+
+O Codex pode preparar e acompanhar PRs; merge e squash merge permanecem ações humanas.
+
 ## 4. Nome de branches
 
 Formato recomendado:
@@ -204,6 +230,8 @@ Evitar:
 - fazer force push sem necessidade;
 - deixar decisões apenas no chat;
 - aceitar mudanças do Codex sem revisão.
+- criar branch dependente sobre PR não mergeado sem autorização explícita;
+- misturar várias Issues em um PR apenas para manter o loop em execução.
 
 ## 13. Critério para merge
 

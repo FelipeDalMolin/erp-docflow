@@ -226,6 +226,8 @@ Critério:
 - validações cabíveis foram executadas ou justificadas;
 - documentação e ADR foram considerados.
 
+Uma Issue em `Review` ainda não está `Done`. Isso não impede o Codex de puxar outro slice independente, pronto e pertencente ao mesmo envelope.
+
 ### Done
 
 Item concluído.
@@ -335,6 +337,70 @@ Uma Issue pode receber `codex:eligible` quando:
 
 Se faltar qualquer item relevante, usar `codex:plan-required` ou `codex:human-review`.
 
+## 9.1 Loop de continuidade do Codex
+
+`codex:eligible` indica que a Issue pode entrar na fila de pull. A label não concede autonomia fora do contexto aprovado.
+
+Antes da execução, o Plan Mode pode aprovar um **envelope de execução** contendo:
+
+- objetivo do lote;
+- slices explícitos ou critério de seleção;
+- áreas permitidas e excluídas;
+- dependências;
+- validações;
+- checkpoints humanos;
+- condição de encerramento.
+
+Não é obrigatório criar novo campo no Project. A fila pode ser formada por:
+
+```text
+Status = Ready
+Condição de Execução = Ready for execution
+Codex = codex:eligible
+Epic/envelope = aprovado
+Dependências = satisfeitas ou item independente
+```
+
+Ao concluir tecnicamente um slice, o Codex avalia a fila e registra:
+
+| Decisão | Uso |
+| --- | --- |
+| `CONTINUE` | puxar o próximo slice elegível sem nova aprovação mecânica |
+| `AWAIT_DEPENDENCY` | aguardar merge, decisão ou outra entrega |
+| `CHECKPOINT` | pedir orientação por mudança, risco, conflito ou ambiguidade |
+| `STOP` | encerrar o envelope ou parar por falta de candidato |
+
+### Regra para PR pendente
+
+O Codex pode iniciar outro slice enquanto um PR aguarda review somente quando:
+
+- o novo slice é independente;
+- a branch parte da `main`;
+- não depende do conteúdo ainda não mergeado;
+- não há sobreposição relevante de arquivos ou decisão;
+- o envelope autoriza continuidade.
+
+Se houver dependência, o item permanece `Ready` ou `Blocked`, conforme o caso, e a decisão é `AWAIT_DEPENDENCY`.
+
+Branch/PR empilhado não é padrão. Só deve ser usado quando previsto explicitamente no envelope.
+
+### Checkpoint humano
+
+Pedir checkpoint quando houver:
+
+- nova decisão arquitetural, de negócio ou de segurança;
+- banco, storage, fluxo de aceite, dado real ou provider externo;
+- CI, deploy, branch protection, secrets ou área protegida não autorizada;
+- conflito entre candidatos ou prioridades;
+- falha de validação que exija ampliar escopo;
+- fim do lote ou gate de Phase.
+
+O checkpoint deve informar fato, impacto, opções e recomendação.
+
+### Merge
+
+O loop não altera a revisão humana. O Codex prepara PRs e pode continuar com trabalho independente, mas não faz merge automático.
+
 ## 10. Fluxo para criar nova Epic
 
 Checklist:
@@ -346,6 +412,7 @@ Checklist:
 [ ] Fora de escopo está definido.
 [ ] Issues/Slices iniciais foram listadas ou planejadas.
 [ ] Critério de conclusão da Epic está claro.
+[ ] Envelope de execução e checkpoints estão definidos quando houver loop Codex.
 [ ] Labels mínimas foram aplicadas.
 [ ] Epic foi vinculada ao Project.
 ```
@@ -373,6 +440,7 @@ Checklist:
 [ ] Condição de execução está definida.
 [ ] Labels mínimas foram aplicadas.
 [ ] Não há decisão crítica escondida no chat.
+[ ] Continuidade após o slice foi indicada: candidato, dependência ou checkpoint.
 ```
 
 Labels sugeridas:
@@ -426,6 +494,8 @@ Considerar concluído quando:
 - Issue foi fechada;
 - Project foi atualizado para Done;
 - decisões relevantes foram documentadas.
+
+Preparar um PR e decidir `CONTINUE` não move a Issue automaticamente para `Done`.
 
 ## 15. Automação operacional versus automação real
 

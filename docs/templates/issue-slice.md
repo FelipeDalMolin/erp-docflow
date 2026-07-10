@@ -86,6 +86,25 @@ Selecionar uma:
 - [ ] Somente Revisão Codex
 - [ ] Pareamento / Chat + Humano
 
+## Continuidade após este slice
+
+Envelope/Epic aprovado:
+
+- #<numero ou referência>
+
+Próximo candidato conhecido:
+
+- #<numero> — <título>
+
+Dependência após este slice:
+
+- [ ] O próximo candidato é independente e pode ser puxado após o PR draft.
+- [ ] O próximo candidato depende do merge deste PR.
+- [ ] Há checkpoint humano previsto.
+- [ ] Encerrar o envelope.
+
+O Codex deve registrar `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP` ao concluir tecnicamente o slice.
+
 ## Restrições para Codex
 
 - Não executar fora do escopo desta Issue.
@@ -93,3 +112,4 @@ Selecionar uma:
 - Não criar código de produto durante a Phase 0 sem Issue explícita.
 - Não criar deploy, secrets, automerge ou branch protection sem escopo explícito.
 - Parar e pedir decisão humana se houver mudança arquitetural, segurança, dados sensíveis ou escopo ambíguo.
+- Não pedir nova aprovação apenas porque o slice terminou quando houver próximo item elegível no envelope.
