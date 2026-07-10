@@ -1,26 +1,33 @@
 # Module Map
 
-Placeholder inicial.
+Mapa de boundaries planejados. Ainda não há módulos de produto implementados.
 
-Ainda não há módulos de produto implementados no repositório.
+Este arquivo orienta arquitetura e decomposição futura; não autoriza backend, frontend, banco, Compose, workers ou integrações.
 
-Este mapa não declara módulos reais e não autoriza criação de backend, frontend, banco, Docker Compose, workers ou scripts operacionais.
+| Boundary planejado | Responsabilidade | Conceitos principais | ADRs | Implementação |
+| --- | --- | --- | --- | --- |
+| `intake` | canais, idempotência e materialização inicial | ingestion, hash, origem | ADR-0012 | não implementado |
+| `documents` | ciclo do envelope, versões e snapshots | DocumentEnvelope, DocumentVersion, AcceptedSnapshot | ADR-0012, 0013 | não implementado |
+| `files` | binários, derivados, integridade e retenção | FileObject | ADR-0011, 0012, 0014 | não implementado |
+| `processing` | jobs, attempts, task graph e routing | ProcessingJob, ProcessingAttempt, RoutingDecision | ADR-0012, 0016 (proposto) | não implementado |
+| `providers` | adapters por capability | ProviderExecution, normalized result | ADR-0016 (proposto) | não implementado |
+| `validation` | regras determinísticas e conflitos | ValidationResult | ADR-0013, 0016 (proposto) | não implementado |
+| `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013, 0015 | não implementado |
+| `audit` | fatos duráveis, proveniência e decisão | AuditEvent | ADR-0013, 0015, 0016 | não implementado |
+| `linking` | sugestão/confirmação de relações | EntityLink | ADR-0012, 0013 | não implementado |
+| `finance` | lançamentos, pagamentos e caixa | FinancialEntry, PaymentIntent, CashMovement | ADR-0009, 0013, 0015 | não implementado |
+| `search` | índice, recuperação e RAG | chunks/read models | ADR-0012, 0015, 0016 | não implementado |
+| `integrations` | fontes e destinos externos | connectors/outbox | ADR-0001, 0015, 0016 | não implementado |
+| `auth` | identidade, acesso e segregação | usuário, papel, política | ADR-0015 (gate) | não implementado |
 
-## Módulos futuros citados
+## Boundary técnico planejado
 
-| Módulo futuro | Status | ADRs relacionados | Observação |
-| --- | --- | --- | --- |
-| documents | não implementado | ADR-0012, ADR-0011, ADR-0010 | Futuro núcleo GED e materialização documental. |
-| files | não implementado | ADR-0011, ADR-0012 | Futuro gerenciamento de arquivos e versões. |
-| review | não implementado | ADR-0013, ADR-0015 | Futuro fluxo de revisão humana, aceite e override. |
-| audit | não implementado | ADR-0013, ADR-0015 | Futuro suporte a auditoria. |
-| finance | não implementado | ADR-0009 | Futuro núcleo financeiro previsto no roadmap. |
-| integrations | não implementado | ADR-0009, ADR-0015 | Futuras integrações externas. |
-| auth | não implementado | ADR-0015 | Requer ADR específico antes de implementação. |
-| workers | não implementado | ADR-0008, ADR-0012 | Futuros workers para OCR e processamento. |
+Workers podem executar jobs de `processing` em processos/containers separados, mantendo o produto inicialmente como modular monolith. Isso não cria microservices nem permite que um provider altere diretamente o banco canônico.
 
 ## Quando atualizar
 
-- Quando a Phase 1 criar estrutura real de aplicação.
-- Quando um módulo real surgir no código.
-- Quando um ADR mudar a responsabilidade de um módulo.
+- quando a Phase 1 criar estrutura real;
+- quando boundary virar módulo de código;
+- quando ADR mudar responsabilidade;
+- quando um slice provar que dois boundaries devem ser unidos ou separados.
+

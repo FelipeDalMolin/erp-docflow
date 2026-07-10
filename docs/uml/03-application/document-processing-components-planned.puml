@@ -1,0 +1,57 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0009, ADR-0012, ADR-0013, ADR-0016 (proposed)
+' Guardrail: planned logical boundaries in a modular monolith; not implemented services.
+
+title Componentes lógicos de processamento planejados
+
+component "Inbox / Intake" as Intake
+component "Documents" as Documents
+component "Files" as Files
+component "Processing Orchestrator" as Processing
+component "Capability Registry\n& Routing Policy" as Router
+component "Provider Adapters" as Adapters
+component "Validation" as Validation
+component "Review & Acceptance" as Review
+component "Audit" as Audit
+component "Linking" as Linking
+component "Finance / módulos ERP" as Finance
+component "Search / RAG" as Search
+
+database "Metadados transacionais" as DB
+storage "Objetos e artefatos" as Objects
+
+Intake --> Documents : materializa
+Documents --> Files : referencia versões
+Files --> Objects
+Documents --> Processing : solicita job
+Processing --> Router : resolve task/candidates
+Router --> Adapters : executa capability
+Adapters --> Objects : raw/derived artifacts
+Adapters --> Processing : resultado normalizado
+Processing --> Validation
+Validation --> Review : conflitos/gates
+Review --> Documents : snapshot aceito
+Documents --> Linking
+Linking --> Finance : efeito autorizado
+Documents --> Search : conteúdo/status
+
+Documents --> DB
+Processing --> DB
+Review --> DB
+Linking --> DB
+
+Intake ..> Audit
+Documents ..> Audit
+Processing ..> Audit
+Review ..> Audit
+Linking ..> Audit
+
+note bottom of Adapters
+  Tika, Stirling, OCRmyPDF, Tesseract,
+  PaddleOCR, Document AI, OpenAI etc.
+  Cada adapter declara capabilities.
+end note
+
+@enduml
+

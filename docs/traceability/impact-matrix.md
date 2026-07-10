@@ -1,28 +1,43 @@
 # Impact Matrix
 
-Matriz inicial para avaliar impacto de mudanças em decisões do projeto.
+Guia de revisão de impacto. Não substitui ADRs.
 
-Esta matriz é um guia de revisão. Ela não substitui ADRs.
-
-| Tema de mudança | ADRs afetados | Docs afetados | Mapas a atualizar | Exige novo ADR? |
+| Tema de mudança | ADRs afetados | Docs afetados | Mapas/UMLs a atualizar | Novo ADR? |
 | --- | --- | --- | --- | --- |
-| Estratégia on-prem/cloud-like | ADR-0001, ADR-0014 | `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/AMBIENTES.md`, `docs/ROADMAP.md` | `decision-map.md`, `document-map.md`, `impact-matrix.md` | Sim, se mudar direção. |
-| Iniciar código antes do fim da Phase 0 | ADR-0002 | `docs/ROADMAP.md`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `AGENTS.md` | `decision-map.md`, `impact-matrix.md` | Sim. |
-| Fluxo Git/PR/revisão | ADR-0003, ADR-0007 | `docs/ESTRATEGIA_GIT.md`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md` | `decision-map.md`, `document-map.md`, `impact-matrix.md` | Sim, se mudar regra. |
-| Ambiente WSL local | ADR-0004, ADR-0008 | `docs/AMBIENTES.md`, `docs/WSL_MULTI_PROJETOS.md` | `document-map.md`, `impact-matrix.md` | Sim, se mudar ambiente oficial. |
-| Uso ou configuração Codex | ADR-0005 | `AGENTS.md`, `.codex/config.toml`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md` | `document-map.md`, `impact-matrix.md` | Sim, se mudar política. |
-| CI ou branch protection | ADR-0007, ADR-0003 | `docs/ESTRATEGIA_GIT.md`, `docs/AMBIENTES.md`, `docs/ROADMAP.md` | `decision-map.md`, `impact-matrix.md` | Sim, se mudar ordem ou regra. |
-| Docker Compose | ADR-0008, ADR-0004 | `docs/AMBIENTES.md`, `docs/WSL_MULTI_PROJETOS.md`, `docs/ROADMAP.md` | `decision-map.md`, `module-map.md`, `impact-matrix.md` | Sim, se mudar direção operacional. |
-| Modular monolith | ADR-0009 | `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md` | `decision-map.md`, `module-map.md`, `impact-matrix.md` | Sim, se mudar arquitetura. |
-| PostgreSQL | ADR-0010, ADR-0014 | `docs/AMBIENTES.md`, `docs/ROADMAP.md` | `entity-map.md`, `module-map.md`, `impact-matrix.md` | Sim, antes de trocar banco. |
-| Object storage | ADR-0011, ADR-0014 | `docs/AMBIENTES.md`, `docs/ROADMAP.md` | `entity-map.md`, `module-map.md`, `impact-matrix.md` | Sim, antes de declarar storage definitivo. |
-| DocumentEnvelope | ADR-0012 | `docs/ROADMAP.md`, `docs/uml/README.md` | `entity-map.md`, `module-map.md`, `route-map.md`, `impact-matrix.md` | Sim, se mudar núcleo GED. |
-| Revisão/aceite/override | ADR-0013, ADR-0015 | `docs/ROADMAP.md`, `docs/uml/README.md`, `AGENTS.md` | `entity-map.md`, `module-map.md`, `route-map.md`, `impact-matrix.md` | Sim, se mudar fluxo. |
-| Backup/restore | ADR-0014, ADR-0010, ADR-0011 | `docs/AMBIENTES.md`, `docs/ROADMAP.md` | `impact-matrix.md`, `decision-map.md` | Sim, antes de operação real. |
-| Auth/security | ADR-0015 | `AGENTS.md`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md` | `module-map.md`, `entity-map.md`, `route-map.md`, `impact-matrix.md` | Sim; ADR-0015 está Proposto. |
+| estratégia on-prem/cloud-like | ADR-0001, 0014, 0016 | arquitetura, ambientes, roadmap | decision/document/impact + deployment | sim, se mudar direção |
+| iniciar código antes da Phase 0 | ADR-0002 | roadmap, modelo operacional, AGENTS | decision/impact | sim |
+| Git/PR/revisão do projeto | ADR-0003, 0007 | estratégia Git, modelo operacional | decision/document/impact | sim, se mudar regra |
+| ambiente WSL/local | ADR-0004, 0008 | ambientes, WSL | document/impact + deployment | sim, se mudar ambiente oficial |
+| Codex/configuração | ADR-0005 | AGENTS, .codex, modelo operacional | document/impact | sim, se mudar política |
+| CI/branch protection | ADR-0003, 0007 | estratégia Git, ambientes, roadmap | decision/impact | sim, se mudar ordem/regra |
+| Docker Compose/processos | ADR-0008, 0009 | arquitetura, ambientes, roadmap | module/impact + deployment | sim, se mudar direção |
+| modular monolith/microservices | ADR-0009, 0016 | arquitetura, provider strategy | decision/module/impact + componentes | sim |
+| PostgreSQL/schema | ADR-0010, 0012, 0014 | data baseline, arquitetura, ambientes | entity/module/impact + domínio | sim antes de trocar banco |
+| object storage/MinIO | ADR-0011, 0012, 0014 | data baseline, arquitetura, ambientes | entity/module/impact + deployment | sim antes de storage definitivo |
+| DocumentEnvelope/versionamento | ADR-0012 | arquitetura, pipeline, data baseline, glossário | entity/module/impact + domínio/estado/sequência | sim se mudar núcleo |
+| materialização vs efetivação | ADR-0012, 0013 | arquitetura, pipeline, glossário | entity/module/impact + atividade/sequências | sim se mudar responsabilidade |
+| review/aceite/override | ADR-0013, 0015, 0016 | pipeline, data baseline, roadmap | entity/module/impact + review sequence/estado | sim se mudar fluxo |
+| provider/capability/router | ADR-0016 (proposto) | provider strategy, arquitetura, pipeline | adr/decision/document/module/entity/impact + componentes | aprovar/substituir ADR-0016 antes de implementar |
+| PaddleOCR/Tesseract padrão | ADR-0016 (proposto) | provider strategy, benchmark futuro | impact + policy/profile | decisão baseada em benchmark; novo ADR se estrutural |
+| Stirling/OCRmyPDF | ADR-0008, 0011, 0016 | provider strategy, pipeline, deployment | module/impact + componentes | revisar ADR-0016; novo ADR se virar infra obrigatória |
+| Google Document AI/OpenAI | ADR-0001, 0015, 0016 | provider strategy, segurança futura, ambientes | decision/module/impact + contexto/deployment | sim se autorizar dados/providers externos |
+| thresholds/confidence | ADR-0013, 0016 | provider strategy, pipeline | entity/impact + estados | policy version; ADR se mudar gate estrutural |
+| RAG/indexação | ADR-0012, 0015, 0016 | arquitetura, pipeline, data baseline | module/entity/impact | ADR quando store/acesso virarem decisão |
+| vínculo/efeito financeiro | ADR-0012, 0013, 0015 | pipeline, roadmap, data baseline | module/entity/route/impact + atividade | sim antes de fluxo sensível |
+| backup/restore | ADR-0010, 0011, 0014 | ambientes, arquitetura, roadmap | impact/decision + deployment | sim antes de operação real |
+| auth/security/LGPD | ADR-0015 | AGENTS, arquitetura, pipeline, provider strategy | module/entity/route/impact + contexto | sim; ADR-0015 é gate |
 
-## Regras de manutenção
+## Checklist de análise
 
-- Atualizar quando um ADR mudar status ou relação.
-- Atualizar quando módulos, entidades, rotas ou documentos reais surgirem.
-- Não usar esta matriz para criar código fora da fase correspondente.
+Para qualquer linha afetada:
+
+1. consultar status do ADR;
+2. identificar se a mudança complementa ou altera decisão;
+3. revisar documentos canônicos, não apenas o diagrama;
+4. atualizar mapas e UMLs correspondentes;
+5. verificar segurança, dados reais, retenção e operação;
+6. especificar testes/benchmark;
+7. registrar Issue e PR.
+
+Uma mudança de modelo/processor pode ser apenas nova versão de policy quando mantém a decisão arquitetural. Se alterar residência, responsabilidade, gate humano, storage, domínio ou implantação, exige análise de ADR.
+

@@ -1,128 +1,164 @@
 # Roadmap
 
-Este roadmap organiza a evolução do projeto ERP/GED em fases incrementais.
+Este roadmap organiza a evolução do ERP/GED em fases incrementais.
 
-A proposta não é construir o sistema inteiro de uma vez. A proposta é evoluir de forma controlada, começando pelo sistema de trabalho do projeto e avançando até o núcleo GED, revisão humana, financeiro, geração documental e integrações.
+A proposta não é construir o sistema inteiro de uma vez. O projeto começa pelo sistema de trabalho e por uma arquitetura documental revisável, avança para um vertical slice de intake e só então adiciona processamento, revisão, financeiro, geração e integrações.
 
 ## Visão de destino
 
-O projeto busca construir uma plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, capaz de:
+A plataforma **on-prem first**, com arquitetura **cloud-like**, deverá ser capaz de:
 
-- receber documentos;
-- materializar documentos em um núcleo GED;
-- armazenar arquivos com versionamento e rastreabilidade;
-- executar OCR;
-- extrair campos;
-- sugerir classificação;
+- receber documentos por uma Inbox e canais integrados;
+- materializar `DocumentEnvelope`, original e versões;
+- armazenar arquivos com integridade, versionamento e rastreabilidade;
+- extrair texto nativo ou executar OCR quando necessário;
+- extrair campos, tabelas e entidades;
+- sugerir classificação e vínculos;
+- validar regras determinísticas;
 - permitir revisão humana;
-- registrar aceite ou override;
-- vincular documentos a lançamentos financeiros;
-- gerar documentos como recibos, contratos e cobranças;
-- manter auditoria;
-- evoluir para integrações com bancos, escritórios contábeis e fontes externas.
+- registrar aceite, correção, rejeição ou override;
+- vincular snapshots aceitos a fluxos financeiros;
+- gerar e versionar documentos;
+- manter auditoria e proveniência;
+- evoluir para bancos, escritórios contábeis e fontes externas.
 
-## Phase 0 — Sistema do Projeto
+## Dependências entre fases
 
-Objetivo: criar o sistema operacional do projeto antes de iniciar código de produto.
+```text
+Phase 0: governança + decisões + arquitetura planejada
+  -> Phase 1: aplicação mínima reproduzível
+  -> Phase 2: intake + materialização documental
+  -> Phase 3: um task graph de processamento
+  -> Phase 4: review + accepted snapshot
+  -> Phase 5: primeiro efeito ERP autorizado
+```
+
+Integrações e geração podem evoluir depois que os boundaries que utilizam estiverem estáveis.
+
+## Phase 0 — Sistema do Projeto e baseline arquitetural
+
+Objetivo: criar o sistema operacional do projeto e tornar decisões de produto rastreáveis antes de código.
 
 Inclui:
 
-- GitHub Project;
-- Issues e slices;
+- GitHub Project, Issues, slices, branches e PRs;
 - modelo operacional;
-- estratégia Git;
-- fluxo VS Code, Git e GitHub CLI;
-- fluxo Codex;
-- ADR baseline;
-- traceability baseline;
-- UML baseline;
-- templates de Issue;
-- template de Pull Request;
-- CI estrutural inicial;
-- planejamento de branch protection.
+- estratégia Git, VS Code, GitHub CLI e Codex;
+- ADR e traceability baseline;
+- UML operacional;
+- CI estrutural e branch protection planejada;
+- arquitetura, pipeline, glossário e modelo conceitual planejados;
+- revisão do chat **Gestão Documental Inteligente**;
+- ADR-0016 proposto para providers por capability.
 
 Critério de saída:
 
-```text
-Issue → branch → commits → PR → CI → review → squash merge
-```
-
-deve estar documentado e operacional.
+- fluxo Issue → branch → PR → CI → review → squash merge operacional;
+- docs canônicos sem contradições conhecidas;
+- decisões propostas não confundidas com decisões aceitas;
+- primeiro perfil documental escolhido;
+- segurança, dados reais e providers externos continuam bloqueados até decisões aplicáveis;
+- backlog da Phase 1 e spikes necessários especificados.
 
 ## Phase 1 — Bootstrap App
 
-Objetivo: criar a estrutura mínima da aplicação.
+Objetivo: criar a estrutura mínima da aplicação, sem antecipar o GED completo.
 
 Inclui:
 
 - monorepo inicial;
-- backend FastAPI com endpoint `/health`;
+- backend FastAPI com `/health`;
 - frontend React/Vite;
-- estrutura base de pastas;
+- boundaries de módulos planejados;
 - configuração inicial de ambiente local;
 - README de execução;
-- Docker Compose inicial de desenvolvimento.
+- Docker Compose inicial;
+- observabilidade e configuração mínimas sem secrets.
 
 Fora de escopo inicial:
 
 - autenticação completa;
-- OCR;
+- OCR/provider real;
 - financeiro;
-- GED completo;
 - integração bancária;
-- deploy de produção.
+- produção.
 
 Resultado esperado:
 
 ```text
 frontend abre
 backend responde /health
-estrutura base do projeto existe
+estrutura modular existe
 ambiente local é reproduzível
 ```
 
-## Phase 2 — Núcleo GED
+## Phase 2 — Núcleo GED e intake
 
-Objetivo: implementar a base documental do sistema.
+Objetivo: implementar um vertical slice de materialização documental antes de ML/OCR.
 
 Inclui:
 
-- DocumentEnvelope;
-- FileObject;
-- DocumentVersion;
-- upload de documentos;
-- armazenamento em object storage;
-- persistência de metadados;
-- hash de arquivos;
-- Inbox Documental inicial;
-- vínculo entre arquivo, versão e documento.
+- `DocumentEnvelope`;
+- `DocumentVersion`;
+- `FileObject`;
+- upload inicial pela Inbox;
+- original imutável;
+- SHA-256, MIME detectado e origem;
+- idempotência de ingestão;
+- object storage;
+- metadados transacionais;
+- evento/auditoria de materialização;
+- visualização de estado e versão.
+
+Gates antes de implementar:
+
+- revisar ADR-0010 antes de schema/migrations;
+- revisar ADR-0011 antes de object storage real;
+- revisar ADR-0012 com o primeiro caso;
+- definir tenant/acesso mínimo sem contornar ADR-0015.
 
 Resultado esperado:
 
 ```text
-arquivo enviado
-documento materializado
-arquivo armazenado
+arquivo recebido
+original íntegro armazenado
+envelope e versão materializados
 metadados persistidos
 documento aparece na Inbox
+auditoria permite rastrear a origem
 ```
 
-## Phase 3 — OCR, Extract e Classify
+## Phase 3 — Probe, OCR, Extract, Classify e Validate
 
-Objetivo: iniciar a automação documental.
+Objetivo: implementar um task graph vertical e observável para o primeiro perfil.
 
 Inclui:
 
-- worker de OCR;
-- OCRResult;
-- extração de texto;
-- extração inicial de campos;
-- classificação sugerida;
-- fila de processamento;
+- `DocumentProbe` e bypass de OCR quando texto nativo for suficiente;
+- normalização condicional;
+- `ProcessingJob`, attempts e idempotência;
+- um adapter local inicial;
+- um adapter de escalation apenas se aprovado;
+- `RecognitionArtifact`;
+- `ExtractionResult`;
+- `ClassificationResult`;
+- `ValidationResult`;
+- `RoutingDecision`;
+- raw output referenciado e resultado normalizado;
 - reprocessamento manual;
-- registro de erros e tentativas.
+- erro, retry e limite;
+- métricas de qualidade, latência e custo.
 
-Campos iniciais desejáveis:
+Gates antes de implementar:
+
+- escolher primeiro tipo documental;
+- criar dataset/ground truth;
+- executar benchmark local versus alternativas permitidas;
+- aprovar, revisar ou substituir ADR-0016;
+- definir classificação/residência de dados;
+- estabilizar apenas o schema mínimo necessário.
+
+Campos candidatos, sujeitos ao primeiro perfil:
 
 - fornecedor;
 - valor;
@@ -131,146 +167,150 @@ Campos iniciais desejáveis:
 - competência;
 - linha digitável;
 - CNPJ/CPF;
-- tipo provável do documento.
+- tipo provável.
 
 Resultado esperado:
 
 ```text
-documento processado
-texto extraído
-campos sugeridos
-classificação sugerida
-status atualizado
+texto nativo é reaproveitado ou OCR é justificado
+cada etapa produz artefato e proveniência
+campos/classificação são sugestões
+regras registram passes, warnings e conflicts
+router indica próximo passo
 ```
 
-## Phase 4 — Review e Acceptance
+## Phase 4 — Review, Acceptance e Audit
 
-Objetivo: implementar revisão humana, override e aceite formal.
+Objetivo: implementar revisão humana antes de efeito sensível.
 
 Inclui:
 
-- ReviewDecision;
-- AcceptanceCheck;
-- tela de revisão;
-- correção de campos;
-- aceite;
-- rejeição;
-- reprocessamento;
+- `ReviewCase`;
+- `ReviewDecision`;
+- `AcceptedSnapshot`;
+- tela com original, evidência, confiança e validações;
+- aceitar, corrigir, override, rejeitar e reprocessar;
+- antes/depois e justificativa;
 - timeline documental;
 - audit trail;
-- registro de decisão humana.
+- gates por risco/campo/perfil;
+- autorização conforme ADR de segurança futuro.
+
+Gates:
+
+- revisar ADR-0013;
+- decidir auth/autorização e segregação necessárias;
+- definir quais perfis permitem autoaceite;
+- definir ações que exigem dupla aprovação.
 
 Resultado esperado:
 
 ```text
 sistema sugere
-pessoa revisa
-pessoa aceita, corrige ou rejeita
-decisão é auditada
-documento fica pronto para vínculo operacional
+regras validam
+pessoa/política decide
+snapshot aceito é versionado
+decisão e evidência são auditáveis
 ```
 
 ## Phase 5 — Núcleo Financeiro
 
-Objetivo: conectar o núcleo GED aos fluxos ERP financeiros.
+Objetivo: conectar snapshots aceitos aos fluxos ERP.
 
 Inclui:
 
-- FinancialEntry;
-- PaymentIntent inicial;
-- CashMovement inicial;
-- EntityLink;
-- vínculo entre documento e lançamento;
-- vínculo entre documento e pagamento;
-- dashboard operacional de pendências.
+- `FinancialEntry`;
+- `PaymentIntent` inicial;
+- `CashMovement` inicial;
+- `EntityLink`;
+- sugestão e confirmação de vínculo;
+- idempotência de efetivação;
+- autorização independente;
+- dashboard de pendências.
 
 Resultado esperado:
 
 ```text
-documento aceito
-lançamento financeiro criado
-vínculo registrado
-auditoria preservada
-pendências aparecem no dashboard
+snapshot documental aceito
+vínculo confirmado
+efeito autorizado
+lançamento criado uma única vez
+documento e auditoria preservados
 ```
 
 ## Phase 6 — Geração Documental
 
-Objetivo: permitir geração de documentos a partir dos dados do sistema.
+Objetivo: gerar documentos a partir de dados estruturados.
 
 Inclui:
 
-- templates;
-- geração de recibos;
-- geração de contratos simples;
-- geração de cobranças;
-- geração de PDFs;
-- versionamento de documentos gerados;
-- vínculo com DocumentEnvelope;
-- armazenamento dos documentos gerados.
-
-Resultado esperado:
-
-```text
-dados estruturados
-template selecionado
-documento gerado
-PDF armazenado
-versão registrada
-vínculo criado
-```
+- templates versionados;
+- recibos e contratos simples;
+- cobranças;
+- PDFs;
+- `GeneratedDocument`;
+- armazenamento, versão e vínculo com `DocumentEnvelope`;
+- revisão/aceite quando aplicável.
 
 ## Phase 7 — Integrações
 
-Objetivo: conectar o sistema a fontes externas e fluxos operacionais mais amplos.
+Objetivo: conectar fontes e destinos externos sem contornar o núcleo documental.
 
 Inclui:
 
-- Google Drive / OneDrive como entrada;
+- Google Drive e OneDrive como entrada;
 - e-mail ingestion;
-- integração bancária futura;
 - importação OFX/CNAB;
-- plano de contas;
-- exportação contábil;
-- integrações com escritório contábil;
-- webhooks;
-- APIs externas.
+- integração bancária futura;
+- plano de contas e exportação contábil;
+- escritório contábil;
+- webhooks e APIs externas.
 
-Resultado esperado:
+Toda entrada deve passar por intake/materialização. Toda saída deve preservar autorização, idempotência e auditoria.
 
-```text
-fontes externas alimentam o GED
-movimentações externas alimentam o ERP
-documentos e lançamentos ficam sincronizados
-rastreabilidade é mantida
-```
+## Tracks transversais
 
-## Evolução esperada por maturidade
+### Segurança e LGPD
 
-A maturidade do projeto deve evoluir assim:
+- autenticação/autorização;
+- tenant e segregação;
+- data residency;
+- retenção/descarte/legal hold;
+- criptografia, secrets e logs;
+- acesso e auditoria.
 
-```text
-Fase documental controlada
-→ automação assistida
-→ revisão humana auditável
-→ vínculo financeiro
-→ geração documental
-→ integrações
-→ operação on-prem confiável
-```
+### Qualidade de modelos
+
+- datasets versionados;
+- golden fixtures;
+- benchmark por campo/perfil;
+- calibração;
+- drift e mudança de modelo;
+- custo, latência e taxa de revisão.
+
+### Operação on-prem
+
+- observabilidade;
+- capacity planning CPU/GPU;
+- backup/restore;
+- atualização/rollback;
+- dead letter e reprocessamento;
+- disponibilidade de providers.
 
 ## Princípio de execução
 
-Cada fase deve ser quebrada em slices pequenos.
-
-Cada slice deve seguir:
+Cada fase deve ser quebrada em slices pequenos:
 
 ```text
-Issue → branch → commits → Pull Request → CI → review → squash merge
+Issue clara
+  -> condição de execução verificada
+  -> branch curta
+  -> commits
+  -> Pull Request
+  -> CI e validação proporcional
+  -> revisão humana
+  -> squash merge
 ```
 
-## Observação
+Spikes respondem perguntas e produzem evidência; não promovem automaticamente a hipótese a decisão aceita.
 
-As fases não são blocos rígidos. Elas orientam a evolução.
-
-Pode haver spikes técnicos, revisões de ADR e ajustes de escopo ao longo do caminho. O importante é que mudanças relevantes sejam registradas e rastreáveis.

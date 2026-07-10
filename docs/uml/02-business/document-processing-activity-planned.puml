@@ -1,0 +1,51 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
+' Guardrail: planned business flow; states and actions are not implemented contracts.
+
+title Pipeline documental planejado
+
+start
+:Capturar entrada;
+:Calcular hash e materializar\nEnvelope + versão + original;
+:Probe de MIME, páginas,\ntexto nativo e qualidade;
+
+if (Texto nativo suficiente?) then (sim)
+  :Extrair texto nativo;
+else (não)
+  if (Normalização necessária?) then (sim)
+    :Criar derivado normalizado;
+  endif
+  :Executar OCR/layout\npor provider elegível;
+endif
+
+:Extrair campos e classificar\nconforme task graph;
+:Executar validações determinísticas;
+
+if (Output elegível e sem gate?) then (sim)
+  :Criar snapshot aceito\nconforme política;
+else (não)
+  :Abrir ReviewCase;
+  :Humano aceita, corrige,\nfaz override, rejeita\nou pede reprocessamento;
+  if (Reprocessar?) then (sim)
+    :Criar nova tentativa;
+    stop
+  elseif (Aceito?) then (sim)
+    :Criar snapshot aceito;
+  else (não)
+    :Rejeitar ou colocar\nem quarentena;
+    stop
+  endif
+endif
+
+:Sugerir/confirmar vínculos;
+
+if (Efeito operacional autorizado?) then (sim)
+  :Efetivar no módulo de destino;
+endif
+
+:Atualizar índices/read models\ne registrar auditoria;
+stop
+
+@enduml
+

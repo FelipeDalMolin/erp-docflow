@@ -1,0 +1,35 @@
+@startuml
+' Issue #22
+' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
+' Guardrail: candidate lifecycle for review; not an implemented state machine.
+
+title ProcessingJob - estados planejados
+
+[*] --> QUEUED
+QUEUED --> RUNNING : worker adquiriu job
+RUNNING --> SUCCEEDED : task graph concluído
+RUNNING --> WAITING_RETRY : erro transitório
+RUNNING --> WAITING_REVIEW : decisão humana necessária
+RUNNING --> FAILED : erro não recuperável
+RUNNING --> CANCELLED : cancelamento autorizado
+
+WAITING_RETRY --> QUEUED : backoff / próxima tentativa
+WAITING_RETRY --> DEAD_LETTER : limite excedido
+
+WAITING_REVIEW --> QUEUED : reprocessamento solicitado
+WAITING_REVIEW --> SUCCEEDED : decisão encerra processamento
+WAITING_REVIEW --> CANCELLED : rejeição/cancelamento
+
+FAILED --> DEAD_LETTER : política exige análise
+
+SUCCEEDED --> [*]
+CANCELLED --> [*]
+DEAD_LETTER --> [*]
+
+note right of WAITING_RETRY
+  Retry cria nova tentativa.
+  Histórico anterior não é sobrescrito.
+end note
+
+@enduml
+
