@@ -1,8 +1,13 @@
 # Fluxo VS Code, Git e GitHub CLI
 
+- **Classe:** runbook operacional
+- **Estado:** vigente
+- **Autoridade:** sequência prática de comandos; regras pertencem às fontes especializadas
+- **Atualizar quando:** ambiente oficial ou procedimento local/CLI mudar
+
 Este documento define o procedimento operacional para trabalhar no `erp-docflow` usando VS Code remoto no WSL, Git e GitHub CLI.
 
-Ele complementa `docs/FLUXO_GITHUB_PROJECT.md`: o Project define a governança dos itens; este documento define como executar o fluxo no ambiente local e no GitHub.
+Ele complementa o [Fluxo do GitHub Project](FLUXO_GITHUB_PROJECT.md) e a [Estratégia Git](ESTRATEGIA_GIT.md): essas fontes definem as regras; este documento demonstra como executá-las.
 
 ## 1. Ambiente oficial
 
@@ -10,7 +15,7 @@ Ambiente de trabalho principal:
 
 ```text
 Windows host
-Ubuntu WSL
+Ubuntu WSL conforme ambiente vigente
 VS Code remoto no WSL
 Git
 GitHub CLI
@@ -31,9 +36,11 @@ Dados operacionais fora do Git:
 
 A distribuição `docker-desktop` não deve ser usada como shell principal de desenvolvimento.
 
+Versão atual e alvo de migração não devem ser inferidos deste runbook. Consultar [Ambientes](AMBIENTES.md) e [WSL multi-projetos](WSL_MULTI_PROJETOS.md).
+
 ## 2. Fonte da verdade
 
-A fonte da verdade do trabalho é o GitHub:
+A fonte da verdade do trabalho é o GitHub; a matriz de autoridade interna está no [portal documental](README.md):
 
 ```text
 Issue -> Branch -> Commit -> Pull Request -> Review humana -> Squash merge
@@ -88,6 +95,16 @@ Se faltar escopo ou critério de aceite, usar Codex em modo Plan. Não editar ar
 
 A criação de itens pode ser manual pelo GitHub web ou assistida pelo GitHub CLI.
 
+Os arquivos em `docs/templates/` são corpos de referência. Eles existem, mas não são formulários nativos do GitHub.
+
+Antes de usar `--label`, verificar se a taxonomia alvo já foi criada:
+
+```bash
+gh label list
+```
+
+Se não existir, criar o item sem improvisar outra label e registrar o gap operacional.
+
 ### 5.1 Criar Epic
 
 Exemplo:
@@ -95,13 +112,10 @@ Exemplo:
 ```bash
 gh issue create \
   --title "[E0] Sistema operacional do projeto" \
-  --body-file docs/templates/epic.md \
-  --label "type:epic" \
-  --label "phase:0" \
-  --label "status:needs-plan"
+  --body-file docs/templates/epic.md
 ```
 
-Se o template ainda não existir, criar a Issue manualmente com corpo contendo objetivo, escopo, fora de escopo e critério de conclusão.
+Adicionar labels alvo somente depois de confirmá-las no repositório.
 
 ### 5.2 Criar Issue/Slice
 
@@ -109,12 +123,8 @@ Exemplo:
 
 ```bash
 gh issue create \
-  --title "[S0.04] Criar templates de Issue e PR" \
-  --body-file docs/templates/issue-slice.md \
-  --label "type:slice" \
-  --label "phase:0" \
-  --label "area:docs" \
-  --label "codex:plan-required"
+  --title "[S1.01] Definir workspace e monorepo mínimo" \
+  --body-file docs/templates/issue-slice.md
 ```
 
 ### 5.3 Criar sub-issue
@@ -123,12 +133,8 @@ Exemplo:
 
 ```bash
 gh issue create \
-  --title "[S0.04.01] Criar template de Issue Slice" \
-  --body-file docs/templates/sub-issue.md \
-  --label "type:sub-issue" \
-  --label "phase:0" \
-  --label "area:docs" \
-  --label "codex:eligible"
+  --title "[S1.01.01] Validar layout do workspace" \
+  --body-file docs/templates/sub-issue.md
 ```
 
 No corpo da sub-issue, referenciar a Issue pai.
@@ -161,7 +167,7 @@ Se a label ainda não existir no repositório, não improvisar nome alternativo 
 
 ## 7. Quando uma Issue pode virar branch
 
-Uma Issue pode virar branch quando estiver `Ready for execution` ou equivalente.
+Uma Issue pode virar branch quando estiver com `Condição de Execução = Condições Verificadas` e pertencer a envelope aprovado quando aplicável.
 
 Checklist:
 
@@ -178,13 +184,11 @@ Checklist:
 
 ## 8. Criar branch
 
-Padrão de branch:
+O padrão canônico pertence à [Estratégia Git](ESTRATEGIA_GIT.md):
 
 ```text
-phase0/<numero-issue>-<resumo-curto>
-docs/<numero-issue>-<resumo-curto>
-adr/<numero-issue>-<resumo-curto>
-chore/<numero-issue>-<resumo-curto>
+<tipo>/<slice>-<resumo-curto>
+<tipo>/issue-<numero>-<resumo-curto>  # quando não houver identificador de slice
 ```
 
 Exemplo:
@@ -192,7 +196,7 @@ Exemplo:
 ```bash
 git switch main
 git pull --ff-only
-git switch -c docs/s0-04-templates-issue-pr
+git switch -c feature/s1-01-workspace
 ```
 
 Não trabalhar direto na `main`.
@@ -210,7 +214,7 @@ Regras:
 
 - manter diff pequeno;
 - alterar apenas arquivos do escopo;
-- não criar código de produto na Phase 0;
+- não iniciar código de produto sem slice especificada, condições verificadas e envelope aprovado;
 - não usar secrets;
 - não executar deploy;
 - não alterar ADR aceito sem novo ADR;
@@ -271,7 +275,7 @@ Exemplo:
 
 ```bash
 gh pr create \
-  --title "[S0.02/S0.03] Documentar fluxos de Project e execução local" \
+  --title "[S1.01] Definir workspace e monorepo mínimo" \
   --body-file docs/templates/pr.md \
   --base main \
   --head <branch>
@@ -370,16 +374,14 @@ Parar e pedir decisão humana quando:
 - houver necessidade de comando destrutivo;
 - houver necessidade de escrever fora do workspace.
 
-## 18. Relação com templates futuros
+## 18. Templates de referência e automação futura
 
-Este documento define o procedimento manual e assistido.
+Este documento usa os modelos de referência já existentes em `docs/templates/`.
 
-Automação real futura pode incluir:
+Automação real futura pode materializar:
 
-- template de Epic;
-- template de Issue/Slice;
-- template de sub-issue;
-- template de PR;
+- formulários nativos em `.github/ISSUE_TEMPLATE/`;
+- template nativo em `.github/PULL_REQUEST_TEMPLATE.md`;
 - script para criar labels;
 - validação de título de Issue;
 - validação de labels obrigatórias;

@@ -1,5 +1,10 @@
 # Roadmap
 
+- **Classe:** planejamento canônico de fases e gates
+- **Estado:** vigente
+- **Status corrente:** [Phase 0 encerrada; Phase 1 em refinamento](PROJECT_STATUS.md)
+- **Atualizar quando:** escopo, dependência, resultado ou gate de fase mudar
+
 Este roadmap organiza a evolução do ERP/GED em fases incrementais.
 
 A proposta não é construir o sistema inteiro de uma vez. O projeto começa pelo sistema de trabalho e por uma arquitetura documental revisável, avança para um vertical slice de intake e só então adiciona processamento, revisão, financeiro, geração e integrações.
@@ -39,6 +44,8 @@ Integrações e geração podem evoluir depois que os boundaries que utilizam es
 
 Objetivo: criar o sistema operacional do projeto e tornar decisões de produto rastreáveis antes de código.
 
+Estado: **encerrada administrativamente**. Evidências e hardening posterior estão registrados em [Status do projeto](PROJECT_STATUS.md).
+
 Inclui:
 
 - GitHub Project, Issues, slices, branches e PRs;
@@ -54,15 +61,18 @@ Inclui:
 Critério de saída:
 
 - fluxo Issue → branch → PR → CI → review → squash merge operacional;
-- docs canônicos sem contradições conhecidas;
+- fontes canônicas, status e gaps conhecidos rastreáveis;
 - decisões propostas não confundidas com decisões aceitas;
-- primeiro perfil documental escolhido;
 - segurança, dados reais e providers externos continuam bloqueados até decisões aplicáveis;
-- backlog da Phase 1 e spikes necessários especificados.
+- backlog da Phase 1 inventariado, com refinamentos e gates ainda pendentes explicitados.
+
+A escolha do primeiro perfil documental pertence ao gate da Phase 3, na Issue #43. Não é condição retroativa para o fechamento da Phase 0.
 
 ## Phase 1 — Bootstrap App
 
 Objetivo: criar a estrutura mínima da aplicação, sem antecipar o GED completo.
+
+Estado: **Epic #26 aberta em refinamento**. As Issues #33–#37 ainda não formam fila executável. A autorização do primeiro envelope deve seguir o gate em [Status do projeto](PROJECT_STATUS.md).
 
 Inclui:
 
@@ -90,6 +100,15 @@ frontend abre
 backend responde /health
 estrutura modular existe
 ambiente local é reproduzível
+```
+
+Ordem planejada:
+
+```text
+#33 workspace
+  -> #34 backend e #35 frontend, independentes após o merge de #33
+  -> #36 Compose
+  -> #37 CI e documentação de execução
 ```
 
 ## Phase 2 — Núcleo GED e intake
@@ -151,8 +170,8 @@ Inclui:
 
 Gates antes de implementar:
 
-- escolher primeiro tipo documental;
-- criar dataset/ground truth;
+- escolher o primeiro tipo documental na #43;
+- definir dataset permitido e ground truth;
 - executar benchmark local versus alternativas permitidas;
 - aprovar, revisar ou substituir ADR-0016;
 - definir classificação/residência de dados;
@@ -325,9 +344,10 @@ STOP
 
 Checkpoints são exigidos por mudança de direção, risco, dependência, área protegida ou gate de Phase — não apenas porque um slice terminou.
 
+Uma dependência conhecida e já modelada usa `AWAIT_DEPENDENCY`. Dependência inesperada que exija decisão, nova coordenação ou mudança de escopo usa `CHECKPOINT`.
+
 O Codex pode iniciar trabalho independente enquanto outro PR aguarda review. Trabalho dependente aguarda merge, salvo estratégia de PR empilhado explicitamente aprovada.
 
 Merge permanece humano.
 
 Spikes respondem perguntas e produzem evidência; não promovem automaticamente a hipótese a decisão aceita.
-

@@ -1,5 +1,9 @@
 # Ambientes
 
+- **Classe:** runbook e baseline operacional de ambientes
+- **Estado:** vigente, com itens planejados explicitamente qualificados
+- **Atualizar quando:** host, WSL, CI, runtime ou estratégia on-prem mudar
+
 Este projeto seguirá uma estratégia **on-prem first**, com evolução **cloud-like**.
 
 O objetivo é permitir desenvolvimento local simples, validação em CI, execução futura em ambiente on-prem e possibilidade de expansão híbrida.
@@ -56,16 +60,16 @@ A diretriz inicial é **não criar uma distribuição WSL para cada projeto**.
 
 O padrão será usar uma distribuição Ubuntu principal como ambiente técnico compartilhado e isolar os projetos por pasta, ambiente virtual, versão Node, Docker Compose, variáveis de ambiente e diretórios de dados.
 
-Distribuição principal esperada:
-
-```text
-Ubuntu-24.04
-```
-
-ou, se já instalada e funcional:
+Distribuição principal atual, conforme ADR-0004 e o runbook detalhado:
 
 ```text
 Ubuntu-20.04
+```
+
+Alvo possível, somente mediante migração controlada em Issue própria:
+
+```text
+Ubuntu-24.04
 ```
 
 A distribuição `docker-desktop` pertence ao Docker Desktop e não deve ser usada como shell principal de desenvolvimento.
@@ -119,11 +123,7 @@ Criar uma distribuição WSL dedicada apenas quando houver motivo real, como:
 
 Enquanto o projeto estiver em MVP documental leve, a WSL principal compartilhada é suficiente.
 
-Documento detalhado:
-
-```text
-docs/WSL_MULTI_PROJETOS.md
-```
+Documento detalhado: [WSL multi-projetos](WSL_MULTI_PROJETOS.md).
 
 ## 4. Ambiente CI
 
@@ -139,7 +139,7 @@ Uso:
 - validar configuração de Docker Compose;
 - futuramente validar migrações.
 
-Na Phase 0, o CI deve começar simples.
+O CI estrutural nasceu na Phase 0 e deve evoluir junto das fontes canônicas.
 
 Validações iniciais:
 

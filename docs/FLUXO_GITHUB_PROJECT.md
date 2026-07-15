@@ -1,5 +1,10 @@
 # Fluxo do GitHub Project
 
+- **Classe:** normativo operacional do lifecycle de trabalho
+- **Estado:** vigente
+- **Autoridade:** tipos de item, estados, condição de execução, modo de colaboração e outcomes do Codex
+- **Atualizar quando:** campos/opções reais do Project ou critérios de prontidão mudarem
+
 Este documento define como o GitHub Project será usado para acompanhar o `erp-docflow` durante a Phase 0 e nas fases seguintes.
 
 O objetivo é garantir que Epics, Issues e sub-issues sejam criadas com nomenclatura, tags/labels, campos e critérios de aceite suficientes para permitir execução assistida por Codex sem perder controle humano.
@@ -16,7 +21,7 @@ Todo trabalho relevante deve seguir:
 Epic -> Issue/Slice -> Sub-issue opcional -> Branch -> Commit -> Pull Request -> Review humana -> Squash merge
 ```
 
-Durante a Phase 0, o foco é documentar o sistema operacional do projeto. Código de produto, deploy e automações complexas ficam fora de escopo, salvo Issue explícita.
+A Phase 0 foi encerrada; a Phase 1 está em refinamento. Uma Epic aberta não torna suas slices executáveis. O snapshot atual e o gate ficam em [Status do projeto](PROJECT_STATUS.md).
 
 ## 2. Tipos de item
 
@@ -103,9 +108,11 @@ Regras:
 - não reaproveitar número de Issue concluída;
 - usar verbos como `Definir`, `Criar`, `Documentar`, `Validar`, `Configurar`, `Revisar`.
 
-## 4. Labels/tags iniciais
+## 4. Taxonomia alvo de labels/tags
 
-A taxonomia abaixo é a proposta mínima para organizar o Project.
+A taxonomia abaixo é o vocabulário alvo para organizar o Project. Ela não descreve automaticamente labels já criadas ou aplicadas.
+
+No snapshot de 2026-07-14, as Issues legadas não possuem essa taxonomia aplicada. A materialização e aplicação retroativa exigem trabalho operacional próprio. O estado desse gap pertence a [Status do projeto](PROJECT_STATUS.md).
 
 ### 4.1 Tipo
 
@@ -162,7 +169,7 @@ area:security
 area:environment
 ```
 
-A criação efetiva dessas labels no GitHub pode ser feita manualmente ou em Issue própria. Este documento define a taxonomia; não obriga automação real nesta etapa.
+A criação efetiva dessas labels no GitHub pode ser feita manualmente ou em Issue própria. Até isso ocorrer, título, campos do Project e corpo da Issue continuam sendo as evidências; não se deve fingir que uma label proposta está configurada.
 
 ## 5. Campos do Project
 
@@ -174,12 +181,14 @@ Campos mínimos recomendados:
 | --- | --- |
 | Status | Posição do item no fluxo de trabalho. |
 | Condição de Execução | Indica se o item está pronto, bloqueado ou precisa de decisão. |
-| Modo de Execução | Indica se será feito por humano, Codex Plan, Codex Workspace-write ou misto. |
+| Modo de Execução | Indica a forma de colaboração: manual, assistida, somente revisão ou pareamento. |
 | Tipo | Epic, Slice, Sub-issue, ADR, documentação, chore. |
 | Área | Parte do projeto afetada. |
 | Fase | Phase 0, Phase 1 etc. |
 | Prioridade | Ordem relativa de execução. |
 | Issue pai/Epic | Relação com entrega maior. |
+
+Esta lista define o modelo desejado. Antes de usar um valor como critério automatizado, conferir se o campo e a opção existem de fato no Project. `Fase` deve ser o classificador primário; milestones não são usadas atualmente e não devem duplicar a mesma função sem decisão explícita.
 
 ## 6. Status
 
@@ -252,24 +261,32 @@ Critério:
 
 A Condição de Execução responde: o item pode ser executado agora?
 
-Valores recomendados:
+Valores canônicos:
 
 ```text
-Needs refinement
-Needs decision
-Ready for Plan
-Ready for execution
-Blocked
-Done
+Não Verificado
+Precisa Especificação
+Precisa Decisão Humana
+Precisa ADR
+Bloqueado
+Condições Verificadas
 ```
 
-### Ready for Plan
+### Precisa Especificação
 
 Usar quando o problema existe, mas ainda falta decomposição técnica.
 
 O Codex pode ajudar a produzir mini especificação técnica, riscos, escopo e critérios de aceite.
 
-### Ready for execution
+### Precisa Decisão Humana
+
+Usar quando existe uma escolha de produto, arquitetura, segurança, dados, provider, persistência ou operação que não pode ser inferida da documentação vigente.
+
+### Precisa ADR
+
+Usar quando a execução depende de nova decisão arquitetural ou de revisão formal indicada por ADR existente.
+
+### Condições Verificadas
 
 Usar quando a Issue já pode virar branch e PR.
 
@@ -282,47 +299,49 @@ Critérios mínimos:
 - nenhuma decisão arquitetural pendente;
 - nenhuma área protegida sem autorização explícita.
 
+`Não Verificado` é o estado inicial. `Bloqueado` registra impedimento objetivo. Conclusão pertence ao campo `Status = Done`, não à Condição de Execução.
+
 ## 8. Modo de Execução
 
-O Modo de Execução define como o trabalho deve ser conduzido.
+O Modo de Execução define a forma de colaboração. Ele não é sinônimo do nível técnico de permissão do Codex.
 
-Valores recomendados:
+Valores canônicos:
 
 ```text
-Human only
-Codex Read
-Codex Plan
-Codex Workspace-write
-Hybrid
+Não Definido
+Manual
+Assistido por Codex
+Somente Revisão Codex
+Pareamento / Chat + Humano
 ```
 
-### Human only
+`Não Definido` é apenas o estado inicial e impede que o item seja considerado pronto.
+
+### Manual
 
 Usar quando envolver decisão de negócio, credencial, dado real, permissão, deploy, branch protection ou ação sensível.
 
-### Codex Read
+### Assistido por Codex
 
-Usar para inspeção, revisão, análise de Issue, levantamento de risco ou leitura de documentação.
+Usar quando o Codex pode planejar ou executar a parte autorizada e preparar evidências/PR sob revisão humana.
 
-### Codex Plan
+### Somente Revisão Codex
 
-Usar quando a Issue ainda precisa de decomposição, critérios de aceite ou análise de impacto.
+Usar quando a execução é humana e o Codex atua apenas em leitura, análise ou review.
 
-Não deve editar arquivos.
+### Pareamento / Chat + Humano
 
-### Codex Workspace-write
+Usar quando decisões e checkpoints fazem parte do próprio trabalho.
 
-Usar quando a Issue está pronta para execução.
+### Nível técnico da sessão Codex
 
-Pode editar arquivos dentro do workspace e preparar PR pequeno.
+`Read`, `Plan` e `Workspace-write` descrevem capacidade técnica da sessão e continuam sujeitos a sandbox/permissões. A Issue/envelope autoriza escopo; a configuração técnica não concede escopo por si só.
 
-### Hybrid
+Quando útil, registrar o nível esperado no plano ou na Issue, sem misturá-lo ao campo `Modo de Execução`.
 
-Usar quando o Codex executa parte documental ou técnica e o humano decide pontos de governança.
+## 9. Critério para elegibilidade do Codex
 
-## 9. Critério para Codex Eligible
-
-Uma Issue pode receber `codex:eligible` quando:
+Uma Issue pode entrar na fila elegível — e receber `codex:eligible` quando a label existir — quando:
 
 - possui objetivo claro;
 - possui escopo e fora de escopo;
@@ -335,11 +354,11 @@ Uma Issue pode receber `codex:eligible` quando:
 - pode ser entregue em PR pequeno;
 - validações cabíveis são conhecidas ou justificáveis.
 
-Se faltar qualquer item relevante, usar `codex:plan-required` ou `codex:human-review`.
+Se faltar qualquer item relevante, manter `Precisa Especificação`, `Precisa Decisão Humana`, `Precisa ADR` ou `Bloqueado`. Labels auxiliares não substituem o campo canônico.
 
 ## 9.1 Loop de continuidade do Codex
 
-`codex:eligible` indica que a Issue pode entrar na fila de pull. A label não concede autonomia fora do contexto aprovado.
+Elegibilidade indica que a Issue pode entrar na fila de pull. Uma eventual label `codex:eligible` não concede autonomia fora do contexto aprovado.
 
 Antes da execução, o Plan Mode pode aprovar um **envelope de execução** contendo:
 
@@ -355,8 +374,8 @@ Não é obrigatório criar novo campo no Project. A fila pode ser formada por:
 
 ```text
 Status = Ready
-Condição de Execução = Ready for execution
-Codex = codex:eligible
+Condição de Execução = Condições Verificadas
+Modo de Execução = Assistido por Codex
 Epic/envelope = aprovado
 Dependências = satisfeitas ou item independente
 ```
@@ -425,6 +444,8 @@ phase:<fase>
 status:needs-plan
 ```
 
+Aplicar apenas quando a taxonomia tiver sido criada; caso contrário, preencher os campos e o corpo da Epic.
+
 ## 11. Fluxo para criar nova Issue/Slice
 
 Checklist:
@@ -452,6 +473,8 @@ area:<area>
 status:needs-plan ou status:ready
 codex:plan-required ou codex:eligible
 ```
+
+Aplicar apenas quando a taxonomia tiver sido criada; a condição canônica continua no campo/corpo da Issue.
 
 ## 12. Fluxo para criar sub-issue
 
@@ -497,14 +520,14 @@ Considerar concluído quando:
 
 Preparar um PR e decidir `CONTINUE` não move a Issue automaticamente para `Done`.
 
-## 15. Automação operacional versus automação real
+## 15. Padronização operacional versus automação real
 
-Nesta fase, automação significa padronização operacional: checklist, nomenclatura, labels, campos e fluxo repetível.
+O repositório já possui modelos de referência em [`docs/templates/`](templates/), mas eles não são templates nativos do GitHub. Padronização operacional significa checklist, nomenclatura, campos e fluxo repetível; não prova que labels, formulários ou automações estejam instalados.
 
 Automação real pode ser criada futuramente, por exemplo:
 
-- templates de Issue;
-- templates de PR;
+- templates nativos de Issue;
+- template nativo de PR;
 - GitHub Actions para validar título;
 - GitHub Actions para validar labels;
 - script para criar labels;

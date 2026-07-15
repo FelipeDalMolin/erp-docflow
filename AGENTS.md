@@ -4,9 +4,17 @@ Instrucoes operacionais para uso do Codex neste repositorio.
 
 ## Contexto do projeto
 
-O `erp-docflow` esta na Phase 0.
+O baseline da Phase 0 esta concluido. A Phase 1 esta aberta em refinamento, mas nenhuma slice de codigo esta automaticamente autorizada.
 
-O objetivo da Phase 0 e criar o sistema operacional do projeto antes de iniciar codigo de produto.
+Antes de executar, consultar:
+
+1. `docs/PROJECT_STATUS.md` para fase, gate e fila candidata;
+2. a Issue e o envelope aprovado para escopo e autorizacao;
+3. `docs/FLUXO_GITHUB_PROJECT.md` para lifecycle e prontidao;
+4. `docs/ESTRATEGIA_GIT.md` para branch, PR e merge;
+5. este arquivo para guardrails especificos do Codex.
+
+O portal `docs/README.md` define a matriz de autoridade. Quando documentos divergirem, o Codex nao deve combinar regras silenciosamente: deve usar a fonte primaria, registrar a contradicao e pedir checkpoint se ela alterar a execucao.
 
 Ambiente oficial atual:
 
@@ -41,7 +49,7 @@ Regras:
 - confirmar escopo, fora de escopo e criterios de aceite pela Issue e pelo envelope aprovado antes de editar;
 - manter PRs pequenos e revisaveis;
 - nao fazer merge automatico;
-- nao criar codigo de produto durante a Phase 0;
+- nao iniciar codigo de produto enquanto a slice da Phase 1 permanecer em `Precisa Especificacao` ou fora de envelope aprovado;
 - nao criar deploy;
 - nao usar secrets;
 - nao alterar ADR aceito sem novo ADR;
@@ -73,6 +81,13 @@ CHECKPOINT
 STOP
 ```
 
+Semantica operacional:
+
+- `CONTINUE`: proximo item elegivel dentro do envelope;
+- `AWAIT_DEPENDENCY`: dependencia conhecida e esperada, sem nova decisao humana;
+- `CHECKPOINT`: ambiguidade, risco, mudanca ou dependencia que exige decisao/acao humana nao prevista;
+- `STOP`: envelope encerrado ou nenhum candidato elegivel.
+
 Pode usar `CONTINUE` quando o proximo slice:
 
 - esta pronto para execucao;
@@ -89,6 +104,14 @@ O Codex pode iniciar um slice independente enquanto outro PR aguarda review, par
 Slice dependente deve aguardar o merge. Branch ou PR empilhado exige autorizacao explicita no envelope.
 
 O loop seleciona e executa trabalho. Ele nao autoriza automerge, merge pelo Codex ou expansao silenciosa de escopo.
+
+Preparar um PR draft conclui tecnicamente o slice para fins do loop. Mover a Issue para `Review` exige que o PR esteja efetivamente pronto para revisao humana. `Done` continua dependendo de review, merge e fechamento.
+
+## Autorizacao versus capacidade tecnica
+
+A Issue e o envelope dizem **o que** esta autorizado. `.codex/config.toml`, sandbox, permissoes e disponibilidade de rede dizem **o que a sessao consegue executar tecnicamente**.
+
+Uma autorizacao de escopo nao amplia automaticamente permissao de filesystem, rede, credencial ou GitHub. Se push, PR ou outra acao autorizada estiver tecnicamente indisponivel, registrar o bloqueio; nao contornar o sandbox nem solicitar acesso mais amplo sem necessidade explicita.
 
 ## Escopo explicito obrigatorio
 
@@ -223,6 +246,8 @@ git commit -m "<mensagem>"
 git push -u origin <branch>
 ```
 
+O nome da branch deve seguir o padrao canonico de `docs/ESTRATEGIA_GIT.md`; outros documentos apenas demonstram o procedimento.
+
 Comandos GitHub CLI permitidos:
 
 ```bash
@@ -243,6 +268,8 @@ docker compose config
 ```
 
 Instalacao de dependencias so deve ocorrer quando a Issue permitir e o humano aprovar.
+
+Os comandos acima descrevem operacoes admitidas pelo processo. Eles continuam sujeitos as permissoes tecnicas da sessao e ao escopo do envelope.
 
 ## Comandos proibidos
 
@@ -296,4 +323,4 @@ Antes de concluir uma tarefa, o Codex deve verificar:
 - ADR e rastreabilidade foram considerados quando aplicavel;
 - nao foram criados secrets, deploy, automerge ou codigo de produto indevido.
 - a decisao de continuidade foi registrada como `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP`.
-
+- o estado e o gate em `docs/PROJECT_STATUS.md` continuam corretos ou foram atualizados no mesmo PR.

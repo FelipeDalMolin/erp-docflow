@@ -1,5 +1,9 @@
 # WSL Multi-Projetos
 
+- **Classe:** runbook operacional detalhado
+- **Estado:** vigente para Ubuntu-20.04; Ubuntu-24.04 é alvo possível
+- **Atualizar quando:** distribuição principal, integração Docker/WSL ou layout de trabalho mudar
+
 Este documento define como o projeto `erp-docflow` deve usar WSL quando a mesma máquina também hospedar outros projetos de desenvolvimento.
 
 A decisão operacional inicial é: **usar uma única distribuição WSL principal para desenvolvimento**, mantendo isolamento por projeto dentro da própria distribuição.
@@ -335,7 +339,7 @@ sudo apt install -y \
   poppler-utils
 ```
 
-Esses pacotes preparam o ambiente técnico, mas não autorizam início de código de produto fora dos gates da Phase 0.
+Esses pacotes preparam o ambiente técnico, mas não autorizam início de código de produto fora do gate e do envelope vigentes em [Status do projeto](PROJECT_STATUS.md).
 
 ### 8.10 Instalar Node via nvm
 

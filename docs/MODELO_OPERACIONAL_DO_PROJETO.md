@@ -1,5 +1,10 @@
 # Modelo Operacional do Projeto
 
+- **Classe:** normativo operacional
+- **Estado:** vigente
+- **Autoridade:** princípios de governança; detalhes especializados pertencem às fontes indicadas no [portal documental](README.md)
+- **Atualizar quando:** o modelo de trabalho, responsabilidades ou fontes de verdade mudarem
+
 Este projeto tem como objetivo construir uma plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, focada em materialização documental, versionamento, revisão humana, aceite, auditoria e evolução futura para fluxos financeiros, contábeis, geração documental e integrações.
 
 A proposta do projeto não é começar criando um ERP completo de uma vez. O objetivo inicial é construir uma base confiável para que documentos, arquivos, decisões, revisões, aceite humano, vínculos financeiros e histórico possam evoluir de forma rastreável.
@@ -43,6 +48,8 @@ O repositório deve armazenar:
 - histórico de evolução via commits e Pull Requests.
 
 O GitHub Project será usado como painel de acompanhamento, mas não substitui o repositório.
+
+A fonte correta dentro do repositório depende da pergunta. O [portal documental](README.md) mantém a matriz de autoridade; o [status do projeto](PROJECT_STATUS.md) mantém o snapshot de fase e gate. Este modelo não deve duplicar enums, comandos ou critérios que pertençam a uma fonte especializada.
 
 ## 3. Organização do trabalho
 
@@ -198,8 +205,6 @@ O Codex não deve decidir sozinho mudanças de direção. Deve solicitar orienta
 - alteração de ADR aceito;
 - implementação fora do escopo da Issue.
 
-Além de indicar e atualizar as documentações.
-
 O uso do Codex deve respeitar:
 
 - Issue clara;
@@ -213,7 +218,7 @@ A aprovação humana pode abranger um lote de slices. O fim de um slice não exi
 
 ## 10. Condição de Execução
 
-O campo `Condição de Execução` no GitHub Project indica se uma Issue está pronta para ser trabalhada.
+O campo `Condição de Execução` no GitHub Project indica se uma Issue está pronta para ser trabalhada. A lista canônica e os critérios completos pertencem ao [Fluxo do GitHub Project](FLUXO_GITHUB_PROJECT.md).
 
 Valores previstos:
 
@@ -236,7 +241,7 @@ Quando várias Issues com condições verificadas pertencem a um envelope aprova
 
 ## 11. Modo de Execução
 
-O campo `Modo de Execução` indica como a Issue será trabalhada.
+O campo `Modo de Execução` indica como a Issue será trabalhada. Ele descreve colaboração e não substitui permissões técnicas de Read, Plan ou Workspace-write da sessão Codex.
 
 Valores previstos:
 
@@ -286,6 +291,8 @@ O envelope deve registrar apenas o necessário:
 
 `CHECKPOINT` é usado quando houver mudança de direção, risco, ambiguidade, falha que amplie escopo ou área protegida não autorizada.
 
+Uma dependência conhecida e esperada usa `AWAIT_DEPENDENCY`. Se a dependência revelar decisão, ação humana não prevista ou ambiguidade de escopo, usa-se `CHECKPOINT`.
+
 `STOP` é usado quando o envelope terminar ou não houver candidato elegível.
 
 Um slice fica tecnicamente concluído quando implementação, validações, documentação e PR draft estão preparados. Ele só fica `Done` depois de revisão, merge e fechamento da Issue.
@@ -311,21 +318,13 @@ Phase 7 — Integrações
 
 A Phase 0 deve ser concluída antes do início do código de produto.
 
+O baseline da Phase 0 está encerrado. A Epic da Phase 1 está aberta em refinamento, mas o código só começa quando o gate e a primeira slice estiverem aprovados conforme [Status do projeto](PROJECT_STATUS.md).
+
 ## 13. Critério de maturidade para iniciar código
 
-O código de produto só deve começar quando a Phase 0 tiver pelo menos:
+O ADR-0002 define a decisão histórica de concluir um baseline operacional antes do código. O [Roadmap](ROADMAP.md) mantém os critérios permanentes da transição, e [Status do projeto](PROJECT_STATUS.md) registra evidências, pendências e aprovação do gate atual.
 
-- modelo operacional documentado;
-- fluxo GitHub Project documentado;
-- estratégia Git documentada;
-- fluxo VS Code/GitHub CLI documentado;
-- fluxo Codex documentado;
-- ADR baseline criado;
-- traceability baseline criado;
-- UML baseline criado;
-- templates de Issue e PR criados;
-- CI estrutural inicial criado;
-- branch protection planejada ou configurada.
+Uma Epic aberta ou uma lista de Issues não equivale a autorização de execução. Para iniciar código, a slice deve ter escopo verificável, dependências satisfeitas, condição `Condições Verificadas`, paths/validações conhecidos e vínculo com envelope aprovado.
 
 ## 14. O que evitar
 

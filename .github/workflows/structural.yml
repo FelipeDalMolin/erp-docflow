@@ -13,14 +13,14 @@ permissions:
 
 jobs:
   structural:
-    name: Validate Phase 0 structure
+    name: Validate repository structure and documentation
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check required documentation files
+      - name: Check canonical files
         shell: bash
         run: |
           set -euo pipefail
@@ -29,6 +29,8 @@ jobs:
             "README.md"
             "AGENTS.md"
             ".codex/config.toml"
+            "docs/README.md"
+            "docs/PROJECT_STATUS.md"
             "docs/MODELO_OPERACIONAL_DO_PROJETO.md"
             "docs/ROADMAP.md"
             "docs/ESTRATEGIA_GIT.md"
@@ -36,6 +38,12 @@ jobs:
             "docs/FLUXO_VSCODE_GIT_GITHUB_CLI.md"
             "docs/AMBIENTES.md"
             "docs/WSL_MULTI_PROJETOS.md"
+            "docs/ARCHITECTURE.md"
+            "docs/DOCUMENT_PIPELINE.md"
+            "docs/PROVIDER_STRATEGY.md"
+            "docs/DATA_MODEL_BASELINE.md"
+            "docs/GLOSSARIO_DOCUMENTAL.md"
+            "docs/reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md"
             "docs/templates/epic.md"
             "docs/templates/issue-slice.md"
             "docs/templates/sub-issue.md"
@@ -56,6 +64,8 @@ jobs:
             "docs/adr/0013-human-review-acceptance-and-override.md"
             "docs/adr/0014-backup-and-restore-required.md"
             "docs/adr/0015-auth-authorization-security-strategy.md"
+            "docs/adr/0016-capability-based-document-processing-providers.md"
+            "docs/adr/0017-codex-continuous-slice-loop.md"
             "docs/traceability/README.md"
             "docs/traceability/adr-index.md"
             "docs/traceability/decision-map.md"
@@ -68,10 +78,9 @@ jobs:
           )
 
           missing=0
-
           for path in "${required_files[@]}"; do
             if [[ ! -f "$path" ]]; then
-              echo "::error file=$path::Required Phase 0 file is missing"
+              echo "::error file=$path::Required canonical file is missing"
               missing=1
             fi
           done
@@ -80,16 +89,83 @@ jobs:
             exit 1
           fi
 
-      - name: Check UML baseline diagrams
+      - name: Validate documentation links and catalogs
         shell: bash
         run: |
           set -euo pipefail
 
-          puml_count="$(find docs/uml -type f -name '*.puml' | wc -l)"
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+          from urllib.parse import unquote
 
-          if [[ "$puml_count" -eq 0 ]]; then
-            echo "::error file=docs/uml::Expected at least one PlantUML diagram"
-            exit 1
-          fi
+          root = Path.cwd()
+          errors: list[str] = []
+          markdown_files = sorted(
+              path for path in root.rglob("*.md")
+              if ".git" not in path.parts
+          )
 
-          echo "Found $puml_count PlantUML diagram(s)."
+          link_pattern = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
+
+          for path in markdown_files:
+              text = path.read_text(encoding="utf-8")
+
+              fences = sum(1 for line in text.splitlines() if line.lstrip().startswith("```"))
+              if fences % 2:
+                  errors.append(f"{path.relative_to(root)}: unbalanced Markdown fences")
+
+              for raw_target in link_pattern.findall(text):
+                  target = raw_target.strip().split(maxsplit=1)[0].strip("<>")
+                  if not target or target.startswith(("#", "http://", "https://", "mailto:")):
+                      continue
+
+                  target = unquote(target.split("#", 1)[0].split("?", 1)[0])
+                  if not target:
+                      continue
+
+                  resolved = (path.parent / target).resolve()
+                  try:
+                      resolved.relative_to(root)
+                  except ValueError:
+                      errors.append(
+                          f"{path.relative_to(root)}: relative link escapes repository: {raw_target}"
+                      )
+                      continue
+
+                  if not resolved.exists():
+                      errors.append(
+                          f"{path.relative_to(root)}: missing relative target: {raw_target}"
+                      )
+
+          adr_files = sorted((root / "docs/adr").glob("[0-9][0-9][0-9][0-9]-*.md"))
+          adr_catalog = (root / "docs/adr/README.md").read_text(encoding="utf-8")
+          adr_index = (root / "docs/traceability/adr-index.md").read_text(encoding="utf-8")
+
+          for adr in adr_files:
+              if adr.name not in adr_catalog:
+                  errors.append(f"docs/adr/README.md: ADR missing from catalog: {adr.name}")
+              if adr.name not in adr_index:
+                  errors.append(f"docs/traceability/adr-index.md: ADR missing from index: {adr.name}")
+
+          puml_files = sorted((root / "docs/uml").rglob("*.puml"))
+          if not puml_files:
+              errors.append("docs/uml: expected at least one PlantUML diagram")
+
+          for path in puml_files:
+              text = path.read_text(encoding="utf-8")
+              if text.count("@startuml") != 1 or text.count("@enduml") != 1:
+                  errors.append(
+                      f"{path.relative_to(root)}: expected exactly one @startuml/@enduml pair"
+                  )
+
+          if errors:
+              print("\n".join(f"ERROR: {error}" for error in errors))
+              sys.exit(1)
+
+          print(
+              f"Validated {len(markdown_files)} Markdown files, "
+              f"{len(adr_files)} ADRs and {len(puml_files)} PlantUML diagrams."
+          )
+          PY

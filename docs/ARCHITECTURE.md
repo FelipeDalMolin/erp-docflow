@@ -187,9 +187,9 @@ Métricas mínimas planejadas:
 
 Confianças brutas de engines diferentes não devem ser comparadas como se tivessem a mesma escala. A política deve usar calibração por perfil, validação determinística e resultados de benchmark.
 
-## 12. Restrições da Phase 0
+## 12. Status e restrições desta baseline
 
-Esta baseline:
+Esta baseline foi consolidada durante a Phase 0 e continua descrevendo arquitetura planejada/não implementada. Ela:
 
 - não cria código de produto;
 - não define endpoints;
@@ -212,4 +212,3 @@ As decisões ainda abertas estão registradas em [reviews/GESTAO_DOCUMENTAL_INTE
 - [Sequência de processamento e revisão](uml/05-sequence/process-review-accept-planned.puml)
 - [Estado do DocumentEnvelope](uml/06-state/document-envelope-state-planned.puml)
 - [Estado do ProcessingJob](uml/06-state/processing-job-state-planned.puml)
-
