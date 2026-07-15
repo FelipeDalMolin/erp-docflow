@@ -27,7 +27,7 @@ Exige manter ferramentas na WSL e separar corretamente código de dados fora do 
 
 ## Impacto técnico
 
-Documentação afetada: `docs/AMBIENTES.md`, `docs/WSL_MULTI_PROJETOS.md`, `AGENTS.md`.
+Documentação afetada: `docs/operations/AMBIENTES.md`, `docs/operations/WSL_MULTI_PROJETOS.md`, `AGENTS.md`.
 Módulos/entidades/rotas: nenhum produto criado agora.
 Infra: ambiente local e Docker Compose futuro.
 Testes necessários: validação documental e conferência dos paths.

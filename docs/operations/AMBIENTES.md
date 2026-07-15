@@ -79,8 +79,11 @@ A distribuição `docker-desktop` pertence ao Docker Desktop e não deve ser usa
 Código do projeto:
 
 ```text
-~/projetos/erp-docflow
+~/projetos/erp-docflow          # WSL pessoal/genérica
+/srv/apps/erp-docflow           # host operacional app-host
 ```
+
+O path não é uma decisão arquitetural do produto. Quando existir inventário do host, como `/srv/ops/projects.yml`, ele é a fonte operacional para o checkout daquela máquina. Os exemplos com `~/projetos` continuam sendo o padrão portátil para uma WSL pessoal.
 
 Logs brutos de execução Codex:
 

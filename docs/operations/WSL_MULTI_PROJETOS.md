@@ -66,6 +66,8 @@ Para o `erp-docflow`, a WSL dedicada pode ser considerada futuramente quando o p
 
 ## 4. Nomes recomendados
 
+Os paths desta seção descrevem uma WSL pessoal. Em hosts operacionais, consultar o inventário local; no `app-host`, o checkout corrente fica em `/srv/apps/erp-docflow`. Não duplicar o código nos dois caminhos.
+
 Distribuição WSL principal atual:
 
 ```text
@@ -339,7 +341,7 @@ sudo apt install -y \
   poppler-utils
 ```
 
-Esses pacotes preparam o ambiente técnico, mas não autorizam início de código de produto fora do gate e do envelope vigentes em [Status do projeto](PROJECT_STATUS.md).
+Esses pacotes preparam o ambiente técnico, mas não autorizam início de código de produto fora do gate e do envelope vigentes em [Status do projeto](../project/PROJECT_STATUS.md).
 
 ### 8.10 Instalar Node via nvm
 

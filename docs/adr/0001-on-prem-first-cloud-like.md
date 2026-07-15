@@ -27,7 +27,7 @@ Maior responsabilidade local por backup, restore, segurança e operação.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`, `docs/AMBIENTES.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`, `docs/operations/AMBIENTES.md`.
 Módulos/entidades/rotas: futuros; nada criado agora.
 Infra: local, CI, onprem-lab e prod-onprem.
 Testes necessários: validação documental nesta fase.

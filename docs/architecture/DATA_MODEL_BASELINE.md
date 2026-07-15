@@ -297,7 +297,7 @@ REJECTED
 QUARANTINED
 ```
 
-O desenho exato e transições estão em [document-envelope-state-planned.puml](uml/06-state/document-envelope-state-planned.puml).
+O desenho exato e transições estão em [document-envelope-state-planned.puml](../uml/06-state/document-envelope-state-planned.puml).
 
 ### 5.2 Job
 
@@ -312,7 +312,7 @@ CANCELLED
 DEAD_LETTER
 ```
 
-O desenho está em [processing-job-state-planned.puml](uml/06-state/processing-job-state-planned.puml).
+O desenho está em [processing-job-state-planned.puml](../uml/06-state/processing-job-state-planned.puml).
 
 ## 6. Versionamento
 
@@ -380,4 +380,3 @@ Definições finais dependem do ADR sucessor do ADR-0015.
 - quais campos precisam de índice relacional?
 
 Nenhuma migration deve ser criada antes de responder ao mínimo necessário para o primeiro slice da Phase 2.
-

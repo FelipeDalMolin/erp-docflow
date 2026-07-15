@@ -91,13 +91,13 @@ Alternativa proposta: preserva limites, permite workers/processos separados e ev
 
 ### Documentação afetada
 
-- `docs/ARCHITECTURE.md`;
-- `docs/DOCUMENT_PIPELINE.md`;
-- `docs/PROVIDER_STRATEGY.md`;
-- `docs/DATA_MODEL_BASELINE.md`;
-- `docs/GLOSSARIO_DOCUMENTAL.md`;
+- `docs/architecture/ARCHITECTURE.md`;
+- `docs/architecture/DOCUMENT_PIPELINE.md`;
+- `docs/architecture/PROVIDER_STRATEGY.md`;
+- `docs/architecture/DATA_MODEL_BASELINE.md`;
+- `docs/architecture/GLOSSARIO_DOCUMENTAL.md`;
 - `docs/reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md`;
-- `docs/ROADMAP.md`;
+- `docs/project/ROADMAP.md`;
 - `docs/uml/`;
 - `docs/traceability/`.
 

@@ -223,11 +223,11 @@ ADR-0016 propõe providers por capability e roteamento por política. Enquanto o
 
 ## 10. Artefatos canônicos resultantes
 
-- [Arquitetura](../ARCHITECTURE.md)
-- [Pipeline documental](../DOCUMENT_PIPELINE.md)
-- [Estratégia de providers](../PROVIDER_STRATEGY.md)
-- [Baseline de dados](../DATA_MODEL_BASELINE.md)
-- [Glossário](../GLOSSARIO_DOCUMENTAL.md)
+- [Arquitetura](../architecture/ARCHITECTURE.md)
+- [Pipeline documental](../architecture/DOCUMENT_PIPELINE.md)
+- [Estratégia de providers](../architecture/PROVIDER_STRATEGY.md)
+- [Baseline de dados](../architecture/DATA_MODEL_BASELINE.md)
+- [Glossário](../architecture/GLOSSARIO_DOCUMENTAL.md)
 - [ADR-0016 proposto](../adr/0016-capability-based-document-processing-providers.md)
 - [Catálogo UML](../uml/README.md)
 

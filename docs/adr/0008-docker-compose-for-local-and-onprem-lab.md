@@ -27,7 +27,7 @@ Não substitui estratégia de produção madura e exige cuidado com volumes, sec
 
 ## Impacto técnico
 
-Documentação afetada: `docs/AMBIENTES.md`, `docs/WSL_MULTI_PROJETOS.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/operations/AMBIENTES.md`, `docs/operations/WSL_MULTI_PROJETOS.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: futuros backend, frontend, banco, storage e workers.
 Infra: ambiente local e onprem-lab.
 Testes necessários: futuro `docker compose config`.

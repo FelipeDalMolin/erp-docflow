@@ -277,4 +277,3 @@ Troca de modelo/processor que pode alterar output deve gerar nova versão de pol
 - retenção das respostas brutas.
 
 Essas escolhas devem vir de spike/benchmark e decisão humana, não de preferência abstrata.
-

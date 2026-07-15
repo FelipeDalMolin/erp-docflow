@@ -87,8 +87,8 @@ Antes do merge:
 
 ## 7. Documentos relacionados
 
-- [Arquitetura](../ARCHITECTURE.md)
-- [Pipeline](../DOCUMENT_PIPELINE.md)
-- [Baseline de dados](../DATA_MODEL_BASELINE.md)
-- [Estratégia de providers](../PROVIDER_STRATEGY.md)
-- [Glossário](../GLOSSARIO_DOCUMENTAL.md)
+- [Arquitetura](../architecture/ARCHITECTURE.md)
+- [Pipeline](../architecture/DOCUMENT_PIPELINE.md)
+- [Baseline de dados](../architecture/DATA_MODEL_BASELINE.md)
+- [Estratégia de providers](../architecture/PROVIDER_STRATEGY.md)
+- [Glossário](../architecture/GLOSSARIO_DOCUMENTAL.md)

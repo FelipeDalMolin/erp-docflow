@@ -27,7 +27,7 @@ Exige operação, backup, restore, migrations e estratégia de ambiente.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/AMBIENTES.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/operations/AMBIENTES.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: futuros módulos e entidades persistidas.
 Infra: Docker Compose futuro, onprem-lab, backup e restore.
 Testes necessários: migrations e persistência quando houver implementação.

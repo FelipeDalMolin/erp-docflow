@@ -2,7 +2,7 @@
 
 - **Classe:** normativo operacional
 - **Estado:** vigente
-- **Autoridade:** princípios de governança; detalhes especializados pertencem às fontes indicadas no [portal documental](README.md)
+- **Autoridade:** princípios de governança; detalhes especializados pertencem às fontes indicadas no [portal documental](../README.md)
 - **Atualizar quando:** o modelo de trabalho, responsabilidades ou fontes de verdade mudarem
 
 Este projeto tem como objetivo construir uma plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, focada em materialização documental, versionamento, revisão humana, aceite, auditoria e evolução futura para fluxos financeiros, contábeis, geração documental e integrações.
@@ -49,7 +49,7 @@ O repositório deve armazenar:
 
 O GitHub Project será usado como painel de acompanhamento, mas não substitui o repositório.
 
-A fonte correta dentro do repositório depende da pergunta. O [portal documental](README.md) mantém a matriz de autoridade; o [status do projeto](PROJECT_STATUS.md) mantém o snapshot de fase e gate. Este modelo não deve duplicar enums, comandos ou critérios que pertençam a uma fonte especializada.
+A fonte correta dentro do repositório depende da pergunta. O [portal documental](../README.md) mantém a matriz de autoridade; o [status do projeto](PROJECT_STATUS.md) mantém o snapshot de fase e gate. Este modelo não deve duplicar enums, comandos ou critérios que pertençam a uma fonte especializada.
 
 ## 3. Organização do trabalho
 
@@ -218,7 +218,7 @@ A aprovação humana pode abranger um lote de slices. O fim de um slice não exi
 
 ## 10. Condição de Execução
 
-O campo `Condição de Execução` no GitHub Project indica se uma Issue está pronta para ser trabalhada. A lista canônica e os critérios completos pertencem ao [Fluxo do GitHub Project](FLUXO_GITHUB_PROJECT.md).
+O campo `Condição de Execução` no GitHub Project indica se uma Issue está pronta para ser trabalhada. A lista canônica e os critérios completos pertencem ao [Fluxo do GitHub Project](../operations/FLUXO_GITHUB_PROJECT.md).
 
 Valores previstos:
 

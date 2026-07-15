@@ -8,10 +8,10 @@ O baseline da Phase 0 esta concluido. A Phase 1 esta aberta em refinamento, mas 
 
 Antes de executar, consultar:
 
-1. `docs/PROJECT_STATUS.md` para fase, gate e fila candidata;
+1. `docs/project/PROJECT_STATUS.md` para fase, gate e fila candidata;
 2. a Issue e o envelope aprovado para escopo e autorizacao;
-3. `docs/FLUXO_GITHUB_PROJECT.md` para lifecycle e prontidao;
-4. `docs/ESTRATEGIA_GIT.md` para branch, PR e merge;
+3. `docs/operations/FLUXO_GITHUB_PROJECT.md` para lifecycle e prontidao;
+4. `docs/operations/ESTRATEGIA_GIT.md` para branch, PR e merge;
 5. este arquivo para guardrails especificos do Codex.
 
 O portal `docs/README.md` define a matriz de autoridade. Quando documentos divergirem, o Codex nao deve combinar regras silenciosamente: deve usar a fonte primaria, registrar a contradicao e pedir checkpoint se ela alterar a execucao.
@@ -27,7 +27,9 @@ Codex extension
 
 O uso principal do Codex deve ocorrer pela Codex extension no VS Code remoto WSL.
 
-Uso opcional:
+O caminho do checkout depende do host. Neste `app-host`, o inventário operacional define `/srv/apps/erp-docflow`; em uma WSL de desenvolvimento pessoal, os runbooks usam `~/projetos/erp-docflow` como padrão genérico. Consultar `/srv/ops/projects.yml` quando ele existir.
+
+Uso opcional no caminho genérico:
 
 ```bash
 cd ~/projetos/erp-docflow
@@ -246,7 +248,7 @@ git commit -m "<mensagem>"
 git push -u origin <branch>
 ```
 
-O nome da branch deve seguir o padrao canonico de `docs/ESTRATEGIA_GIT.md`; outros documentos apenas demonstram o procedimento.
+O nome da branch deve seguir o padrao canonico de `docs/operations/ESTRATEGIA_GIT.md`; outros documentos apenas demonstram o procedimento.
 
 Comandos GitHub CLI permitidos:
 
@@ -323,4 +325,4 @@ Antes de concluir uma tarefa, o Codex deve verificar:
 - ADR e rastreabilidade foram considerados quando aplicavel;
 - nao foram criados secrets, deploy, automerge ou codigo de produto indevido.
 - a decisao de continuidade foi registrada como `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP`.
-- o estado e o gate em `docs/PROJECT_STATUS.md` continuam corretos ou foram atualizados no mesmo PR.
+- o estado e o gate em `docs/project/PROJECT_STATUS.md` continuam corretos ou foram atualizados no mesmo PR.

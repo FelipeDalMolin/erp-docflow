@@ -2,7 +2,7 @@
 
 - **Classe:** snapshot operacional canônico
 - **Estado:** vigente
-- **Data de referência:** 2026-07-14
+- **Data de referência:** 2026-07-15
 - **Issue de revisão:** [#65](https://github.com/FelipeDalMolin/erp-docflow/issues/65)
 - **Atualizar quando:** uma fase, gate, Epic ou condição de execução mudar
 
@@ -12,7 +12,8 @@ Este documento responde apenas **onde o projeto está agora, qual é o próximo 
 
 ```text
 Phase 0: concluída administrativamente e integrada à main
-Hardening documental pós-Phase 0: em andamento na Issue #65
+Hardening documental #65: integrado pelo PR #68
+Organização física e auditoria documental: em andamento na Issue #69
 Phase 1: Epic aberta, em refinamento; execução de código ainda não autorizada
 Próxima candidata: #33, somente após especificação e gate 0 → 1 registrados
 ```
@@ -58,7 +59,7 @@ O gate possui duas dimensões diferentes:
 
 Para autorizar execução da Phase 1, registrar na Epic #26 ou no plano aprovado:
 
-- [ ] Issue #65 revisada e integrada, ou exceção explícita sem contradição bloqueante;
+- [x] Issue #65 revisada e integrada pelo PR #68;
 - [ ] revisão do gatilho do ADR-0002 ao iniciar código de produto;
 - [ ] revisão do ADR-0007 após o CI estrutural e antes de eventual branch protection;
 - [ ] runtimes, gerenciadores de pacotes e layout mínimo definidos para a #33;
@@ -100,6 +101,7 @@ Nenhuma dessas slices deve receber `codex:eligible` ou ser tratada como `Condiç
 - Nenhuma milestone é usada atualmente; `Fase` deve permanecer campo do Project/título até decisão diferente, evitando duas fontes concorrentes.
 - ADRs propostos, em especial ADR-0015 e ADR-0016, continuam sem autorizar segurança/providers reais.
 - A precisão durável dos outcomes/envelope do Codex será decidida na [#67](https://github.com/FelipeDalMolin/erp-docflow/issues/67), sem reescrever silenciosamente o ADR-0017.
+- A organização física e a auditoria de coerência documental são rastreadas na [#69](https://github.com/FelipeDalMolin/erp-docflow/issues/69); esse trabalho não autoriza código de produto.
 
 Esses gaps devem ser tratados por Issues próprias ou pelo escopo explícito da #65. Eles não devem ser ocultados por labels ou estados que ainda não existem.
 

@@ -27,7 +27,7 @@ Exige operação de storage, backup/restore de objetos e cuidado com credenciais
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/AMBIENTES.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/operations/AMBIENTES.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: futuros arquivos, versões, upload e download.
 Infra: Docker Compose futuro, onprem-lab, backup e restore.
 Testes necessários: upload, download, versionamento, backup e restore quando houver implementação.
