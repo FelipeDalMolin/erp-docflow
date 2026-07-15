@@ -1,5 +1,10 @@
 # Estratégia Git
 
+- **Classe:** normativo operacional de Git
+- **Estado:** vigente
+- **Autoridade:** branch, commit, PR e merge
+- **Atualizar quando:** a política Git/GitHub ou o padrão de integração mudar
+
 Este projeto usará uma estratégia Git simples, com branches curtas, Pull Requests pequenos e squash merge.
 
 O objetivo é manter a evolução rastreável, revisável e com baixo risco de conflito.
@@ -74,6 +79,8 @@ Formato recomendado:
 <tipo>/<slice>-<descricao-curta>
 ```
 
+`<slice>` é o identificador estável do trabalho, como `s1-01`. Para Issues sem identificador de slice, usar `issue-<numero>`.
+
 Exemplos:
 
 ```text
@@ -82,6 +89,7 @@ docs/s0-02-fluxo-github-project
 chore/s0-10-ci-estrutural
 feature/s1-01-bootstrap-api
 fix/s1-02-healthcheck
+docs/issue-65-documentation-architecture
 ```
 
 Tipos comuns:
@@ -215,8 +223,15 @@ gh issue view 2
 gh pr create
 gh pr view --web
 gh pr checks
+```
+
+Depois da revisão, o responsável humano pelo merge pode usar:
+
+```powershell
 gh pr merge --squash
 ```
+
+Esse comando é **human-only** neste projeto. O Codex não executa merge, mesmo quando preparou a branch e o PR.
 
 ## 12. O que evitar
 

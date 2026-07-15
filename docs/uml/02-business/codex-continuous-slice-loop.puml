@@ -35,7 +35,7 @@ repeat
   endif
 repeat while (Envelope ainda válido?) is (sim)
 
-:Checkpoint de fim do envelope;
+:STOP - envelope encerrado;
 stop
 
 note right
@@ -44,4 +44,3 @@ note right
 end note
 
 @enduml
-

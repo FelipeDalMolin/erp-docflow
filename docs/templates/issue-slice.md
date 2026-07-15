@@ -31,6 +31,20 @@ Comandos, revisão manual ou evidências esperadas:
 # exemplo
 ```
 
+## Dependências e paths
+
+Dependências obrigatórias:
+
+- #<numero ou `nenhuma`>
+
+Paths permitidos:
+
+- `<path>`
+
+Paths protegidos ou excluídos:
+
+- `<path>`
+
 ## Relação com Epic
 
 Epic relacionada:
@@ -67,7 +81,7 @@ Documentos afetados:
 
 ## Condição de Execução
 
-Selecionar uma:
+Selecionar exatamente uma e manter as demais desmarcadas:
 
 - [ ] Não Verificado
 - [ ] Condições Verificadas
@@ -78,7 +92,7 @@ Selecionar uma:
 
 ## Modo de Execução
 
-Selecionar uma:
+Selecionar exatamente uma e manter as demais desmarcadas:
 
 - [ ] Não Definido
 - [ ] Manual
@@ -91,6 +105,14 @@ Selecionar uma:
 Envelope/Epic aprovado:
 
 - #<numero ou referência>
+
+Estado do envelope:
+
+- `Rascunho | Aprovado | Pausado | Encerrado`
+
+Responsável, data e referência da aprovação:
+
+- <registro>
 
 Próximo candidato conhecido:
 
@@ -109,7 +131,7 @@ O Codex deve registrar `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP` ao
 
 - Não executar fora do escopo desta Issue.
 - Não alterar ADR aceito sem novo ADR.
-- Não criar código de produto durante a Phase 0 sem Issue explícita.
+- Não iniciar código de produto sem slice especificada, condições verificadas e envelope aprovado.
 - Não criar deploy, secrets, automerge ou branch protection sem escopo explícito.
 - Parar e pedir decisão humana se houver mudança arquitetural, segurança, dados sensíveis ou escopo ambíguo.
 - Não pedir nova aprovação apenas porque o slice terminou quando houver próximo item elegível no envelope.

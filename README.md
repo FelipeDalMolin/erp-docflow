@@ -2,7 +2,9 @@
 
 Plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, para materialização documental, versionamento, processamento assistido, revisão, aceite, auditoria e fluxos financeiros.
 
-Status atual: **Phase 0 — sistema do projeto e arquitetura documental**. Não há código de produto implementado.
+Status atual: **Phase 0 encerrada; Phase 1 aberta em refinamento, ainda sem execução de código autorizada**. Não há código de produto implementado.
+
+Consulte o [status do projeto](docs/PROJECT_STATUS.md) para o gate ativo e o [portal da documentação](docs/README.md) para escolher a fonte correta.
 
 ## Visão do fluxo
 
@@ -18,31 +20,25 @@ entrada
 
 ## Documentação principal
 
-| Documento | Finalidade |
+| Entrada | Finalidade |
 | --- | --- |
-| [Modelo operacional](docs/MODELO_OPERACIONAL_DO_PROJETO.md) | governança, fases e forma de trabalho |
-| [Roadmap](docs/ROADMAP.md) | evolução incremental da Phase 0 às integrações |
-| [Arquitetura](docs/ARCHITECTURE.md) | visão lógica, boundaries e dados |
-| [Pipeline documental](docs/DOCUMENT_PIPELINE.md) | fluxo canônico, gates e artefatos |
-| [Estratégia de providers](docs/PROVIDER_STRATEGY.md) | capabilities, adapters, roteamento e benchmark |
-| [Baseline de dados](docs/DATA_MODEL_BASELINE.md) | conceitos e invariantes, sem schema físico |
-| [Glossário documental](docs/GLOSSARIO_DOCUMENTAL.md) | terminologia canônica |
-| [Revisão do chat](docs/reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md) | decisões, contradições e perguntas abertas |
+| [Portal da documentação](docs/README.md) | trilhas de leitura, matriz de autoridade, classes e manutenção |
+| [Status do projeto](docs/PROJECT_STATUS.md) | fase atual, evidências, gate e fila candidata |
+| [Roadmap](docs/ROADMAP.md) | escopo permanente, dependências e resultados das fases |
+| [Arquitetura](docs/ARCHITECTURE.md) | visão lógica planejada, boundaries e dados |
 | [ADRs](docs/adr/README.md) | decisões arquiteturais e seus status |
-| [Rastreabilidade](docs/traceability/README.md) | relações entre decisões e artefatos |
-| [UML](docs/uml/README.md) | catálogo de diagramas operacionais e planejados |
+| [Rastreabilidade](docs/traceability/README.md) | relações derivadas entre decisões e artefatos |
 
 ## Guardrails
 
 - não trabalhar diretamente na `main`;
 - seguir Issue → branch → PR → CI → revisão humana → squash merge;
 - permitir que o Codex puxe o próximo slice pronto dentro de envelope aprovado, sem nova autorização mecânica;
-- não iniciar código de produto antes dos critérios da Phase 0;
+- não iniciar a Phase 1 apenas porque sua Epic está aberta: a slice deve estar especificada, com condições verificadas e dentro de envelope aprovado;
 - não transformar proposta ou diagrama planejado em contrato implementado;
 - não alterar ADR aceito como documento vivo;
 - não usar dados reais, secrets ou providers externos sem decisão e controles aplicáveis.
 
 O fim de um slice não é, sozinho, um gate. Mudança de direção, risco, dependência ou área protegida exige checkpoint; merge permanece humano.
 
-Consulte [AGENTS.md](AGENTS.md) antes de executar uma Issue com Codex.
-
+Consulte [AGENTS.md](AGENTS.md) antes de executar uma Issue com Codex. O `README` apresenta o projeto; ele não substitui a fonte especializada de cada regra.

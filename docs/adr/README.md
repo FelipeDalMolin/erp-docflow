@@ -1,5 +1,9 @@
 # ADRs
 
+- **Classe:** governança e catálogo de decisões
+- **Estado:** vigente
+- **Índice derivado:** [ADR Index](../traceability/adr-index.md)
+
 Esta pasta armazena os Architecture Decision Records do projeto.
 
 ADR significa Architecture Decision Record.
@@ -166,21 +170,37 @@ Formato recomendado:
 
 Todo ADR relevante deve ser listado em:
 
-```text
-docs/traceability/adr-index.md
-```
+[ADR Index](../traceability/adr-index.md)
 
 Quando aplicável, também deve aparecer em:
 
-```text
-docs/traceability/decision-map.md
-docs/traceability/module-map.md
-docs/traceability/entity-map.md
-docs/traceability/route-map.md
-docs/traceability/impact-matrix.md
-```
+[Decision Map](../traceability/decision-map.md), [Module Map](../traceability/module-map.md), [Entity Map](../traceability/entity-map.md), [Route Map](../traceability/route-map.md) e [Impact Matrix](../traceability/impact-matrix.md).
 
-## 9. Diretriz final
+## 9. Catálogo
+
+| ADR | Status | Tema |
+| --- | --- | --- |
+| [ADR-0001](0001-on-prem-first-cloud-like.md) | Aceito | on-prem first e cloud-like |
+| [ADR-0002](0002-phase-0-before-product-code.md) | Aceito | baseline operacional antes do código |
+| [ADR-0003](0003-git-flow-issue-branch-pr-review.md) | Aceito | Issue, branch, PR e revisão |
+| [ADR-0004](0004-local-dev-windows-wsl-vscode.md) | Aceito | Windows, WSL e VS Code |
+| [ADR-0005](0005-controlled-codex-usage.md) | Aceito | uso controlado do Codex |
+| [ADR-0006](0006-adr-and-traceability-governance.md) | Aceito | ADRs e rastreabilidade |
+| [ADR-0007](0007-structural-ci-and-branch-protection.md) | Aceito com revisão | CI estrutural e branch protection |
+| [ADR-0008](0008-docker-compose-for-local-and-onprem-lab.md) | Aceito com revisão | Docker Compose local/onprem-lab |
+| [ADR-0009](0009-modular-monolith-initial-architecture.md) | Aceito com revisão | modular monolith |
+| [ADR-0010](0010-postgresql-primary-relational-database.md) | Aceito com revisão | PostgreSQL |
+| [ADR-0011](0011-s3-compatible-object-storage-minio.md) | Aceito com revisão | object storage S3-compatible |
+| [ADR-0012](0012-document-envelope-ged-core.md) | Aceito com revisão | `DocumentEnvelope` |
+| [ADR-0013](0013-human-review-acceptance-and-override.md) | Aceito com revisão | revisão, aceite e override |
+| [ADR-0014](0014-backup-and-restore-required.md) | Aceito com revisão | backup e restore |
+| [ADR-0015](0015-auth-authorization-security-strategy.md) | Proposto | autenticação, autorização e segurança |
+| [ADR-0016](0016-capability-based-document-processing-providers.md) | Proposto | capabilities e providers |
+| [ADR-0017](0017-codex-continuous-slice-loop.md) | Aceito | loop contínuo de slices |
+
+O catálogo oferece navegação. O [ADR Index](../traceability/adr-index.md) mantém relações, decisão curta e gatilho de revisão.
+
+## 10. Diretriz final
 
 ADRs preservam memória técnica.
 

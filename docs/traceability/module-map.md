@@ -12,13 +12,13 @@ Este arquivo orienta arquitetura e decomposição futura; não autoriza backend,
 | `processing` | jobs, attempts, task graph e routing | ProcessingJob, ProcessingAttempt, RoutingDecision | ADR-0012, 0016 (proposto) | não implementado |
 | `providers` | adapters por capability | ProviderExecution, normalized result | ADR-0016 (proposto) | não implementado |
 | `validation` | regras determinísticas e conflitos | ValidationResult | ADR-0013, 0016 (proposto) | não implementado |
-| `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013, 0015 | não implementado |
-| `audit` | fatos duráveis, proveniência e decisão | AuditEvent | ADR-0013, 0015, 0016 | não implementado |
+| `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013; 0015 (proposto/gate) | não implementado |
+| `audit` | fatos duráveis, proveniência e decisão | AuditEvent | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | não implementado |
 | `linking` | sugestão/confirmação de relações | EntityLink | ADR-0012, 0013 | não implementado |
-| `finance` | lançamentos, pagamentos e caixa | FinancialEntry, PaymentIntent, CashMovement | ADR-0009, 0013, 0015 | não implementado |
-| `search` | índice, recuperação e RAG | chunks/read models | ADR-0012, 0015, 0016 | não implementado |
-| `integrations` | fontes e destinos externos | connectors/outbox | ADR-0001, 0015, 0016 | não implementado |
-| `auth` | identidade, acesso e segregação | usuário, papel, política | ADR-0015 (gate) | não implementado |
+| `finance` | lançamentos, pagamentos e caixa | FinancialEntry, PaymentIntent, CashMovement | ADR-0009, 0013; 0015 (proposto/gate) | não implementado |
+| `search` | índice, recuperação e RAG | chunks/read models | ADR-0012; 0015 (proposto/gate); 0016 (proposto) | não implementado |
+| `integrations` | fontes e destinos externos | connectors/outbox | ADR-0001; 0015 (proposto/gate); 0016 (proposto) | não implementado |
+| `auth` | identidade, acesso e segregação | usuário, papel, política | ADR-0015 (proposto/gate) | não implementado |
 
 ## Boundary técnico planejado
 
@@ -30,4 +30,3 @@ Workers podem executar jobs de `processing` em processos/containers separados, m
 - quando boundary virar módulo de código;
 - quando ADR mudar responsabilidade;
 - quando um slice provar que dois boundaries devem ser unidos ou separados.
-

@@ -35,6 +35,14 @@ Explicar por que esta Epic existe e qual problema ou frente ela organiza.
 
 ## Envelope de execução do Codex
 
+Estado:
+
+- `Rascunho | Aprovado | Pausado | Encerrado`
+
+Responsável, data e referência da aprovação:
+
+- <registro>
+
 Objetivo do lote:
 
 - <objetivo>
@@ -46,6 +54,10 @@ Slices ou critério de seleção:
 Áreas permitidas:
 
 - <área>
+
+Paths permitidos e ownership quando houver paralelismo:
+
+- <path/responsável>
 
 Fora do envelope:
 

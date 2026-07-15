@@ -29,7 +29,7 @@ ADRs relacionados:
 
 - ADR-000X
 
-Novo ADR necessário?
+Novo ADR necessário? Selecionar exatamente uma:
 
 - [ ] Não
 - [ ] Sim, explicar:
@@ -47,7 +47,7 @@ Comandos executados:
 # comando
 ```
 
-Resultado:
+Resultado: selecionar exatamente uma:
 
 - [ ] Passou
 - [ ] Não aplicável, justificar:
@@ -79,7 +79,7 @@ Resultado:
 
 ## Decisão de continuidade do Codex
 
-Selecionar uma:
+Selecionar exatamente uma e manter as demais desmarcadas:
 
 - [ ] `CONTINUE` — próximo slice elegível:
 - [ ] `AWAIT_DEPENDENCY` — dependência:

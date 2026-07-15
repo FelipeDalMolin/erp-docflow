@@ -1,5 +1,9 @@
 # Rastreabilidade
 
+- **Classe:** índice derivado
+- **Estado:** vigente
+- **Fonte de classificação:** [portal documental](../README.md)
+
 Esta pasta conecta decisões, documentação, módulos, entidades, rotas, diagramas, Issues e Pull Requests.
 
 ## 1. Hierarquia de fontes
@@ -33,13 +37,13 @@ ADR aceito
 
 | Arquivo | Finalidade |
 | --- | --- |
-| `adr-index.md` | ADRs, status, relações e condição de revisão |
-| `decision-map.md` | dependências entre decisões |
-| `document-map.md` | documentos canônicos, ADRs, UMLs e fases |
-| `module-map.md` | boundaries planejados/implementados |
-| `entity-map.md` | conceitos/entidades, estados e ADRs |
-| `route-map.md` | rotas reais quando existirem |
-| `impact-matrix.md` | checklist de artefatos afetados por tema |
+| [ADR index](adr-index.md) | ADRs, status, relações e condição de revisão |
+| [Decision map](decision-map.md) | dependências entre decisões |
+| [Document map](document-map.md) | documentos, classes, autoridade e relações |
+| [Module map](module-map.md) | boundaries planejados/implementados |
+| [Entity map](entity-map.md) | conceitos/entidades, estados e ADRs |
+| [Route map](route-map.md) | rotas reais quando existirem |
+| [Impact matrix](impact-matrix.md) | checklist de artefatos afetados por tema |
 
 ## 4. Status de produto
 
@@ -85,4 +89,3 @@ Atualizar os mapas quando houver mudança em:
 ## 7. Diretriz final
 
 A rastreabilidade deve ser leve, mas suficiente para impedir decisões invisíveis e para explicar o impacto de mudar o `DocumentEnvelope`, o fluxo de review, um provider ou um efeito financeiro.
-
