@@ -254,12 +254,12 @@ Usar commits pequenos e descritivos.
 Exemplos:
 
 ```bash
-git add docs/FLUXO_GITHUB_PROJECT.md
+git add docs/operations/FLUXO_GITHUB_PROJECT.md
 git commit -m "docs(project): define fluxo do GitHub Project"
 ```
 
 ```bash
-git add docs/FLUXO_VSCODE_GIT_GITHUB_CLI.md
+git add docs/operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md
 git commit -m "docs(flow): define fluxo VS Code Git e GitHub CLI"
 ```
 

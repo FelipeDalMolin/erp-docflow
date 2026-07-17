@@ -27,7 +27,7 @@ Adiciona complexidade de estados e pode aumentar tempo operacional.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`, `docs/uml/README.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`, `docs/uml/README.md`.
 Módulos/entidades/rotas: futuros revisão, documentos, auditoria, usuários, aceite e override.
 Infra: auditoria, logs e permissões futuras.
 Testes necessários: estado, permissão e auditoria quando houver implementação.

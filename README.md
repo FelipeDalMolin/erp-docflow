@@ -4,7 +4,7 @@ Plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, para mater
 
 Status atual: **Phase 0 encerrada; Phase 1 aberta em refinamento, ainda sem execução de código autorizada**. Não há código de produto implementado.
 
-Consulte o [status do projeto](docs/PROJECT_STATUS.md) para o gate ativo e o [portal da documentação](docs/README.md) para escolher a fonte correta.
+Consulte o [status do projeto](docs/project/PROJECT_STATUS.md) para o gate ativo e o [portal da documentação](docs/README.md) para escolher a fonte correta.
 
 ## Visão do fluxo
 
@@ -23,9 +23,9 @@ entrada
 | Entrada | Finalidade |
 | --- | --- |
 | [Portal da documentação](docs/README.md) | trilhas de leitura, matriz de autoridade, classes e manutenção |
-| [Status do projeto](docs/PROJECT_STATUS.md) | fase atual, evidências, gate e fila candidata |
-| [Roadmap](docs/ROADMAP.md) | escopo permanente, dependências e resultados das fases |
-| [Arquitetura](docs/ARCHITECTURE.md) | visão lógica planejada, boundaries e dados |
+| [Status do projeto](docs/project/PROJECT_STATUS.md) | fase atual, evidências, gate e fila candidata |
+| [Roadmap](docs/project/ROADMAP.md) | escopo permanente, dependências e resultados das fases |
+| [Arquitetura](docs/architecture/ARCHITECTURE.md) | visão lógica planejada, boundaries e dados |
 | [ADRs](docs/adr/README.md) | decisões arquiteturais e seus status |
 | [Rastreabilidade](docs/traceability/README.md) | relações derivadas entre decisões e artefatos |
 

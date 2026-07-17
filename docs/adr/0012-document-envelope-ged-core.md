@@ -27,7 +27,7 @@ Pode exigir refinamento quando casos reais surgirem; um núcleo mal definido pod
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`, `docs/uml/README.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`, `docs/uml/README.md`.
 Módulos/entidades/rotas: futuros documentos, arquivos, revisão, OCR, auditoria, upload e consulta.
 Infra: banco, object storage, workers e backup futuros.
 Testes necessários: domínio e integração quando houver implementação.

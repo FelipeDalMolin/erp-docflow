@@ -21,7 +21,7 @@ Todo trabalho relevante deve seguir:
 Epic -> Issue/Slice -> Sub-issue opcional -> Branch -> Commit -> Pull Request -> Review humana -> Squash merge
 ```
 
-A Phase 0 foi encerrada; a Phase 1 está em refinamento. Uma Epic aberta não torna suas slices executáveis. O snapshot atual e o gate ficam em [Status do projeto](PROJECT_STATUS.md).
+A Phase 0 foi encerrada; a Phase 1 está em refinamento. Uma Epic aberta não torna suas slices executáveis. O snapshot atual e o gate ficam em [Status do projeto](../project/PROJECT_STATUS.md).
 
 ## 2. Tipos de item
 
@@ -112,7 +112,7 @@ Regras:
 
 A taxonomia abaixo é o vocabulário alvo para organizar o Project. Ela não descreve automaticamente labels já criadas ou aplicadas.
 
-No snapshot de 2026-07-14, as Issues legadas não possuem essa taxonomia aplicada. A materialização e aplicação retroativa exigem trabalho operacional próprio. O estado desse gap pertence a [Status do projeto](PROJECT_STATUS.md).
+No snapshot de 2026-07-14, as Issues legadas não possuem essa taxonomia aplicada. A materialização e aplicação retroativa exigem trabalho operacional próprio. O estado desse gap pertence a [Status do projeto](../project/PROJECT_STATUS.md).
 
 ### 4.1 Tipo
 
@@ -522,7 +522,7 @@ Preparar um PR e decidir `CONTINUE` não move a Issue automaticamente para `Done
 
 ## 15. Padronização operacional versus automação real
 
-O repositório já possui modelos de referência em [`docs/templates/`](templates/), mas eles não são templates nativos do GitHub. Padronização operacional significa checklist, nomenclatura, campos e fluxo repetível; não prova que labels, formulários ou automações estejam instalados.
+O repositório já possui modelos de referência em [`docs/templates/`](../templates/), mas eles não são templates nativos do GitHub. Padronização operacional significa checklist, nomenclatura, campos e fluxo repetível; não prova que labels, formulários ou automações estejam instalados.
 
 Automação real pode ser criada futuramente, por exemplo:
 

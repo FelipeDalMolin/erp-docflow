@@ -7,27 +7,27 @@
 
 Este é o ponto de entrada para a documentação do `erp-docflow`. Ele organiza os artefatos por pergunta e autoridade, sem transformar índices, diagramas ou registros de descoberta em novas fontes de decisão.
 
-O estado atual do projeto e o próximo gate estão em [Status do projeto](PROJECT_STATUS.md).
+O estado atual do projeto e o próximo gate estão em [Status do projeto](project/PROJECT_STATUS.md).
 
 ## Trilhas de leitura
 
 ### Começar ou executar uma Issue
 
-1. [Status do projeto](PROJECT_STATUS.md)
-2. [Modelo operacional](MODELO_OPERACIONAL_DO_PROJETO.md)
-3. [Fluxo do GitHub Project](FLUXO_GITHUB_PROJECT.md)
-4. [Estratégia Git](ESTRATEGIA_GIT.md)
-5. [Runbook VS Code, WSL, Git e GitHub CLI](FLUXO_VSCODE_GIT_GITHUB_CLI.md)
+1. [Status do projeto](project/PROJECT_STATUS.md)
+2. [Modelo operacional](project/MODELO_OPERACIONAL_DO_PROJETO.md)
+3. [Fluxo do GitHub Project](operations/FLUXO_GITHUB_PROJECT.md)
+4. [Estratégia Git](operations/ESTRATEGIA_GIT.md)
+5. [Runbook VS Code, WSL, Git e GitHub CLI](operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md)
 6. [`AGENTS.md`](../AGENTS.md), quando houver uso do Codex
 
 ### Entender produto e arquitetura planejada
 
-1. [Roadmap](ROADMAP.md)
-2. [Arquitetura de referência](ARCHITECTURE.md)
-3. [Pipeline documental](DOCUMENT_PIPELINE.md)
-4. [Baseline conceitual de dados](DATA_MODEL_BASELINE.md)
-5. [Estratégia de providers](PROVIDER_STRATEGY.md)
-6. [Glossário documental](GLOSSARIO_DOCUMENTAL.md)
+1. [Roadmap](project/ROADMAP.md)
+2. [Arquitetura de referência](architecture/ARCHITECTURE.md)
+3. [Pipeline documental](architecture/DOCUMENT_PIPELINE.md)
+4. [Baseline conceitual de dados](architecture/DATA_MODEL_BASELINE.md)
+5. [Estratégia de providers](architecture/PROVIDER_STRATEGY.md)
+6. [Glossário documental](architecture/GLOSSARIO_DOCUMENTAL.md)
 7. [Catálogo UML](uml/README.md)
 
 ### Entender decisões e impacto
@@ -40,22 +40,22 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](PROJEC
 
 ### Entender ambiente e operação local
 
-1. [Ambientes](AMBIENTES.md)
-2. [WSL multi-projetos](WSL_MULTI_PROJETOS.md)
-3. [Runbook VS Code, WSL, Git e GitHub CLI](FLUXO_VSCODE_GIT_GITHUB_CLI.md)
+1. [Ambientes](operations/AMBIENTES.md)
+2. [WSL multi-projetos](operations/WSL_MULTI_PROJETOS.md)
+3. [Runbook VS Code, WSL, Git e GitHub CLI](operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md)
 
 ## Matriz de autoridade
 
 | Pergunta | Fonte primária | Papel das demais fontes |
 | --- | --- | --- |
-| Qual é o estado atual e o próximo gate? | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Issues/PRs fornecem a evidência operacional. |
-| Quais fases, resultados e gates existem? | [ROADMAP.md](ROADMAP.md) | O status registra a posição atual; Epics decompõem o trabalho. |
-| Como o projeto governa Issues, PRs, decisões e rastreabilidade? | [MODELO_OPERACIONAL_DO_PROJETO.md](MODELO_OPERACIONAL_DO_PROJETO.md) | Documentos especializados detalham cada mecanismo. |
-| Qual é o lifecycle de um item e quando ele está executável? | [FLUXO_GITHUB_PROJECT.md](FLUXO_GITHUB_PROJECT.md) | Templates aplicam o vocabulário; o Project exibe o estado. |
-| Quais são as regras de branch, commit, PR e merge? | [ESTRATEGIA_GIT.md](ESTRATEGIA_GIT.md) | O runbook mostra comandos; `AGENTS.md` adiciona limites do Codex. |
+| Qual é o estado atual e o próximo gate? | [PROJECT_STATUS.md](project/PROJECT_STATUS.md) | Issues/PRs fornecem a evidência operacional. |
+| Quais fases, resultados e gates existem? | [ROADMAP.md](project/ROADMAP.md) | O status registra a posição atual; Epics decompõem o trabalho. |
+| Como o projeto governa Issues, PRs, decisões e rastreabilidade? | [MODELO_OPERACIONAL_DO_PROJETO.md](project/MODELO_OPERACIONAL_DO_PROJETO.md) | Documentos especializados detalham cada mecanismo. |
+| Qual é o lifecycle de um item e quando ele está executável? | [FLUXO_GITHUB_PROJECT.md](operations/FLUXO_GITHUB_PROJECT.md) | Templates aplicam o vocabulário; o Project exibe o estado. |
+| Quais são as regras de branch, commit, PR e merge? | [ESTRATEGIA_GIT.md](operations/ESTRATEGIA_GIT.md) | O runbook mostra comandos; `AGENTS.md` adiciona limites do Codex. |
 | O que o Codex pode fazer? | [`AGENTS.md`](../AGENTS.md) | [`.codex/config.toml`](../.codex/config.toml) define capacidade técnica local; a Issue/envelope concede escopo. |
 | Por que uma decisão arquitetural foi tomada? | ADR aplicável em [`docs/adr/`](adr/README.md) | Arquitetura, mapas e UML devem derivar da decisão e respeitar seu status. |
-| Como o produto deverá funcionar? | [ARCHITECTURE.md](ARCHITECTURE.md) e documentos de domínio | Roadmap define ordem; UML representa visualmente; nenhum deles prova implementação. |
+| Como o produto deverá funcionar? | [ARCHITECTURE.md](architecture/ARCHITECTURE.md) e documentos de domínio | Roadmap define ordem; UML representa visualmente; nenhum deles prova implementação. |
 | O que está implementado? | Código, testes e contratos executáveis | Mapas registram a evidência da Issue/PR quando código existir. |
 
 Quando duas fontes divergirem, não combinar regras silenciosamente. Usar a fonte primária da pergunta, verificar ADRs aplicáveis e abrir uma Issue para resolver a inconsistência.
@@ -76,6 +76,8 @@ Quando duas fontes divergirem, não combinar regras silenciosamente. Usar a font
 
 `docs/templates/` contém modelos de referência para copiar ou usar via CLI. Eles não são templates nativos do GitHub enquanto não existirem arquivos equivalentes em `.github/ISSUE_TEMPLATE/` ou `.github/PULL_REQUEST_TEMPLATE.md`.
 
+A auditoria que fundamentou a organização física está em [Revisão de coerência documental](reviews/DOCUMENTATION_COHERENCE_2026-07.md).
+
 ## Estados e qualificadores
 
 - `vigente`: processo ou índice atual;
@@ -94,8 +96,9 @@ Qualificadores como `proposto` e `não implementado` devem acompanhar o conceito
 ```text
 docs/
 ├── README.md                    # portal e matriz de autoridade
-├── PROJECT_STATUS.md            # snapshot, gate e próximo trabalho
-├── *.md                         # fontes operacionais e baselines canônicos
+├── project/                     # status, roadmap e governança do projeto
+├── architecture/                # arquitetura e baselines documentais planejados
+├── operations/                  # ambiente, Git, GitHub Project e runbooks
 ├── adr/                         # decisões arquiteturais
 ├── reviews/                     # evidência de descoberta
 ├── templates/                   # modelos de referência
@@ -103,14 +106,14 @@ docs/
 └── uml/                         # representações visuais
 ```
 
-Os arquivos não serão movidos apenas para produzir uma árvore visualmente perfeita. Primeiro, este portal, os links e o CI devem estabilizar a autoridade de cada fonte. Uma reorganização física futura exige Issue própria, atualização atômica de links e preservação do histórico.
+A organização física foi materializada pela Issue #69. Cada agrupamento possui um índice que delimita responsabilidade e reduz duplicação normativa. Movimentos futuros continuam exigindo Issue própria, atualização atômica de links e preservação do histórico.
 
 ## Regra de manutenção
 
 Toda mudança documental deve verificar:
 
 - fonte primária correta para a pergunta;
-- status atual no [PROJECT_STATUS.md](PROJECT_STATUS.md);
+- status atual no [PROJECT_STATUS.md](project/PROJECT_STATUS.md);
 - ADRs e respectivos status;
 - links e mapas de rastreabilidade afetados;
 - distinção entre planejado e implementado;

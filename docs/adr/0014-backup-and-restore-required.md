@@ -27,7 +27,7 @@ Aumenta trabalho antes de produção e exige disciplina operacional.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/AMBIENTES.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/operations/AMBIENTES.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: futuros documentos, storage, banco, auditoria e dados persistidos.
 Infra: PostgreSQL futuro, object storage futuro, onprem-lab e prod-onprem.
 Testes necessários: teste real de restore quando houver dados e storage.

@@ -146,10 +146,10 @@ Escolhida por combinar continuidade, PRs pequenos e checkpoints baseados em risc
 ### Documentação afetada
 
 - `AGENTS.md`;
-- `docs/MODELO_OPERACIONAL_DO_PROJETO.md`;
-- `docs/FLUXO_GITHUB_PROJECT.md`;
-- `docs/ESTRATEGIA_GIT.md`;
-- `docs/ROADMAP.md`;
+- `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`;
+- `docs/operations/FLUXO_GITHUB_PROJECT.md`;
+- `docs/operations/ESTRATEGIA_GIT.md`;
+- `docs/project/ROADMAP.md`;
 - `docs/templates/`;
 - `docs/traceability/`;
 - `docs/uml/`.

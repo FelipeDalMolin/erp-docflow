@@ -199,16 +199,16 @@ Esta baseline foi consolidada durante a Phase 0 e continua descrevendo arquitetu
 - não autoriza dados reais, credenciais ou deploy;
 - não muda ADR aceito.
 
-As decisões ainda abertas estão registradas em [reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md](reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md).
+As decisões ainda abertas estão registradas em [reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md](../reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md).
 
 ## 13. Diagramas relacionados
 
-- [Contexto planejado](uml/01-context/erp-docflow-system-context-planned.puml)
-- [Deployment on-prem planejado](uml/01-context/onprem-deployment-planned.puml)
-- [Atividade do pipeline](uml/02-business/document-processing-activity-planned.puml)
-- [Componentes de processamento](uml/03-application/document-processing-components-planned.puml)
-- [Domínio documental](uml/04-domain/document-processing-domain-planned.puml)
-- [Sequência de intake](uml/05-sequence/ingest-to-envelope-planned.puml)
-- [Sequência de processamento e revisão](uml/05-sequence/process-review-accept-planned.puml)
-- [Estado do DocumentEnvelope](uml/06-state/document-envelope-state-planned.puml)
-- [Estado do ProcessingJob](uml/06-state/processing-job-state-planned.puml)
+- [Contexto planejado](../uml/01-context/erp-docflow-system-context-planned.puml)
+- [Deployment on-prem planejado](../uml/01-context/onprem-deployment-planned.puml)
+- [Atividade do pipeline](../uml/02-business/document-processing-activity-planned.puml)
+- [Componentes de processamento](../uml/03-application/document-processing-components-planned.puml)
+- [Domínio documental](../uml/04-domain/document-processing-domain-planned.puml)
+- [Sequência de intake](../uml/05-sequence/ingest-to-envelope-planned.puml)
+- [Sequência de processamento e revisão](../uml/05-sequence/process-review-accept-planned.puml)
+- [Estado do DocumentEnvelope](../uml/06-state/document-envelope-state-planned.puml)
+- [Estado do ProcessingJob](../uml/06-state/processing-job-state-planned.puml)

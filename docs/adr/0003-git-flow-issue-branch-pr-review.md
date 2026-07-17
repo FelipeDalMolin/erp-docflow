@@ -27,7 +27,7 @@ Exige PR até para mudanças pequenas e disciplina para manter um slice por PR.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/ESTRATEGIA_GIT.md`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md`.
+Documentação afetada: `docs/operations/ESTRATEGIA_GIT.md`, `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`.
 Módulos/entidades/rotas: nenhum produto criado agora.
 Infra: CI e branch protection futuros.
 Testes necessários: validação documental.

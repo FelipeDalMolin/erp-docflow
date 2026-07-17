@@ -27,7 +27,7 @@ Exige disciplina para manter limites entre módulos e pode demandar extração f
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: futuros, conforme produto surgir.
 Infra: bootstrap app futuro.
 Testes necessários: testes de módulo e integração quando houver código.

@@ -27,7 +27,7 @@ A `main` ainda depende de disciplina humana até a proteção ser aplicada.
 
 ## Impacto técnico
 
-Documentação afetada: `docs/AMBIENTES.md`, `docs/ESTRATEGIA_GIT.md`, `docs/ROADMAP.md`.
+Documentação afetada: `docs/operations/AMBIENTES.md`, `docs/operations/ESTRATEGIA_GIT.md`, `docs/project/ROADMAP.md`.
 Módulos/entidades/rotas: nenhum produto criado agora.
 Infra: GitHub Actions e branch protection futuros.
 Testes necessários: validação documental; testes de CI virão em slice própria.

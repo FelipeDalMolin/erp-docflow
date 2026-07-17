@@ -27,7 +27,7 @@ Exige Issues claras, revisão humana e parada quando houver decisão arquitetura
 
 ## Impacto técnico
 
-Documentação afetada: `AGENTS.md`, `.codex/config.toml`, `docs/MODELO_OPERACIONAL_DO_PROJETO.md`.
+Documentação afetada: `AGENTS.md`, `.codex/config.toml`, `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`.
 Módulos/entidades/rotas: nenhum produto criado agora.
 Infra: ambiente local e fluxo de PR.
 Testes necessários: validação documental e conferência da configuração Codex.

@@ -309,9 +309,8 @@ Retry automático só é permitido para erros transitórios e com limite. Troca 
 
 ## 17. Overviews relacionados
 
-- [Atividade do pipeline](uml/02-business/document-processing-activity-planned.puml)
-- [Sequência de intake](uml/05-sequence/ingest-to-envelope-planned.puml)
-- [Sequência de processamento e revisão](uml/05-sequence/process-review-accept-planned.puml)
-- [Estado do DocumentEnvelope](uml/06-state/document-envelope-state-planned.puml)
-- [Estado do ProcessingJob](uml/06-state/processing-job-state-planned.puml)
-
+- [Atividade do pipeline](../uml/02-business/document-processing-activity-planned.puml)
+- [Sequência de intake](../uml/05-sequence/ingest-to-envelope-planned.puml)
+- [Sequência de processamento e revisão](../uml/05-sequence/process-review-accept-planned.puml)
+- [Estado do DocumentEnvelope](../uml/06-state/document-envelope-state-planned.puml)
+- [Estado do ProcessingJob](../uml/06-state/processing-job-state-planned.puml)

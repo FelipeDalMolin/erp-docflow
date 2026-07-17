@@ -55,4 +55,3 @@ Issue de origem: #22
 | “resultado final da IA” | sugestão, resultado normalizado ou snapshot aceito |
 | “substituir Tesseract” | escolher engine por perfil após benchmark |
 | “Stirling faz o workflow” | Stirling normaliza/manipula e pode executar OCR auxiliar |
-

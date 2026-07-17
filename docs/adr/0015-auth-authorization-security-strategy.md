@@ -27,7 +27,7 @@ Não resolve autenticação nesta fase e pode bloquear funcionalidades futuras a
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`, `AGENTS.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`, `AGENTS.md`.
 Módulos/entidades/rotas: futuros usuários, autenticação, autorização, revisão, auditoria e rotas autenticadas.
 Infra: secrets, configuração, logs, auditoria e operação futura.
 Testes necessários: autenticação, autorização e segurança quando houver implementação.

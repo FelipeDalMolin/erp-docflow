@@ -27,7 +27,7 @@ Atrasa o início do código de produto e exige disciplina para evitar excesso do
 
 ## Impacto técnico
 
-Documentação afetada: `docs/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/ROADMAP.md`, `AGENTS.md`.
+Documentação afetada: `docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`, `docs/project/ROADMAP.md`, `AGENTS.md`.
 Módulos/entidades/rotas: nenhum produto criado agora.
 Infra: CI estrutural e branch protection futuros.
 Testes necessários: validação documental.
