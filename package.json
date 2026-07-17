@@ -1,0 +1,9 @@
+{
+  "name": "erp-docflow",
+  "private": true,
+  "packageManager": "pnpm@11.13.1",
+  "engines": {
+    "node": ">=24.18.0 <25",
+    "pnpm": ">=11 <12"
+  }
+}
