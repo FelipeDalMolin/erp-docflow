@@ -362,13 +362,25 @@ Elegibilidade indica que a Issue pode entrar na fila de pull. Uma eventual label
 
 Antes da execução, o Plan Mode pode aprovar um **envelope de execução** contendo:
 
+- estado `Rascunho`, `Aprovado`, `Pausado` ou `Encerrado`;
+- responsável, data e referência da aprovação;
 - objetivo do lote;
 - slices explícitos ou critério de seleção;
 - áreas permitidas e excluídas;
+- paths e ownership quando houver paralelismo;
 - dependências;
 - validações;
 - checkpoints humanos;
 - condição de encerramento.
+
+O corpo da Epic ou Issue governante mantém o estado corrente e a evidência durável:
+
+- `Rascunho`: planejamento, sem autorização de slice;
+- `Aprovado`: execução limitada ao escopo registrado;
+- `Pausado`: nenhuma nova slice pode começar;
+- `Encerrado`: retomada exige envelope novo ou revisão aprovada.
+
+Alterar limites, ownership ou exclusões exige nova revisão humana registrada no corpo.
 
 Não é obrigatório criar novo campo no Project. A fila pode ser formada por:
 
@@ -385,9 +397,18 @@ Ao concluir tecnicamente um slice, o Codex avalia a fila e registra:
 | Decisão | Uso |
 | --- | --- |
 | `CONTINUE` | puxar o próximo slice elegível sem nova aprovação mecânica |
-| `AWAIT_DEPENDENCY` | aguardar merge, decisão ou outra entrega |
-| `CHECKPOINT` | pedir orientação por mudança, risco, conflito ou ambiguidade |
+| `AWAIT_DEPENDENCY` | aguardar dependência conhecida e esperada, sem decisão nova |
+| `CHECKPOINT` | pedir orientação por decisão/ação humana não prevista, risco, conflito ou ambiguidade |
 | `STOP` | encerrar o envelope ou parar por falta de candidato |
+
+Selecionar exatamente uma decisão:
+
+1. envelope encerrado ou sem candidato elegível: `STOP`;
+2. decisão, risco, conflito ou ação humana não prevista: `CHECKPOINT`;
+3. dependência conhecida e esperada: `AWAIT_DEPENDENCY`;
+4. próximo item elegível: `CONTINUE`.
+
+Registrar fato, referência ao envelope e condição de retomada na descrição do PR. Sem PR, registrar em comentário na Issue ou Epic correspondente.
 
 ### Regra para PR pendente
 
@@ -399,7 +420,7 @@ O Codex pode iniciar outro slice enquanto um PR aguarda review somente quando:
 - não há sobreposição relevante de arquivos ou decisão;
 - o envelope autoriza continuidade.
 
-Se houver dependência, o item permanece `Ready` ou `Blocked`, conforme o caso, e a decisão é `AWAIT_DEPENDENCY`.
+Se houver dependência conhecida e esperada, o item permanece `Ready` ou `Blocked`, conforme o caso, e a decisão é `AWAIT_DEPENDENCY`. Se a dependência exigir decisão ou coordenação não prevista, usar `CHECKPOINT`.
 
 Branch/PR empilhado não é padrão. Só deve ser usado quando previsto explicitamente no envelope.
 
@@ -500,6 +521,7 @@ Checklist:
 Mover para Review quando:
 
 - existe PR aberto;
+- o PR não está mais em draft;
 - PR referencia a Issue;
 - diff está pequeno e revisável;
 - validações cabíveis foram executadas ou justificadas;
@@ -513,7 +535,7 @@ Considerar concluído quando:
 
 - PR foi revisado por humano;
 - PR foi aprovado ou aceito;
-- PR foi mergeado;
+- PR foi squash-mergeado;
 - Issue foi fechada;
 - Project foi atualizado para Done;
 - decisões relevantes foram documentadas.

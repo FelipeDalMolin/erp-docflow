@@ -86,6 +86,18 @@ Selecionar exatamente uma e manter as demais desmarcadas:
 - [ ] `CHECKPOINT` — decisão/orientação necessária:
 - [ ] `STOP` — envelope encerrado ou sem candidato:
 
+Referência ao envelope:
+
+- <Epic/Issue e estado>
+
+Fato observado:
+
+- <evidência>
+
+Condição de retomada:
+
+- <condição objetiva ou não aplicável>
+
 Esta decisão não faz merge do PR nem move automaticamente a Issue para `Done`.
 
 ## Merge

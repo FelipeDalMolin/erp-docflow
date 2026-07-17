@@ -342,9 +342,11 @@ CHECKPOINT
 STOP
 ```
 
-Checkpoints são exigidos por mudança de direção, risco, dependência, área protegida ou gate de Phase — não apenas porque um slice terminou.
+Checkpoints são exigidos por mudança de direção, risco, decisão/ação humana não prevista, área protegida ou gate de Phase — não apenas porque um slice terminou.
 
 Uma dependência conhecida e já modelada usa `AWAIT_DEPENDENCY`. Dependência inesperada que exija decisão, nova coordenação ou mudança de escopo usa `CHECKPOINT`.
+
+O lifecycle do envelope, a exclusividade dos outcomes e as condições de retomada pertencem ao ADR-0018.
 
 O Codex pode iniciar trabalho independente enquanto outro PR aguarda review. Trabalho dependente aguarda merge, salvo estratégia de PR empilhado explicitamente aprovada.
 

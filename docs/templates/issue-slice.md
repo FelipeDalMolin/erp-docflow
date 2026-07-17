@@ -127,6 +127,15 @@ Dependência após este slice:
 
 O Codex deve registrar `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` ou `STOP` ao concluir tecnicamente o slice.
 
+Registrar exatamente um outcome na descrição do PR, com:
+
+- fato observado;
+- referência ao envelope;
+- próximo item ou dependência;
+- condição de retomada.
+
+Sem PR, registrar o outcome em comentário na Issue ou Epic correspondente.
+
 ## Restrições para Codex
 
 - Não executar fora do escopo desta Issue.

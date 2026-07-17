@@ -1,45 +1,54 @@
 @startuml
-' Issue #24
-' Related ADRs: ADR-0003, ADR-0005, ADR-0017
+' Issues #24 and #67
+' Related ADRs: ADR-0003, ADR-0005, ADR-0017, ADR-0018
 ' Guardrail: operational workflow; does not authorize automerge or product decisions.
 
-title Loop contínuo de slices pelo Codex
+title Lifecycle do envelope e continuidade de slices pelo Codex
 
 start
 :Plan Mode propõe envelope;
-:Humano aprova objetivo, limites e checkpoints;
+:Humano registra estado, responsável,\ndata, referência, limites e checkpoints;
+
+if (Envelope está Aprovado?) then (não)
+  :STOP;
+  stop
+else (sim)
+endif
 
 repeat
-  :Ler fila Ready for execution;
+  :Ler fila e estado do envelope;
 
-  if (Existe slice elegível?) then (sim)
-    :Selecionar por prioridade e dependência;
-    :Criar/usar branch da Issue;
-    :Executar e validar;
-    :Preparar PR draft e registrar evidências;
-
-    if (Próximo slice depende deste PR?) then (sim)
-      :AWAIT_DEPENDENCY;
-      :Solicitar review/merge humano;
-      stop
-    elseif (Surgiu decisão, risco ou conflito?) then (sim)
-      :CHECKPOINT;
-      :Apresentar fato, impacto e opções;
-      stop
-    else (não)
-      :CONTINUE;
-    endif
-  else (não)
+  if (Envelope encerrado\nou sem candidato?) then (sim)
     :STOP;
     stop
+  elseif (Surgiu decisão, risco\nou conflito não previsto?) then (sim)
+    :CHECKPOINT;
+    :Registrar fato, impacto,\nopções e condição de retomada;
+    stop
+  elseif (Existe dependência\nconhecida e esperada?) then (sim)
+    :AWAIT_DEPENDENCY;
+    :Registrar dependência e\ncondição objetiva de retomada;
+    stop
+  else (não)
+    :CONTINUE;
   endif
-repeat while (Envelope ainda válido?) is (sim)
 
-:STOP - envelope encerrado;
+  :Selecionar slice elegível;
+  :Criar/usar branch da Issue;
+  :Executar e validar;
+  :Preparar PR draft e registrar evidências;
+  :Registrar exatamente um outcome;
+
+repeat while (Envelope ainda Aprovado?) is (sim)
+->não;
+:STOP - envelope pausado ou encerrado;
 stop
 
 note right
   O fim do slice não é gate automático.
+  Draft = conclusão técnica.
+  Review exige PR fora de draft.
+  Done exige squash merge e fechamento.
   O Codex nunca faz merge automático.
 end note
 

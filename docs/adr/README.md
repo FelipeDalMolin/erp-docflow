@@ -197,6 +197,7 @@ Quando aplicável, também deve aparecer em:
 | [ADR-0015](0015-auth-authorization-security-strategy.md) | Proposto | autenticação, autorização e segurança |
 | [ADR-0016](0016-capability-based-document-processing-providers.md) | Proposto | capabilities e providers |
 | [ADR-0017](0017-codex-continuous-slice-loop.md) | Aceito | loop contínuo de slices |
+| [ADR-0018](0018-codex-envelope-lifecycle-and-outcomes.md) | Aceito | lifecycle do envelope e outcomes exclusivos |
 
 O catálogo oferece navegação. O [ADR Index](../traceability/adr-index.md) mantém relações, decisão curta e gatilho de revisão.
 

@@ -63,14 +63,21 @@ O Codex pode operar em loop dentro de um envelope de execucao aprovado em Plan M
 
 O envelope pode abranger mais de um slice e deve indicar:
 
+- estado `Rascunho`, `Aprovado`, `Pausado` ou `Encerrado`;
+- responsavel, data e referencia da aprovacao;
 - objetivo do lote;
 - slices ou criterios de selecao;
 - areas permitidas;
+- paths e ownership quando houver paralelismo;
 - fora de escopo;
 - dependencias;
 - validacoes;
 - checkpoints humanos;
 - condicao de encerramento.
+
+`Rascunho` nao autoriza slice. `Aprovado` autoriza somente o escopo registrado. `Pausado` impede iniciar nova slice. `Encerrado` exige novo envelope ou nova revisao aprovada para retomar.
+
+O corpo da Epic ou Issue governante mantem o estado corrente e a evidencia duravel. Mudanca de limites, ownership ou exclusoes exige revisao humana registrada antes de continuar.
 
 Aprovado o envelope, o Codex nao deve pedir nova autorizacao mecanica ao fim de cada slice.
 
@@ -90,6 +97,15 @@ Semantica operacional:
 - `CHECKPOINT`: ambiguidade, risco, mudanca ou dependencia que exige decisao/acao humana nao prevista;
 - `STOP`: envelope encerrado ou nenhum candidato elegivel.
 
+Selecionar exatamente um outcome nesta ordem:
+
+1. envelope encerrado ou sem candidato: `STOP`;
+2. decisao, risco, conflito ou acao humana nao prevista: `CHECKPOINT`;
+3. dependencia conhecida e esperada: `AWAIT_DEPENDENCY`;
+4. proximo item elegivel: `CONTINUE`.
+
+Registrar o outcome na descricao do PR com fato, referencia ao envelope e condicao de retomada. Sem PR, registrar em comentario na Issue ou Epic correspondente.
+
 Pode usar `CONTINUE` quando o proximo slice:
 
 - esta pronto para execucao;
@@ -107,7 +123,7 @@ Slice dependente deve aguardar o merge. Branch ou PR empilhado exige autorizacao
 
 O loop seleciona e executa trabalho. Ele nao autoriza automerge, merge pelo Codex ou expansao silenciosa de escopo.
 
-Preparar um PR draft conclui tecnicamente o slice para fins do loop. Mover a Issue para `Review` exige que o PR esteja efetivamente pronto para revisao humana. `Done` continua dependendo de review, merge e fechamento.
+Preparar implementacao, validacoes, documentacao e PR draft conclui tecnicamente o slice para fins do loop. Mover a Issue para `Review` exige PR fora de draft e efetivamente pronto para revisao humana. `Done` continua dependendo de review, squash merge, fechamento e reconciliacao do Project.
 
 ## Autorizacao versus capacidade tecnica
 
