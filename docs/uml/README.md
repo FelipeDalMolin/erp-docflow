@@ -34,7 +34,7 @@ docs/uml/
 | [documentation-governance-components.puml](03-application/documentation-governance-components.puml) | componentes documentais da governança |
 | [phase-0-delivery-flow.puml](02-business/phase-0-delivery-flow.puml) | lifecycle Issue → branch → PR → review → merge, originado na Phase 0 |
 | [local-dev-environment.puml](03-application/local-dev-environment.puml) | ambiente local atual e integrações planejadas |
-| [codex-continuous-slice-loop.puml](02-business/codex-continuous-slice-loop.puml) | Plan aprova envelope; Codex puxa slices e pede checkpoint em fronteiras reais |
+| [codex-continuous-slice-loop.puml](02-business/codex-continuous-slice-loop.puml) | lifecycle do envelope, outcomes exclusivos, retomada e separação entre draft, Review e Done |
 
 ### Produto planejado — Issue #22
 

@@ -43,6 +43,10 @@ Responsável, data e referência da aprovação:
 
 - <registro>
 
+Última transição ou revisão do envelope:
+
+- <estado anterior → estado atual, responsável, data e motivo>
+
 Objetivo do lote:
 
 - <objetivo>
@@ -63,6 +67,14 @@ Fora do envelope:
 
 - <exclusão>
 
+Dependências:
+
+- <dependência conhecida>
+
+Validações:
+
+- <comando/evidência>
+
 Checkpoints humanos:
 
 - <condição real de decisão>
@@ -70,6 +82,10 @@ Checkpoints humanos:
 Condição de encerramento:
 
 - <condição>
+
+Condição de retomada quando pausado:
+
+- <registro ou não aplicável>
 
 ## Observações de rastreabilidade
 

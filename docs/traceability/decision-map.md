@@ -54,13 +54,14 @@ ADR-0016 não altera ADR aceito e não autoriza provider real enquanto estiver `
 ADR-0003 — Fluxo Git/PR/revisão
 ├── ADR-0007 — CI antes de branch protection
 └── ADR-0017 — Loop contínuo de slices pelo Codex
-    └── complementa ADR-0005 — autonomia alta controlada
+    ├── complementa ADR-0005 — autonomia alta controlada
+    └── ADR-0018 — Lifecycle do envelope e outcomes exclusivos
 
 ADR-0013 — Review, acceptance e override
 └── ADR-0015 — Auth, autorização e segurança [PROPOSTO / GATE]
 ```
 
-ADR-0017 coordena seleção e continuidade do trabalho. Ele não altera a revisão humana nem autoriza merge automático.
+ADR-0017 coordena seleção e continuidade do trabalho. ADR-0018 o complementa com estados, evidência, outcomes exclusivos e condições de retomada. Nenhum deles altera a revisão humana ou autoriza merge automático.
 
 ## Regras de manutenção
 
@@ -68,4 +69,3 @@ ADR-0017 coordena seleção e continuidade do trabalho. Ele não altera a revis�
 - não justificar implementação sem consultar status e condições do ADR;
 - não tratar diagrama ou review de chat como decisão superior ao ADR;
 - decisões `Proposto` não orientam implementação obrigatória.
-

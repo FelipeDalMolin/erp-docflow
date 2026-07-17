@@ -277,25 +277,34 @@ Plan Mode
 
 O envelope deve registrar apenas o necessário:
 
+- estado `Rascunho`, `Aprovado`, `Pausado` ou `Encerrado`;
+- responsável, data e referência da aprovação;
 - objetivo;
 - conjunto ou critério de seleção dos slices;
 - áreas autorizadas e excluídas;
+- paths e ownership quando houver paralelismo;
 - dependências;
 - validações;
 - checkpoints;
 - condição de encerramento.
 
+O corpo da Epic ou Issue governante mantém o estado corrente. `Rascunho` não autoriza execução; `Aprovado` limita a execução ao escopo registrado; `Pausado` impede iniciar nova slice; `Encerrado` exige novo envelope ou revisão aprovada para retomar. Mudança de limites, ownership ou exclusões exige revisão humana durável.
+
 `CONTINUE` é permitido quando o próximo slice estiver pronto, dentro do envelope, sem dependência pendente, sem conflito e sem decisão nova.
 
-`AWAIT_DEPENDENCY` é usado quando o próximo item depende de PR, decisão ou entrega ainda não concluída.
+`AWAIT_DEPENDENCY` é usado quando o próximo item depende de PR ou entrega conhecida e esperada, sem decisão nova.
 
-`CHECKPOINT` é usado quando houver mudança de direção, risco, ambiguidade, falha que amplie escopo ou área protegida não autorizada.
+`CHECKPOINT` é usado quando houver decisão/ação humana não prevista, mudança de direção, risco, ambiguidade, falha que amplie escopo ou área protegida não autorizada.
 
 Uma dependência conhecida e esperada usa `AWAIT_DEPENDENCY`. Se a dependência revelar decisão, ação humana não prevista ou ambiguidade de escopo, usa-se `CHECKPOINT`.
 
 `STOP` é usado quando o envelope terminar ou não houver candidato elegível.
 
-Um slice fica tecnicamente concluído quando implementação, validações, documentação e PR draft estão preparados. Ele só fica `Done` depois de revisão, merge e fechamento da Issue.
+Selecionar exatamente um outcome nesta ordem: `STOP` para envelope encerrado/sem candidato; `CHECKPOINT` para decisão, risco ou conflito não previsto; `AWAIT_DEPENDENCY` para espera conhecida; `CONTINUE` para próximo item elegível.
+
+Registrar fato, referência ao envelope e condição de retomada na descrição do PR. Sem PR, registrar em comentário na Issue ou Epic correspondente.
+
+Um slice fica tecnicamente concluído quando implementação, validações, documentação e PR draft estão preparados. Ele entra em `Review` somente com PR fora de draft e pronto para revisão humana. Só fica `Done` depois de revisão, squash merge, fechamento da Issue e reconciliação do Project.
 
 O Codex pode iniciar outro slice independente enquanto um PR aguarda revisão, desde que parta da `main`, não dependa do PR pendente, não sobreponha mudanças relevantes e o envelope permita.
 

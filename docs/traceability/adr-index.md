@@ -21,6 +21,7 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 | [ADR-0015](../adr/0015-auth-authorization-security-strategy.md) | Estratégia futura de autenticação, autorização e segurança | Proposto | 2026-06-22 | Segurança exige ADR futuro antes da implementação. | ADR-0013, ADR-0016 | Antes de auth/security ou dados reais. |
 | [ADR-0016](../adr/0016-capability-based-document-processing-providers.md) | Processamento documental por capabilities e providers | Proposto | 2026-07-10 | Adapters por capability, task graph, routing policy, benchmark e HITL. | ADR-0001, ADR-0009, ADR-0012, ADR-0013, ADR-0015 | Após primeiro perfil/benchmark e antes da Phase 3. |
 | [ADR-0017](../adr/0017-codex-continuous-slice-loop.md) | Loop contínuo de slices pelo Codex | Aceito | 2026-07-10 | Plan aprova envelope; Codex puxa slices elegíveis e pede checkpoint em fronteiras reais. | ADR-0003, ADR-0005, ADR-0006, ADR-0007 | Se automação persistente, política de merge ou conflitos exigirem revisão. |
+| [ADR-0018](../adr/0018-codex-envelope-lifecycle-and-outcomes.md) | Lifecycle do envelope e outcomes do Codex | Aceito | 2026-07-17 | Envelope tem lifecycle explícito; outcomes são exclusivos e distinguem espera, decisão e encerramento. | ADR-0003, ADR-0005, ADR-0006, ADR-0007, ADR-0017 | Se automação, política de merge ou uso dos outcomes mudar. |
 
 ## Observações
 
@@ -29,4 +30,5 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 - ADR-0015 continua sendo gate para auth, autorização, dados reais e providers externos.
 - ADR-0016 organiza a descoberta; provider padrão e thresholds dependem de benchmark.
 - ADR-0017 preserva PR/review por slice e elimina aprovação mecânica entre itens do mesmo envelope.
+- ADR-0018 complementa ADR-0017 com lifecycle, evidência durável, outcomes exclusivos e condições de retomada.
 - Atualizar este índice quando ADRs forem criados, substituídos, complementados ou obsoletados.
