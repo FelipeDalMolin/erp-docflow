@@ -22,6 +22,7 @@ Ele descreve o destino arquitetural e os limites entre responsabilidades. Não d
 7. **Proveniência obrigatória**: todo resultado precisa apontar entrada, provider, modelo/versão, configuração, horário, confiança, artefato e tentativa.
 8. **Efeito operacional após gates**: uma sugestão extraída não cria silenciosamente lançamento, pagamento ou vínculo oficial.
 9. **RAG não é fonte da verdade**: busca e síntese usam conteúdo aceito ou identificam claramente conteúdo ainda não revisado.
+10. **Notebook não é runtime**: exploração pode ocorrer de forma interativa, mas produção usa pacote/CLI testável, versionado e benchmarkado no ambiente alvo.
 
 ## 3. Decisões existentes preservadas
 
@@ -44,7 +45,8 @@ Canais documentais
   -> Orquestrador de processamento documental
        -> probe/texto nativo
        -> normalização
-       -> OCR/layout
+       -> OCR
+       -> estrutura/layout/tabelas quando o perfil exigir
        -> extração/classificação
        -> validação
 Fontes estruturadas
@@ -71,6 +73,7 @@ Todo o fluxo escreve eventos e artefatos de auditoria. Arquivos binários ficam 
 | `files` | objetos binários, derivados, integridade, retenção e referências | semântica do documento |
 | `processing` | jobs, tentativas, task graph, políticas e resultados | decisão humana final |
 | `providers` | adapters por capacidade e contrato normalizado | regras de negócio ou estado canônico |
+| `evaluation` | manifests, runners, datasets, benchmark e promoção | executar efeito operacional ou servir como runtime |
 | `validation` | regras determinísticas, consistência, reconciliação e conflitos | substituir revisão humana |
 | `review` | fila, correções, aceite, override, rejeição e reprocessamento | apagar sugestão ou evidência anterior |
 | `audit` | eventos append-only, proveniência e trilha de decisão | armazenar conteúdo sensível em log comum |
@@ -133,6 +136,7 @@ Exemplo:
 Apache Tika: probe, MIME/metadados observados e texto nativo; OCR interno desligado
 Stirling PDF/OCRmyPDF/OpenCV: normalizar quando necessário
 PaddleOCR ou Tesseract: reconhecer texto local
+Docling: candidato seletivo para estrutura, layout, ordem de leitura e tabelas
 Google Document AI: escalar layout/tabelas/campos de um perfil elegível
 OpenAI: classificação semântica ou sumarização seletiva
 Regras internas: validar CNPJ, datas, totais e consistência
@@ -141,7 +145,9 @@ Humano: decidir quando houver gate, baixa confiança ou conflito
 
 Tika observa e extrai; uma política interna produz `NativeTextAssessment`. `pytesseract` é binding da engine Tesseract, OpenCV é biblioteca de transformação, e regex/parsers/validators são regras internas versionadas — nenhum deles controla o domínio.
 
-Stirling PDF pode ser exposto por adapter de normalização e OCR auxiliar. Isso não o transforma no provider do fluxo inteiro. A mesma regra vale para Google Document AI, OpenAI, PaddleOCR ou Tesseract: cada integração implementa capacidades explícitas e só é promovida pelo benchmark aplicável.
+Stirling PDF pode ser exposto por adapter de normalização e OCR auxiliar. Isso não o transforma no provider do fluxo inteiro. A mesma regra vale para Docling, Google Document AI, OpenAI, PaddleOCR ou Tesseract: cada integração implementa capacidades explícitas e só é promovida pelo benchmark aplicável.
+
+Docling não substitui o probe Tika por associação. Como candidato a layout/tabelas, ele recebe o original ou derivado suportado e produz uma observação independente. Se orquestrar OCR, a invocation registra engine/subengine e cria execution por capability; origem textual não comprovada bloqueia uso canônico. A serialização do modelo `DoclingDocument` e o envelope da conversão permanecem artifacts de provider, não domínio canônico.
 
 Detalhes: [PROVIDER_STRATEGY.md](PROVIDER_STRATEGY.md).
 
@@ -157,6 +163,7 @@ ProcessingRequested
 NativeTextDetected
 NormalizationCompleted
 RecognitionCompleted
+DocumentStructureCompleted
 ExtractionCompleted
 ClassificationCompleted
 ValidationCompleted
@@ -198,6 +205,7 @@ Métricas mínimas planejadas:
 - volume por tipo, origem e tenant;
 - taxa de bypass de OCR;
 - latência e erro por etapa/provider/modelo;
+- cold/warm start, peak RSS, CPU, disco/model cache, throughput e fila;
 - confiança calibrada por campo e perfil;
 - taxa de revisão, correção, override e rejeição;
 - divergência entre providers;
@@ -210,6 +218,7 @@ Métricas mínimas planejadas:
 - diferenças de reconciliação classificadas;
 - tempo e reaberturas de fechamento;
 - instalação, upgrade, smoke e restore por release.
+- proveniência entre commit/lock/configuração benchmarkados, artifacts promovidos e imagem final testada.
 
 Confianças brutas de engines diferentes não devem ser comparadas como se tivessem a mesma escala. A política deve usar calibração por perfil, validação determinística e resultados de benchmark.
 
@@ -225,7 +234,7 @@ Esta baseline foi consolidada durante a Phase 0 e continua descrevendo arquitetu
 - não autoriza dados reais, credenciais ou deploy;
 - não muda ADR aceito.
 
-As decisões ainda abertas estão registradas nas Issues #74, #80, #82 e #83 e nos ADRs propostos aplicáveis. A revisão [Gestão Documental Inteligente](../reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md) permanece evidência histórica.
+As decisões ainda abertas estão registradas nas Issues #74, #80, #82, #83, #88 e #89 e nos ADRs propostos aplicáveis. A revisão [Gestão Documental Inteligente](../reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md) permanece evidência histórica.
 
 ## 13. Diagramas relacionados
 
@@ -244,5 +253,6 @@ Contratos relacionados:
 - [Domínio financeiro-gerencial](MANAGERIAL_FINANCIAL_DOMAIN.md)
 - [Importação estruturada](STRUCTURED_IMPORT_PIPELINE.md)
 - [Perfil de processamento](PROCESSING_PROFILE_CONTRACT.md)
+- [Engenharia de experimentos e componentes de dados](DATA_SCIENCE_ENGINEERING_LIFECYCLE.md)
 - [Lineage de evidência a relatório](EVIDENCE_TO_REPORT_LINEAGE.md)
 - [Fechamento e entrega contábil](ACCOUNTING_CLOSE_AND_DELIVERY.md)

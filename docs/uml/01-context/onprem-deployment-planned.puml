@@ -1,5 +1,5 @@
 @startuml
-' Issues #22 and #73
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0001, ADR-0008, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016 (proposed)
 ' Guardrail: target deployment view; no service/container is implemented.
 
@@ -26,6 +26,7 @@ node "onprem-lab / piloto\n<<planejado / não implementado>>" as OnPrem {
   storage "Object storage\nS3-compatible / MinIO candidato" as Objects
   node "Tika Server isolado\n<<capability opcional / Phase 3>>\nprobe + texto nativo; OCR desligado" as Tika
   node "Normalização / OCR local\n<<capability opcional / benchmark>>" as LocalOCR
+  node "Docling CPU isolado\n<<layout/tabelas opcional / spike #89>>\nOCR desligado no baseline" as Docling
   node "Observabilidade" as Observability
 }
 
@@ -44,6 +45,7 @@ API --> Queue
 Queue --> Workers
 Workers ..> Tika : profile aprovado; não bloqueia R1 import-first
 Workers ..> LocalOCR : capability separada e elegível
+Workers ..> Docling : profile aprovado; adapter único
 Workers --> CloudProviders : somente por política
 Workers --> Postgres
 Workers --> Objects
@@ -63,11 +65,19 @@ note right of CloudProviders
   tenant, residência, secrets e ADR de segurança.
 end note
 
+note right of Docling
+  Sem porta publicada diretamente na LAN.
+  Modelos prefetched; URL/egress/plugins bloqueados.
+  Limites e workers definidos pelo benchmark.
+end note
+
 note bottom
   Compose de desenvolvimento não é o bundle do piloto.
   Modular monolith descreve boundaries do produto.
   Workers podem rodar em processos/containers separados.
-  Tika e OCR só integram o bundle quando a capability estiver aprovada;
+  O profile core independe de Tika, OCR e Docling.
+  Profiles pesados compartilham admission control global.
+  Tika, OCR e Docling só integram o bundle quando aprovados;
   não são dependências do percurso XLSX/CSV + manual do Golden Month.
 end note
 

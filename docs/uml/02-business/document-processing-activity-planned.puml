@@ -1,5 +1,5 @@
 @startuml
-' Issues #22 and #73
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned business flow; states and actions are not implemented contracts.
 
@@ -27,6 +27,10 @@ if (Entrada documental?) then (sim)
   else (QUARANTINE)
     :Quarentenar entrada sem\nsucesso vazio;
     stop
+  endif
+  if (Estrutura/layout exigidos?) then (sim)
+    :Executar extract_layout e/ou\nextract_table_structure por capability;
+    :Persistir DocumentStructureArtifact\ncom item refs e origem espacial;
   endif
   :Extrair/classificar por perfil\ncom evidência por campo;
 else (não)

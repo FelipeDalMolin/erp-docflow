@@ -18,7 +18,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md`](../operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md) | runbook local/CLI | vigente | estratégia Git e ADR-0004 |
 | [`docs/operations/AMBIENTES.md`](../operations/AMBIENTES.md) | ambientes atuais e planejados | vigente/planejado | ADR-0001, 0004, 0007, 0008 e 0014 |
 | [`docs/operations/WSL_MULTI_PROJETOS.md`](../operations/WSL_MULTI_PROJETOS.md) | runbook WSL detalhado | vigente | ADR-0004 e ambientes |
-| [`docs/project/ROADMAP.md`](../project/ROADMAP.md) | releases, capabilities, dependências, resultados e gates | vigente | Epics #1, #26–#32 e #75; Issues #74–#86 |
+| [`docs/project/ROADMAP.md`](../project/ROADMAP.md) | releases, capabilities, dependências, resultados e gates | vigente | Epics #1, #26–#32 e #75; Issues #74–#86 e #88–#89 |
 | [`docs/product/README.md`](../product/README.md) | índice canônico de produto | planejado/não implementado | north star, piloto R1, UX e entrega |
 | [`docs/product/PRODUCT_NORTH_STAR.md`](../product/PRODUCT_NORTH_STAR.md) | direção de produto e invariantes de valor | planejado/não implementado | fato gerencial sustentado por evidência; #73/#74 |
 | [`docs/product/PILOT_VERTICAL_SLICE.md`](../product/PILOT_VERTICAL_SLICE.md) | contrato do piloto R1 Golden Month | planejado/não implementado | import-first, fechamento mensal e aceite; Epic #75 |
@@ -29,7 +29,8 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/architecture/PROVIDER_STRATEGY.md`](../architecture/PROVIDER_STRATEGY.md) | capabilities, adapters e benchmark | proposta de descoberta | ADR-0016 proposto |
 | [`docs/architecture/DATA_MODEL_BASELINE.md`](../architecture/DATA_MODEL_BASELINE.md) | conceitos e invariantes, sem schema físico | planejado/não implementado | ADR-0010–0013; ADR-0015/0016 propostos |
 | [`docs/architecture/GLOSSARIO_DOCUMENTAL.md`](../architecture/GLOSSARIO_DOCUMENTAL.md) | vocabulário canônico | vigente | arquitetura, pipeline e dados |
-| [`docs/architecture/PROCESSING_PROFILE_CONTRACT.md`](../architecture/PROCESSING_PROFILE_CONTRACT.md) | contrato de perfil, algoritmos, métricas e routing | planejado/não implementado | Tika/OCR/rules/assessment/routing #82–#86; ADR-0016 proposto |
+| [`docs/architecture/PROCESSING_PROFILE_CONTRACT.md`](../architecture/PROCESSING_PROFILE_CONTRACT.md) | contrato de perfil, algoritmos, métricas e routing | planejado/não implementado | Tika/OCR/rules/assessment/routing #82–#86; harness/estrutura #88–#89; ADR-0016 proposto |
+| [`docs/architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md`](../architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | contrato de notebook/experimento até componente promovido | planejado/não implementado | profile/dataset #43, harness #88, spikes #83/#89 e regressão #48 |
 | [`docs/architecture/STRUCTURED_IMPORT_PIPELINE.md`](../architecture/STRUCTURED_IMPORT_PIPELINE.md) | pipeline local de XLSX/CSV e mapeamentos | planejado/não implementado | piloto #75/#77 e proveniência por lote/linha |
 | [`docs/architecture/MANAGERIAL_FINANCIAL_DOMAIN.md`](../architecture/MANAGERIAL_FINANCIAL_DOMAIN.md) | domínio gerencial e financeiro | planejado/não implementado | decisão #74; fatos, obrigações, liquidações, conciliação e rateios |
 | [`docs/architecture/EVIDENCE_TO_REPORT_LINEAGE.md`](../architecture/EVIDENCE_TO_REPORT_LINEAGE.md) | linhagem evidência → fato → relatório | planejado/não implementado | drill-through e read models #78; autoridade #80 |

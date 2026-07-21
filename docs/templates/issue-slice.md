@@ -71,6 +71,14 @@ Tecnologia e estratégia:
 - candidata sob benchmark: `<candidato, spike/benchmark e gate de promoção>`
 - não aplicável: `<justificativa, quando não houver escolha técnica>`
 
+Experimento e promoção, quando aplicável:
+
+- pergunta/hipótese e baseline:
+- `ExperimentManifest` / `BenchmarkRun`:
+- package, lockfile, config e artifact digest usados:
+- paridade entre experimento, teste, runtime e release:
+- critério de promoção, rejeição ou inconclusão:
+
 Artefatos, proveniência e lineage:
 
 - persistidos:
@@ -93,7 +101,7 @@ Fixtures e dados permitidos:
 Métricas e targets:
 
 - qualidade/correção:
-- latência/custo/recursos, quando aplicável:
+- latência/custo/recursos, quando aplicável: `<p50/p95, throughput, CPU-seconds, RSS pico, cold/warm start, disco/cache>`
 - taxa de review/erro, quando aplicável:
 
 UX, quando aplicável:

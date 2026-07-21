@@ -57,6 +57,21 @@ Regras:
 - nao alterar ADR aceito sem novo ADR;
 - nao usar `danger-full-access` como padrao.
 
+## Experimentos, notebooks e componentes de dados
+
+Quando uma Issue envolver OCR, layout, classificacao, modelos, regras derivadas de dados ou benchmark, consultar `docs/architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md`.
+
+Regras:
+
+- notebook pode ser usado somente como ambiente de exploracao/relatorio quando a Issue autorizar;
+- codigo reutilizavel deve ser extraido para modulo/CLI testavel antes de integracao;
+- runtime, worker, API e CI nao podem depender de estado de celula ou executar notebook como fonte canonica;
+- manifest deve registrar dataset/hash, commit, dependencias, provider/modelo/configuracao, hardware, comando e metricas;
+- benchmark, adapter e release devem preservar commit, lock, configuracao e digests de dados/modelos; rebuild exige provenance e regressao da imagem final;
+- Codex nao escolhe nem promove automaticamente o vencedor do benchmark;
+- dados, modelos e servicos remotos obedecem aos gates de seguranca, licenca e residencia;
+- provider pesado roda assincronamente e respeita o envelope de recursos do ambiente.
+
 ## Loop de continuidade
 
 O Codex pode operar em loop dentro de um envelope de execucao aprovado em Plan Mode.

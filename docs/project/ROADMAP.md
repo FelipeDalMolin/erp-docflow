@@ -137,10 +137,12 @@ Objetivo: implementar um task graph observável por perfil, com decisões basead
 ### 7.1 Descoberta e decisão antes de implementação
 
 1. #43 define profile, dataset manifest, ground truth, splits, sensibilidade, hardware e métricas.
-2. #82 valida Tika isolado para probe/texto nativo.
-3. #83 compara texto nativo, Tesseract, OpenCV+Tesseract e PaddleOCR.
-4. ADR-0016 é revisado e a decisão específica de Tika/provider é registrada.
-5. Somente então adapters produtivos tornam-se elegíveis.
+2. #88 materializa o harness reproduzível de experimento: notebook fino, pacote/CLI, manifest, testes e artifact bundle imutável.
+3. #82 valida Tika isolado para probe/texto nativo.
+4. #83 compara candidatos somente para `recognize_text`, enquanto #89 avalia Docling CPU sem OCR para `extract_layout` e `extract_table_structure`; as trilhas podem executar em paralelo após profile/harness, e #83 usa a evidência Tika da #82 quando aplicável.
+5. O perfil Docling composto com OCR, se testado, registra também engine, modelo e configuração subjacentes.
+6. ADR-0016 é revisado e a decisão específica de cada capability/provider é registrada.
+7. Somente então adapters produtivos tornam-se elegíveis.
 
 ### 7.2 Baseline Tika
 
@@ -163,6 +165,8 @@ USE_NATIVE | OCR_REQUIRED | REVIEW_REQUIRED | QUARANTINE
 ### 7.3 Evolução seletiva
 
 O Tika continua primeiro quando OCR existir. Apenas páginas/regiões insuficientes seguem para normalização e `recognize_text`. Artefatos `NATIVE`, `OCR` e `FUSED` preservam `derived_from`; texto de camada pesquisável gerada não se torna “nativo”.
+
+Layout/ordem de leitura (`extract_layout`) e tabelas (`extract_table_structure`) são capabilities separadas de OCR e produzem `DocumentStructureArtifact`. Docling é challenger inicial e relê o original ou derivado autorizado; ele não consome implicitamente o texto do Tika. A serialização JSON preserva o modelo `DoclingDocument`, enquanto envelope/status/erros/timings/confidence/opções ficam correlacionados separadamente. Se o Docling orquestrar OCR, a invocation gera execution por capability e nunca transforma a saída em texto `NATIVE`; origem não resolvida bloqueia uso canônico.
 
 Avaliação do texto nativo (#85), rule packs (#84), classificação/registry de validação (#47) e routing explicável (#86) permanecem capabilities separadas. A #48 mede regressão E2E do pipeline implementado; não substitui o benchmark pré-implementação.
 
@@ -251,7 +255,7 @@ dataset anonimizado
   -> instalar e comprovar no onprem-lab
 ```
 
-Issues de produto: [#75](https://github.com/FelipeDalMolin/erp-docflow/issues/75), #76–#81. Capabilities existentes #39–#40 e #49–#57 serão reutilizadas/refinadas. OCR/Tika #82–#86 não bloqueiam o percurso.
+Issues de produto: [#75](https://github.com/FelipeDalMolin/erp-docflow/issues/75), #76–#81. Capabilities existentes #39–#40 e #49–#57 serão reutilizadas/refinadas. Processamento documental #82–#86 e #88–#89 não bloqueia o percurso.
 
 ## 13. Tracks transversais
 

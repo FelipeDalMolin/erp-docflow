@@ -1,5 +1,5 @@
 @startuml
-' Issues #22 and #73
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned sequence; capabilities, messages and states are not implemented contracts.
 
@@ -18,8 +18,8 @@ participant "Audit" as Audit
 
 Orchestrator -> Registry : resolver adapter da capability planejada
 Registry --> Orchestrator : provider elegível + selection policy version
-Orchestrator -> Provider : executar capability
-Provider --> Orchestrator : raw artifact + normalized result
+Orchestrator -> Provider : criar invocation / executar capability(s) declaradas
+Provider --> Orchestrator : raw envelope + execution/output por capability
 Orchestrator -> Validation : validar output
 Validation --> Orchestrator : passes, warnings e conflicts
 Orchestrator -> Router : avaliar qualidade, risco e gates
@@ -47,6 +47,7 @@ opt snapshot aceito e efeito autorizado
 end
 
 note bottom
+  Invocation representa a chamada física; ProviderExecution representa uma capability.
   Um output de modelo não efetiva pagamento ou lançamento sozinho.
   RoutingDecision não seleciona a capability inicial e não usa outcomes do Codex.
 end note

@@ -9,7 +9,7 @@ ADRs relacionados: ADR-0012, ADR-0013, ADR-0015 e ADR-0016 (proposto)
 
 Este documento define o conteúdo mínimo, o ciclo de vida e os critérios de validação de um **perfil de processamento documental**. Ele complementa o [pipeline documental](DOCUMENT_PIPELINE.md), a [estratégia de providers](PROVIDER_STRATEGY.md) e o [baseline de dados](DATA_MODEL_BASELINE.md).
 
-Um perfil é configuração versionada de um caso documental. Ele descreve entradas, task graph, schemas, regras, candidates, budgets, gates e benchmark. Não é código arbitrário, provider global, autorização para dado real nem evidência de implementação.
+Um perfil é configuração versionada de um caso documental. Ele descreve entradas, saídas exigidas, task graph, schemas, regras, candidates, budgets, gates e benchmark. Não é código arbitrário, provider global, autorização para dado real nem evidência de implementação.
 
 Enquanto o [ADR-0016](../adr/0016-capability-based-document-processing-providers.md) permanecer `Proposto`, este contrato orienta discovery, fixtures e benchmark. A integração produtiva de um provider exige decisão e Issue próprias.
 
@@ -60,14 +60,14 @@ Resultado normalizado de inspeção:
 - metadados permitidos;
 - presença e distribuição de texto nativo;
 - criptografia, corrupção, limite excedido e warnings;
-- adapter, versão, configuração e `ProviderExecution`;
+- adapter, versão, configuração, `ProviderInvocation` e `ProviderExecution`;
 - referência à resposta bruta, sujeita a retenção.
 
 Observações que dependam de ferramentas próprias — qualidade visual, orientação, malware ou estrutura de página — devem identificar o inspector que as produziu.
 
 ### 4.2 RecognitionArtifact
 
-Conteúdo textual/layout observado, com origem explícita:
+Conteúdo textual observado, com origem explícita:
 
 | `origin` | Significado |
 | --- | --- |
@@ -78,7 +78,26 @@ Conteúdo textual/layout observado, com origem explícita:
 
 Bounding boxes e scores só existem quando a capability realmente os fornece. Um artefato nativo não deve inventar coordenadas nem confidence.
 
-### 4.3 EvidenceRef
+### 4.3 DocumentStructureArtifact
+
+Resultado normalizado de exatamente uma execution de `extract_layout` ou `extract_table_structure`, separado do texto reconhecido:
+
+- capability e `provider_execution_ref` singulares;
+- blocos, classes, hierarchy e reading order;
+- páginas, bounding boxes, origem/sistema de coordenadas e transformação para o sistema interno;
+- tabelas, linhas, colunas, células, spans e cabeçalhos;
+- `provider_item_ref`/JSON Pointer e `charspan` quando o provider os expuser;
+- vínculos para `RecognitionArtifact` quando existirem;
+- source artifact, `derived_from`, `ProviderInvocation` e exatamente um `ProviderExecution` produtor;
+- `provided_outputs` e estado `produced`, `not_run` ou `not_available` por saída;
+- confidence/grades do provider como sinais brutos, nunca confiança de negócio;
+- referência ao raw response/envelope, warnings e status parcial.
+
+O schema de SDK/toolkit não vira domínio canônico. Quando Docling for testado, a serialização JSON que preserva o modelo `DoclingDocument` é um raw artifact; ela não representa o original nem todos os intermediários. Envelope de `ConversionResult`, status/partial success, erros, timings, confidence report, opções e digests são preservados separadamente quando expostos. Markdown/HTML permanecem derivados.
+
+Uma invocation que satisfaça as duas capabilities produz dois artifacts normalizados, ambos referenciando o mesmo raw envelope. Fusão posterior, se necessária, cria novo artifact derivado com `derived_from`; não muda o owner da observação original.
+
+### 4.4 EvidenceRef
 
 Referência mínima de evidência de campo:
 
@@ -91,7 +110,7 @@ Referência mínima de evidência de campo:
 
 A cadeia posterior até fatos e relatórios é definida em [EVIDENCE_TO_REPORT_LINEAGE.md](EVIDENCE_TO_REPORT_LINEAGE.md).
 
-### 4.4 NativeTextAssessment
+### 4.5 NativeTextAssessment
 
 Decisão interna posterior ao probe:
 
@@ -129,6 +148,12 @@ applicability:
   max_pages: 20
   data_classification: internal
 
+required_outputs:
+  text: true
+  layout: false
+  reading_order: false
+  tables: false
+
 schemas:
   extraction: payable_document/v1alpha
   taxonomy: document_type/v1alpha
@@ -146,6 +171,20 @@ task_graph:
     when: OCR_REQUIRED
     capability: recognize_text
     candidates: [candidate_from_benchmark]
+  - id: structure
+    when: STRUCTURE_REQUIRED
+    capability: extract_layout
+    input: original_or_approved_derivative
+    candidates: [candidate_from_benchmark]
+    invocation_group: document_structure
+    coalesce_when_supported: true
+  - id: table_structure
+    when: TABLE_STRUCTURE_REQUIRED
+    capability: extract_table_structure
+    input: original_or_approved_derivative
+    candidates: [candidate_from_benchmark]
+    invocation_group: document_structure
+    coalesce_when_supported: true
   - id: extract
     internal_rule_pack: payable_document_rules/v1
   - id: classify
@@ -163,14 +202,22 @@ gates:
 budgets:
   timeout_seconds: 120
   max_attempts: 2
+  max_parallel_heavy_tasks_per_job: 1
+  eligible_resource_envelope_ref: null
   max_external_cost: {currency: BRL, amount: "0.00"}
 
 benchmark:
   dataset_manifest: datasets/payable_document/v1/manifest.yaml
   acceptance_policy: benchmarks/payable_document/v1/acceptance.yaml
+  experiment_manifest_ref: experiments/payable_document/v1/manifest.yaml
+  benchmark_run_ref: null
+  promotion_decision_ref: null
+  implementation_ref: candidate_source_package_and_behavior_config
 ```
 
-O manifesto real não deve conter segredo nem dado pessoal indevido. Paths são ilustrativos e só podem ser criados por slice autorizada.
+O manifesto real não deve conter segredo nem dado pessoal indevido. Paths são ilustrativos e só podem ser criados por slice autorizada. Uma policy interna transforma `required_outputs` nos reason codes nomeados `STRUCTURE_REQUIRED` e `TABLE_STRUCTURE_REQUIRED`; o exemplo não define uma linguagem de expressões. `eligible_resource_envelope_ref` só recebe valor após benchmark e não controla concorrência host-wide: isso pertence ao deployment profile/admission control.
+
+`invocation_group` permite ao scheduler coalescer nós somente quando input, candidate, behavior config e unidade de retry forem compatíveis e o adapter declarar multi-output. Uma única invocation ainda cria duas executions/artifacts. Se qualquer condição divergir ou o adapter não suportar coalescing, o scheduler cria invocations separadas e registra o custo; nunca agrupa implicitamente.
 
 ## 6. Estratégias e algoritmos candidatos
 
@@ -179,6 +226,7 @@ O manifesto real não deve conter segredo nem dado pessoal indevido. Paths são 
 | probe e texto nativo | Tika local | `DocumentProbe`, `RecognitionArtifact(NATIVE)` |
 | normalização visual | OpenCV/OCRmyPDF/Stirling, conforme benchmark | derivado imutável + relatório de transformação |
 | OCR | Tesseract via binding ou PaddleOCR como candidates | `RecognitionArtifact(OCR)` |
+| estrutura/layout/tabelas | Docling CPU, PaddleOCR/PP-Structure ou provider elegível | `DocumentStructureArtifact` + serialização/raw envelope do provider |
 | extração determinística | Unicode NFKC, âncoras, regex nomeadas e parsers tipados | campos brutos/normalizados + `EvidenceRef` |
 | validação | módulo 11, datas pt-BR, `Decimal`, totals e consistência | `PASS`, `WARN`, `FAIL`, `NOT_APPLICABLE` |
 | classificação | regras/keywords; TF-IDF + modelo linear quando justificado | classe, alternativas e score calibrado |
@@ -195,6 +243,8 @@ Nenhum provider padrão ou threshold é promovido antes de benchmark reproduzív
 - Tesseract sem preprocessing;
 - preprocessing aprovado + Tesseract;
 - PaddleOCR ou outro challenger elegível;
+- Docling sem OCR para layout/estrutura de born-digital quando essas saídas forem exigidas;
+- variante composta de Docling + engine OCR somente em spike/profile separado, com todos os componentes registrados;
 - escalation externa somente quando o [gate de segurança](../adr/0015-auth-authorization-security-strategy.md) permitir.
 
 O `DatasetManifest` registra:
@@ -207,7 +257,9 @@ O `DatasetManifest` registra:
 - hardware, SO, container/image digest e configuração;
 - métricas e tolerâncias por campo/perfil.
 
-Métricas mínimas: CER/WER, exact match/tolerância por campo, precision/recall/F1, taxa de revisão, latência, memória/CPU, falhas e custo. O benchmark final do task graph é regressão; não substitui a comparação anterior à escolha.
+Métricas mínimas: CER/WER, exact match/tolerância por campo, precision/recall/F1, taxa de revisão, cold/warm latency, peak RSS, CPU, disco/model cache, throughput, falhas e custo. Layout, reading order e células/tabelas só recebem ground truth/targets quando o perfil exigir essas saídas. O benchmark final do task graph é regressão; não substitui a comparação anterior à escolha.
+
+O runner e a promoção obedecem ao [ciclo de engenharia de experimentos e componentes de dados](DATA_SCIENCE_ENGINEERING_LIFECYCLE.md). Benchmark e runtime preservam commit, dependency lock, configuração e digests de dados/modelos. O package artifact pode ser reutilizado; se package ou imagem forem reconstruídos, o build deve ser rastreável e a regressão precisa executar sobre a imagem final. Reimplementar o notebook depois do benchmark invalida a paridade.
 
 ## 8. Execução isolada do Tika
 
@@ -232,6 +284,9 @@ NATIVE_TEXT_SUFFICIENT
 NATIVE_TEXT_ABSENT
 NATIVE_TEXT_PARTIAL
 HYBRID_CONTENT
+STRUCTURE_REQUIRED
+TABLE_STRUCTURE_REQUIRED
+TEXT_ORIGIN_UNRESOLVED
 MIME_MISMATCH
 ENCRYPTED_INPUT
 CORRUPT_INPUT
@@ -275,6 +330,7 @@ Versionar independentemente:
 - adapter, engine/modelo e configuração;
 - dataset e ground truth;
 - política de aceitação do benchmark.
+- runner/pacote, dependency lock, image/model/config digests e licenças.
 
 Mudança que pode alterar output cria nova versão. Promoção segue:
 
@@ -301,6 +357,7 @@ Uma implementação baseada neste contrato só pode ficar elegível quando a Iss
 - timeouts, retries e reason codes;
 - métricas e targets verificáveis;
 - comandos exatos de lint, testes, contract tests e benchmark;
+- `ExperimentManifest`, runner não interativo e referência do pacote/configuração a promover;
 - condições de `CONTINUE`, `AWAIT_DEPENDENCY`, `CHECKPOINT` e `STOP`;
 - gates de segurança, dados e provider externo.
 
@@ -311,6 +368,9 @@ Uma implementação baseada neste contrato só pode ficar elegível quando a Iss
 - [ ] `DocumentProbe`, artefato nativo, assessment e routing são objetos separados.
 - [ ] raw output, normalizado, versão e configuração possuem proveniência.
 - [ ] OCR só é executado por reason code/política observável.
+- [ ] Texto reconhecido e estrutura/layout são artifacts separados quando ambos existirem.
+- [ ] Provider composto registra uma invocation física, execution por capability, toolkit, backend, engine/subengine, modelos e configuração.
+- [ ] Commit, lock, configuração e digests de dados/modelos são rastreáveis; rebuild foi validado na imagem final.
 - [ ] regras, parsers e validators têm versão e fixtures.
 - [ ] benchmark anterior à escolha pode ser reproduzido.
 - [ ] falhas não geram sucesso vazio nem apagam attempts.

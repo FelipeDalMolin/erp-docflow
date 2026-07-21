@@ -65,6 +65,9 @@ Conteúdo mínimo planejado:
 - diagnóstico e coleta segura de logs;
 - release notes;
 - inventário de componentes/SBOM quando o processo de build for materializado;
+- capabilities, `processing_profiles` e `deployment_profiles` habilitados, com adapters, pacotes, configurações e digests correspondentes;
+- inventário de licenças dos engines, subengines, modelos e pesos distribuídos;
+- cache de modelos previamente materializado e preflight offline quando o profile exigir ML local;
 - dataset sintético ou anonimizado autorizado para o E2E Golden Month.
 
 Secrets não entram em imagem, repositório, manifest, exemplo ou log. O mecanismo concreto depende da decisão de segurança ainda proposta no [ADR-0015](../adr/0015-auth-authorization-security-strategy.md).
@@ -83,6 +86,8 @@ web
 ```
 
 PostgreSQL e storage S3-compatible permanecem direções arquiteturais condicionadas aos ADRs e gates correspondentes. Probe, OCR ou provider só entram no bundle quando o perfil que os utiliza estiver aprovado e implementado.
+
+Providers pesados são deployment profiles opcionais. O núcleo de importação estruturada, lançamento manual auditado, relatório e fechamento deve continuar utilizável sem Tika, OCR, Docling ou GPU. No host `small-cpu-lab`, um admission control compartilhado começa com um job pesado agregado entre todos os profiles; concorrência, threads, batch e limites definitivos vêm do benchmark reproduzível.
 
 O Compose de desenvolvimento da Phase 1, limitado ao bootstrap de API e web, não é automaticamente o Compose do piloto. Bind mounts, hot reload e defaults locais não devem migrar silenciosamente para a unidade instalável.
 
@@ -111,11 +116,15 @@ Os ambientes e limitações vigentes estão em [Ambientes](../operations/AMBIENT
 ### 7.2 Instalação limpa
 
 - requisitos de CPU, memória, disco, portas e runtime documentados;
+- envelope de recursos medido por profile e classe de host, incluindo concorrência, threads, RSS pico, cold/warm start e cache;
 - configuração validada antes de iniciar;
 - instalação em host limpo segue o runbook;
 - serviços atingem health/readiness;
 - smoke test confirma web, API e dependências implantadas;
 - falha retorna diagnóstico acionável e seguro.
+- preflight offline confirma modelos, pesos e digests necessários sem download em runtime.
+- capacity test mistura jobs de profiles pesados e comprova limite host-wide, backpressure e prioridade do `core`.
+- crash/restart recupera lease/admission sem duplicar invocation nem manter slot preso indefinidamente.
 
 ### 7.3 Persistência e recuperação
 

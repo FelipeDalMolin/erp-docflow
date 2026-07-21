@@ -14,15 +14,19 @@ Issues de origem: #22 e #73
 | capability | tarefa atômica declarada por um provider, como OCR ou extração de campos |
 | captura/ingestão | recebimento de arquivo ou referência por um canal |
 | classificação | sugestão de tipo, taxonomia, rótulo ou destino |
-| conteúdo reconhecido | texto/layout observado por extração nativa ou OCR; ainda não é verdade de negócio |
+| conteúdo reconhecido | texto observado por extração nativa ou OCR; ainda não é verdade de negócio |
 | correção | alteração humana de valor sugerido, com antes/depois e autoria |
 | DocumentEnvelope | identidade e ciclo de vida do documento materializado |
 | DocumentVersion | versão material original, derivada ou gerada de um documento |
+| DocumentStructureArtifact | output estrutural de uma execution de `extract_layout` ou `extract_table_structure`; fusão é derivado explícito |
 | efeito/efetivação operacional | criação autorizada de vínculo, lançamento, pagamento ou ação em outro módulo |
 | ensemble | uso reconciliado de mais de um resultado/modelo para a mesma tarefa |
 | escalonamento | mudança para outro provider/capability por política, qualidade, falha ou risco |
 | evidência | referência verificável a documento, região, linha/célula, evento ou ação manual que sustenta uma interpretação |
 | EvidenceRef | referência tipada à origem, localização, hashes e cadeia de transformação de uma evidência |
+| ExperimentManifest | registro reproduzível de hipótese, código, dataset, configuração, hardware, comando e artifacts |
+| BenchmarkRun | execução versionada de qualidade e recursos contra manifest/política de aceitação |
+| PromotionDecision | decisão humana que autoriza pacote/configuração/digests para capability, profile e ambiente |
 | extração | proposta de campos, tabelas e entidades tipadas |
 | FileObject | referência ao objeto binário e seus metadados de integridade/storage |
 | human-in-the-loop | participação humana prevista na política de decisão, não correção informal fora do sistema |
@@ -35,10 +39,14 @@ Issues de origem: #22 e #73
 | reconciliação | comparação e vínculo controlado entre fontes, fatos, settlements e totais, com diferenças explícitas |
 | fechamento de período | snapshot versionado com checklist, cobertura, pendências, pacote e protocolo |
 | normalização | transformação técnica que produz derivado apropriado para processamento |
-| OCR/reconhecimento | produção de texto/layout a partir de imagem ou PDF escaneado |
+| OCR/reconhecimento | produção de texto e coordenadas disponíveis a partir de imagem ou PDF escaneado |
+| layout/estrutura | observação de blocos, ordem de leitura, hierarchy e tabelas, separada de OCR |
+| notebook | cliente de exploração/relatório; nunca unidade de runtime, deploy ou fonte canônica de regra |
 | original | conteúdo recebido, preservado de forma imutável |
 | override | substituição deliberada de uma conclusão, com permissão e justificativa |
 | perfil documental | task graph, schema, providers elegíveis, thresholds, budgets e gates de um caso |
+| ProviderInvocation | chamada física a SDK/CLI/serviço, com componentes, configuração, recursos, raw envelope e unidade de retry |
+| ProviderExecution | resultado normalizado de exatamente uma capability, correlacionado à invocation e à decisão de promoção |
 | processing profile | contrato versionado que liga input, capabilities, rules, artefatos, routing, fixtures e métricas |
 | processamento | conjunto de jobs, attempts e provider executions sobre uma versão |
 | proveniência | cadeia que liga resultado a input, provider, modelo, versão, configuração e tentativa |
@@ -69,4 +77,6 @@ Issues de origem: #22 e #73
 | “Tika aprovou o texto” | “Tika observou/extraiu; a policy produziu `NativeTextAssessment`” |
 | “pytesseract é o OCR” | “Tesseract é a engine; `pytesseract` é o binding Python” |
 | “regex é provider” | “regex pertence a rule pack interno versionado” |
+| “Docling é o OCR” | “Docling é toolkit/pipeline composto; declarar capability e engine OCR real quando habilitada” |
+| “o notebook vai para produção” | “a lógica foi extraída, empacotada, testada, benchmarkada e promovida” |
 | “pacote do produto” | qualificar `AccountingDeliveryPackage` ou `ProductReleaseBundle` |

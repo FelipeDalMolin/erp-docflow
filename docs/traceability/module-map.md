@@ -11,7 +11,8 @@ Este arquivo orienta arquitetura e decomposição futura; não autoriza backend,
 | `documents` | ciclo do envelope, versões e snapshots | DocumentEnvelope, DocumentVersion, AcceptedSnapshot | ADR-0012, 0013 | não implementado |
 | `files` | binários, derivados, integridade e retenção | FileObject | ADR-0011, 0012, 0014 | não implementado |
 | `processing` | jobs, attempts, assessment, task graph e routing | ProcessingJob, NativeTextAssessment, RoutingDecision | #82/#85/#86; ADR-0012, 0016 (proposto) | não implementado |
-| `providers` | adapters por capability; Tika e OCR permanecem separados | ProviderExecution, RecognitionArtifact | #82/#83; ADR-0016 (proposto) | não implementado |
+| `providers` | invocation física e executions por capability; Tika, OCR e estrutura permanecem explícitos | ProviderInvocation, ProviderExecution, RecognitionArtifact, DocumentStructureArtifact | #82/#83/#89; ADR-0016 (proposto) | não implementado |
+| `evaluation` | manifests, runners, datasets, benchmark e promoção de componentes de dados | ExperimentManifest, BenchmarkRun, PromotionDecision | #43/#48/#83/#88/#89; ADR-0016 (proposto quando provider) | não implementado |
 | `validation` | parsers, validators, regras determinísticas e conflitos | ValidationResult, rule packs | #47/#84; ADR-0013, 0016 (proposto) | não implementado |
 | `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013; 0015 (proposto/gate) | não implementado |
 | `audit` | fatos duráveis e decisões humanas/técnicas | AuditEvent | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | não implementado |
@@ -32,7 +33,7 @@ Este arquivo orienta arquitetura e decomposição futura; não autoriza backend,
 
 ## Boundary técnico planejado
 
-Workers podem executar jobs de `processing` em processos/containers separados, mantendo o produto inicialmente como modular monolith. O Tika planejado permanece isolado como serviço interno de `probe_document` e `extract_native_text`, sem credenciais de PostgreSQL ou object storage. Isso não cria microservices de domínio nem permite que um provider altere diretamente o banco canônico.
+Workers podem executar jobs de `processing` em processos/containers separados, mantendo o produto inicialmente como modular monolith. O Tika planejado permanece isolado como serviço interno de `probe_document` e `extract_native_text`, sem credenciais de PostgreSQL ou object storage. Providers pesados de layout/estrutura, como o Docling se aprovado, também ficam na borda e desligados do profile `core`. `evaluation` produz evidência e decisão; não executa efeito operacional. Isso não cria microservices de domínio nem permite que um provider altere diretamente o banco canônico.
 
 ## Quando atualizar
 

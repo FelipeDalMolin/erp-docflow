@@ -9,6 +9,7 @@ Este diretório reúne **baselines planejados do produto**. Esses documentos exp
 | [Baseline de dados](DATA_MODEL_BASELINE.md) | conceitos e invariantes, sem schema físico |
 | [Estratégia de providers](PROVIDER_STRATEGY.md) | capabilities, adapters e critérios de seleção |
 | [Contrato de processing profile](PROCESSING_PROFILE_CONTRACT.md) | profile, task graph, rules, routing, fixtures e promoção |
+| [Engenharia de experimentos e componentes de dados](DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | notebook, reprodução, pacote, benchmark, promoção e operação |
 | [Pipeline de importação estruturada](STRUCTURED_IMPORT_PIPELINE.md) | XLSX/CSV, mapping, raw/normalized row, validação e replay |
 | [Domínio financeiro-gerencial](MANAGERIAL_FINANCIAL_DOMAIN.md) | fatos multiorigem, obrigações, settlements e reconciliação |
 | [Lineage de evidência a relatório](EVIDENCE_TO_REPORT_LINEAGE.md) | `EvidenceRef`, drill-through, coverage e read models |

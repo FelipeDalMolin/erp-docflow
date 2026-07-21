@@ -29,7 +29,7 @@ A autorização da Phase 1 não transforma todas as suas slices em elegíveis. A
 | Phase 0 — sistema do projeto | [#1](https://github.com/FelipeDalMolin/erp-docflow/issues/1) | concluída | baseline, hardening e organização documental integrados |
 | Phase 1 / R0 — bootstrap técnico | [#26](https://github.com/FelipeDalMolin/erp-docflow/issues/26) | execução controlada | #33 em Review; #34–#37 bloqueadas por dependências |
 | Phase 2 — GED e intake | [#27](https://github.com/FelipeDalMolin/erp-docflow/issues/27) | backlog | envelope não aprovado; deve terminar em materialização + `INSPECTION_PENDING` |
-| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | backlog/descoberta | perfil, Tika, benchmark e ADR-0016 ainda precisam de evidência/decisão |
+| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | backlog/descoberta | perfil, harness, Tika, benchmarks de reconhecimento/estrutura e ADR-0016 ainda precisam de evidência/decisão |
 | Phase 4 — review e acceptance | [#29](https://github.com/FelipeDalMolin/erp-docflow/issues/29) | backlog | deve cobrir documento, importação, vínculos e fatos propostos |
 | Phase 5 — domínio gerencial | [#30](https://github.com/FelipeDalMolin/erp-docflow/issues/30) | backlog a refinar | #54–#57 serão reorientadas para fatos multiorigem e reconciliação |
 | Phase 6 — geração documental | [#31](https://github.com/FelipeDalMolin/erp-docflow/issues/31) | backlog | `GeneratedDocument` não é pacote contábil nem release do produto |
@@ -103,7 +103,7 @@ Dependências principais:
 - [#81](https://github.com/FelipeDalMolin/erp-docflow/issues/81): bundle instalável no `onprem-lab`;
 - refinamento/reuso de #39–#40, #49–#57.
 
-Tika/OCR (#82–#86 e Epic #28) evoluem em trilha paralela e não bloqueiam o caminho import-first.
+Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha paralela e não bloqueiam o caminho import-first.
 
 ## Gaps operacionais conhecidos
 
@@ -112,7 +112,7 @@ Tika/OCR (#82–#86 e Epic #28) evoluem em trilha paralela e não bloqueiam o ca
 - Os modelos em `docs/templates/` continuam referências, não templates nativos do GitHub.
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
-- O Tika exige spike #82 e benchmark #83 antes de decisão/integração produtiva.
+- Tika/OCR exigem #82/#83; o lifecycle reproduzível e a avaliação Docling estão em #88/#89. Nenhum provider foi promovido.
 - Dados reais, secrets, deploy de produção, automerge e branch protection continuam fora dos envelopes atuais.
 
 ## Regra de atualização

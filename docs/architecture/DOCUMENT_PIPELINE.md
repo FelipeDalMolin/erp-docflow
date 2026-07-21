@@ -22,6 +22,7 @@ capturar
       -> normalizar + OCR seletivo
       -> revisão ou quarentena
   -> compor artefato nativo/OCR/híbrido
+  -> extrair estrutura/layout/tabelas quando o perfil exigir
   -> extrair e classificar
   -> validar
   -> decidir rota
@@ -45,16 +46,17 @@ capturar
 | 4. Native text | extrair texto já existente sem OCR | `RecognitionArtifact` de origem nativa | sim |
 | 5. Assess | avaliar suficiência por profile/policy, sem inventar confiança do Tika | `NativeTextAssessment` | não |
 | 6. Normalize | corrigir rotação, páginas, PDF e imagem sem perder original | `DerivedFileObject` + transformação/versionamento | sim |
-| 7. Recognize | produzir texto/layout/elementos e coordenadas por OCR | `RecognitionArtifact` de origem OCR | sim, se `USE_NATIVE` |
+| 7. Recognize | produzir texto e coordenadas disponíveis por OCR | `RecognitionArtifact` de origem OCR | sim, se `USE_NATIVE` |
 | 8. Fuse | compor por página/região sem sobrescrever origens | `RecognitionArtifact` de origem `FUSED` | sim |
-| 9. Extract | propor campos, tabelas e entidades com proveniência | `ExtractionResult` | conforme perfil |
-| 10. Classify | propor tipo, rótulos e destino | `ClassificationResult` | conforme perfil |
-| 11. Validate | executar regras, reconciliações e detectar conflitos | `ValidationResult` | não para campos operacionais |
-| 12. Route | aplicar thresholds, risco, custo e política | `RoutingDecision` | não |
-| 13. Review | aceitar, corrigir, override, rejeitar ou reprocessar | `ReviewDecision` | somente se política permitir |
-| 14. Accept | congelar interpretação canônica aprovada | `AcceptedSnapshot` | não antes de uso oficial |
-| 15. Link/effectuate | propor vínculo ou criar efeito autorizado | relação/entidade de destino + auditoria | conforme caso |
-| 16. Index/export | publicar read models, índice/RAG ou integração | referência de publicação | conforme caso |
+| 9. Structure | observar blocos, hierarchy, reading order e tabelas/células | `DocumentStructureArtifact` + raw response referenciada | conforme saídas exigidas pelo perfil |
+| 10. Extract | propor campos e entidades com proveniência | `ExtractionResult` | conforme perfil |
+| 11. Classify | propor tipo, rótulos e destino | `ClassificationResult` | conforme perfil |
+| 12. Validate | executar regras, reconciliações e detectar conflitos | `ValidationResult` | não para campos operacionais |
+| 13. Route | aplicar thresholds, risco, custo e política | `RoutingDecision` | não |
+| 14. Review | aceitar, corrigir, override, rejeitar ou reprocessar | `ReviewDecision` | somente se política permitir |
+| 15. Accept | congelar interpretação canônica aprovada | `AcceptedSnapshot` | não antes de uso oficial |
+| 16. Link/effectuate | propor vínculo ou criar efeito autorizado | relação/entidade de destino + auditoria | conforme caso |
+| 17. Index/export | publicar read models, índice/RAG ou integração | referência de publicação | conforme caso |
 
 Nomes de entidades são baseline conceitual, não schema ou classes implementadas.
 
@@ -158,17 +160,16 @@ NATIVE | OCR | FUSED | OCR_DERIVED_TEXT_LAYER
 Ele pode conter:
 
 - texto por página;
-- palavras/linhas/blocos;
+- palavras/linhas;
 - bounding boxes e orientação;
 - idioma;
-- tabelas e estrutura de layout;
 - confiança por elemento;
 - referência ao arquivo/versão de entrada;
 - provider, modelo, versão e tentativa.
 
-Estratégias discutidas:
+Estratégias de reconhecimento discutidas:
 
-- PaddleOCR como OCR/layout local mais capaz em perfis selecionados;
+- PaddleOCR como OCR local e possível toolkit estrutural em perfis selecionados;
 - Tesseract como opção local simples ou fallback;
 - Google Document AI para OCR/layout/processadores gerenciados;
 - Stirling/OCRmyPDF como normalização e OCR auxiliar.
@@ -177,7 +178,33 @@ Estratégias discutidas:
 
 `pytesseract` é binding Python da engine Tesseract; não é engine ou capability distinta. O benchmark pré-implementação compara, no mesmo dataset: texto nativo, Tesseract cru, OpenCV+Tesseract e PaddleOCR. A [estratégia de providers](PROVIDER_STRATEGY.md) define promoção e regressão.
 
-## 8. Extração e classificação
+## 8. Estrutura, layout e tabelas
+
+`recognize_text`, `extract_layout` e `extract_table_structure` são capabilities diferentes. Texto pode ser suficiente para rule packs simples, enquanto documentos com colunas, tabelas, cabeçalhos ou ordem de leitura complexa exigem estrutura adicional. Um toolkit pode produzi-las na mesma invocation, mas cada execution/output permanece declarado.
+
+`DocumentStructureArtifact` representa observação estrutural e pode conter:
+
+- blocos e classes de elemento;
+- hierarchy e reading order;
+- páginas, bounding boxes, origem/sistema de coordenadas e transformação interna;
+- tabelas, linhas, colunas, células, spans e cabeçalhos;
+- `provider_item_ref`/JSON Pointer e `charspan` quando disponíveis;
+- vínculos entre texto reconhecido/nativo e estrutura;
+- `provided_outputs` e `produced`/`not_run`/`not_available` por saída;
+- warnings, confidence/grade do provider e coverage;
+- source artifact, `derived_from`, `ProviderInvocation` e `ProviderExecution`.
+
+O Docling entra como candidato local para layout, estrutura de tabelas e conversão estruturada. A serialização JSON preserva o modelo `DoclingDocument`, não o original nem todos os intermediários; ela é mantida como raw provider artifact e normalizada ao contrato interno. Envelope de `ConversionResult`, partial success, erros, timings, confidence report, opções e digests são preservados separadamente quando expostos. Markdown/HTML são derivados e não fonte canônica.
+
+Docling executa depois do probe por decisão de orquestração, mas não recebe implicitamente o texto do Tika: ele relê o original ou derivado suportado com seu próprio backend. As duas observações permanecem independentes, e o benchmark contabiliza o custo duplicado.
+
+O primeiro perfil Docling deve usar PDF born-digital e OCR desligado. Texto incidental fica em spans estruturais/raw; não cria outro `RecognitionArtifact(NATIVE)`. Se uma variante habilitar OCR interno, ela é invocation composta e registra Docling, backend, engine OCR real, modelos, versões e parâmetros. Esse texto nunca é rotulado `NATIVE`. Sem origem por elemento verificável, recebe `TEXT_ORIGIN_UNRESOLVED` e não sustenta evidência canônica/autoaceite; `FUSED` exige refs explícitas.
+
+Para scan/híbrido, o pipeline não promete injetar diretamente JSON/TSV de OCR externo no Standard PDF Pipeline. A spike deve escolher e provar Docling composto, PDF pesquisável derivado/auditado, pipeline customizado ou Docling somente estrutural com reconhecimento separado.
+
+PaddleOCR/PP-Structure, Document AI e modelos especializados podem competir pela mesma capability. Não são empilhados automaticamente. Métricas estruturais — ordem de leitura, elementos, células/tabelas e downstream field accuracy — só são obrigatórias quando o perfil declarar essas saídas.
+
+## 9. Extração e classificação
 
 Extração e classificação são tarefas diferentes:
 
@@ -223,7 +250,7 @@ Extração determinística usa rule packs versionados:
 
 Regex é regra interna, não provider e não substitui parser/checksum. Rule packs, schemas, thresholds e fixtures pertencem ao [contrato de profile](PROCESSING_PROFILE_CONTRACT.md).
 
-## 9. Validação determinística
+## 10. Validação determinística
 
 Modelos reconhecem e sugerem; validators testam propriedades verificáveis.
 
@@ -248,7 +275,7 @@ Validators retornam estados distinguíveis, por exemplo:
 PASS | FAIL | WARN | NOT_APPLICABLE
 ```
 
-## 10. Política de roteamento
+## 11. Política de roteamento
 
 A decisão de rota considera:
 
@@ -281,9 +308,9 @@ Esses nomes pertencem ao pipeline e não reutilizam `CONTINUE`, `AWAIT_DEPENDENC
 
 Autoaceite só pode existir para perfis, campos e riscos explicitamente autorizados. A ausência de regra significa revisão, não permissão implícita.
 
-## 11. Revisão humana
+## 12. Revisão humana
 
-### 11.1 Ações planejadas
+### 12.1 Ações planejadas
 
 | Ação | Significado |
 | --- | --- |
@@ -294,7 +321,7 @@ Autoaceite só pode existir para perfis, campos e riscos explicitamente autoriza
 | `REJECT` | rejeita interpretação ou documento para o fluxo atual |
 | `QUARANTINE` | bloqueia uso até análise especializada |
 
-### 11.2 Regras
+### 12.2 Regras
 
 - sugestão e decisão humana permanecem armazenadas separadamente;
 - correção registra antes/depois, autor, horário e motivo;
@@ -303,7 +330,7 @@ Autoaceite só pode existir para perfis, campos e riscos explicitamente autoriza
 - revisão deve exibir original, evidência, confiança, validações e conflitos;
 - ações financeiras ou pagamentos devem ter gates próprios.
 
-## 12. Aceite, vínculo e efetivação
+## 13. Aceite, vínculo e efetivação
 
 `AcceptedSnapshot` registra a interpretação documental aceita para uma versão, schema e finalidade. Ele pode ser substituído por snapshot posterior, mas continua auditável.
 
@@ -319,7 +346,7 @@ O vínculo deve registrar origem, confiança, decisão e estado. Um pagamento nu
 
 Fatos também podem nascer de importação estruturada ou lançamento manual auditado. Nesses casos, a fonte e o `EvidenceRef` substituem a obrigatoriedade de `DocumentEnvelope`; autorização, idempotência e audit trail permanecem.
 
-## 13. RAG e consulta
+## 14. RAG e consulta
 
 Indexação deve preservar:
 
@@ -332,7 +359,7 @@ Indexação deve preservar:
 
 Conteúdo não revisado pode ser indexado apenas se estiver claramente marcado e se a política permitir. Resposta de RAG precisa citar a evidência; não altera dado canônico.
 
-## 14. Falhas e reprocessamento
+## 15. Falhas e reprocessamento
 
 Falhas devem ser classificadas:
 
@@ -348,7 +375,7 @@ Falhas devem ser classificadas:
 
 Retry automático só é permitido para erros transitórios e com limite. Troca de provider segue a política. Após o limite, o job vai para revisão ou dead letter/quarentena com contexto suficiente.
 
-## 15. Idempotência e concorrência
+## 16. Idempotência e concorrência
 
 - operações usam chaves de idempotência e correlation IDs;
 - dois workers não devem finalizar a mesma tentativa;
@@ -357,14 +384,15 @@ Retry automático só é permitido para erros transitórios e com limite. Troca 
 - reprocessamento é nova tentativa explícita;
 - publicação em integrações deve aplicar outbox ou mecanismo equivalente quando aprovado.
 
-## 16. Critérios de saída por estágio
+## 17. Critérios de saída por estágio
 
 | Estágio | Critério mínimo |
 | --- | --- |
 | materializado | original íntegro, hash, envelope, versão e origem registrados |
 | inspecionado | MIME observado, metadados, raw/normalizado, limites e reason codes registrados |
 | texto avaliado | `NativeTextAssessment` versionado e explicável |
-| reconhecido | artefato de texto/layout referenciado e tentativa encerrada |
+| reconhecido | artefato de texto referenciado e tentativa encerrada |
+| estruturado | `DocumentStructureArtifact` e raw output referenciados quando o perfil exigir layout/tabelas |
 | extraído/classificado | output válido contra schema e proveniência completa |
 | validado | regras aplicáveis executadas e conflitos registrados |
 | pronto para revisão | evidências e ações disponíveis ao revisor |
@@ -372,7 +400,7 @@ Retry automático só é permitido para erros transitórios e com limite. Troca 
 | efetivado | autorização do módulo de destino, evidência e relação tipada persistidas |
 | indexado | read model reconstruível e permissão preservada |
 
-## 17. Matriz técnica inicial
+## 18. Matriz técnica inicial
 
 | Etapa | Estratégia baseline/candidata | Evidência e métrica | Falha explícita |
 | --- | --- | --- | --- |
@@ -380,14 +408,15 @@ Retry automático só é permitido para erros transitórios e com limite. Troca 
 | probe/nativo | Tika isolado, OCR desligado | cobertura nativa, latência, parser/config/digest | criptografado, corrompido, parcial, timeout |
 | imagem | OpenCV por profile | transformação/parâmetros + impacto em CER/campo | derivado inválido ou degradação |
 | OCR | Tesseract baseline e PaddleOCR challenger | CER/WER, cobertura de campo, latência/recursos | abstention, output inválido, indisponível |
+| estrutura | Docling CPU e toolkits equivalentes como challengers de layout/tabela | métricas por output declarado, downstream field accuracy, cold/warm e RSS pico | output `not_run`/`not_available`, origem não resolvida, limite ou provider indisponível |
 | extração | regex/parsers tipados/rule packs | exatidão normalizada por campo + `EvidenceRef` | ausente, ambíguo, conflito |
 | validação | dígitos, datas, `Decimal`, totais e coerência | PASS/FAIL/WARN por regra/versão | regra não aplicável ou erro de configuração |
 | linking | identificador → alias → fuzzy apenas como candidato | precision/top-k e ambiguidade | nenhum candidato ou múltiplos próximos |
 | routing | policy versionada | taxa de review/erro, custo e reason code | nenhuma rota elegível → review/quarentena |
 
-Targets, candidatos e fixtures são definidos no profile e nas Issues #43, #82–#86; esta tabela não promove tecnologia antes do benchmark.
+Targets, candidatos e fixtures são definidos no profile e nas Issues #43, #82–#86, #88 e #89; esta tabela não promove tecnologia antes do benchmark.
 
-## 18. Overviews relacionados
+## 19. Overviews relacionados
 
 - [Atividade do pipeline](../uml/02-business/document-processing-activity-planned.puml)
 - [Sequência de intake](../uml/05-sequence/ingest-to-envelope-planned.puml)

@@ -1,5 +1,5 @@
 @startuml
-' Issues #22 and #73
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0009, ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned logical boundaries in a modular monolith; not implemented services.
 
@@ -15,8 +15,11 @@ component "Processing Orchestrator" as Processing
 component "Capability Registry\n& Provider Selection" as Registry
 component "Native Text Assessment" as Assessment
 component "Workflow Routing Policy" as Routing
+component "Evaluation Harness\nManifests / Benchmarks / Promotion" as Evaluation
 component "Tika Adapter\nprobe + native text" as TikaAdapter
-component "Normalization / OCR /\nExtraction Adapters" as OtherAdapters
+component "Normalization / OCR\nAdapters" as RecognitionAdapters
+component "Structure / Layout / Table\nAdapters" as StructureAdapters
+component "Field / Semantic\nAdapters" as FieldAdapters
 component "Validation" as Validation
 component "Review & Acceptance" as Review
 component "Audit" as Audit
@@ -44,11 +47,15 @@ Files --> Objects
 Documents --> Processing : solicita job
 Processing --> Registry : resolve adapter por capability
 Registry --> TikaAdapter : probe/native text
-Registry --> OtherAdapters : adapter elegível
+Registry --> RecognitionAdapters : recognize_text
+Registry --> StructureAdapters : layout/table structure
+Registry --> FieldAdapters : campos/semântica
 TikaAdapter --> Processing : observações + texto nativo
 Processing --> Assessment : probe + artifact NATIVE
 Assessment --> Processing : USE_NATIVE / OCR_REQUIRED / review / quarantine
-OtherAdapters --> Processing : resultado normalizado
+RecognitionAdapters --> Processing : RecognitionArtifact
+StructureAdapters --> Processing : DocumentStructureArtifact
+FieldAdapters --> Processing : resultado normalizado
 Processing --> Objects : raw/derived artifacts
 Processing --> Validation
 Validation --> Routing : resultados + conflitos
@@ -75,6 +82,9 @@ Review --> DB
 Linking --> DB
 Managerial --> DB
 Reporting --> DB
+Evaluation --> Objects : manifests/benchmark artifacts
+Evaluation --> DB : PromotionDecision planejada
+Evaluation ..> Registry : avalia candidates por capability
 
 Intake ..> Audit
 Imports ..> Audit
@@ -97,10 +107,14 @@ note bottom of Routing
   Não se confunde com seleção de provider nem com outcomes do Codex.
 end note
 
-note bottom of OtherAdapters
-  OpenCV, OCRmyPDF, Tesseract/pytesseract, PaddleOCR,
-  Document AI ou OpenAI são candidatos por capability/perfil.
-  Regex, parsers e validators são regras internas versionadas.
+note bottom of StructureAdapters
+  Docling é challenger de layout/tabelas com OCR off no baseline.
+  Uma invocation física produz executions separadas por capability.
+end note
+
+note bottom of Evaluation
+  Notebook não é runtime. Manifest, runner, benchmark e decisão
+  preservam proveniência até adapter/E2E/release.
 end note
 
 @enduml

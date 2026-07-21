@@ -99,23 +99,37 @@ Responsabilidades:
 
 Nova tentativa não altera resultados históricos.
 
-### 3.5 ProviderExecution
+### 3.5 ProviderInvocation e ProviderExecution
 
-Registra a execução de uma capability por adapter/modelo.
+`ProviderInvocation` representa uma chamada física a SDK, CLI ou serviço. Ela registra:
 
-Precisa referenciar:
+- job, attempt, input/hash e runtime/image digest;
+- toolkit/backend/engine/subengine/modelos em `components`;
+- configuração comportamental e envelope operacional separados;
+- status, timestamps, duração real, classificação cold/warm e observações brutas de CPU/memória/temporários;
+- raw response/envelope, erro e retryability.
 
-- job e attempt;
-- capability;
-- provider/adapter;
-- modelo/processor e versão;
-- input e hash;
-- configuração/policy version;
-- status, timestamps e latência;
-- custo/uso;
-- artefato bruto;
-- resultado normalizado;
-- erro e retryability.
+`ProviderExecution` representa exatamente uma capability normalizada produzida pela invocation. Ela referencia:
+
+- `provider_invocation_ref`, capability e provider/adapter;
+- input, configuração/policy version e componentes/modelos relevantes;
+- commit, dependency lock e digests da configuração comportamental/modelos;
+- `experiment_manifest_ref`, `benchmark_run_ref` e `promotion_decision_ref`;
+- status, reason code, outputs declarados e estados `not_run`/`not_available`;
+- raw artifact/envelope e resultado normalizado por referência;
+- erro e retryability daquela capability.
+
+Uma invocation composta cria um `ProviderExecution` por capability e os correlaciona pelo mesmo `provider_invocation_ref`. Retry da chamada física cria nova invocation; outputs anteriores não são sobrescritos. Se o toolkit não permitir retry parcial, a unidade indivisível e o custo repetido ficam explícitos.
+
+### 3.5.1 Evidência de experimento e promoção
+
+Artifacts de evaluation não são estado do documento nem efeito de negócio:
+
+- `ExperimentManifest`: hipótese, commit, dataset/splits, configuração, hardware, runner e artifacts;
+- `BenchmarkRun`: métricas de qualidade/recursos e diferenças contra baseline;
+- `PromotionDecision`: refs a um ou mais benchmark runs, capability/profile, pacote/configuração/digests autorizados, limites, fallback e owner.
+
+O runtime referencia a decisão/execução aprovada; não recria código a partir do notebook. O contrato completo está em [Engenharia de software para experimentos e componentes de dados](DATA_SCIENCE_ENGINEERING_LIFECYCLE.md).
 
 ### 3.6 DocumentProbe
 
@@ -146,11 +160,11 @@ Decisão interna, separada do Tika, que aplica profile/policy às observações:
 
 ### 3.7 RecognitionArtifact
 
-Texto/layout observado em uma versão ou derivado:
+Texto observado em uma versão ou derivado:
 
 - origem `NATIVE`, `OCR`, `FUSED` ou `OCR_DERIVED_TEXT_LAYER`;
 - conteúdo por página;
-- blocos/linhas/palavras;
+- linhas/palavras e blocos textuais quando fornecidos pelo reconhecimento;
 - bounding boxes;
 - idioma e orientação;
 - score bruto e, quando existir, score calibrado separados;
@@ -159,6 +173,23 @@ Texto/layout observado em uma versão ou derivado:
 - cadeia de transformações, algoritmo/configuração e versões.
 
 Pode existir mais de um por versão.
+
+### 3.7.1 DocumentStructureArtifact
+
+Estrutura observada por capability separada de reconhecimento:
+
+- capability `extract_layout` ou `extract_table_structure` e um `provider_execution_ref` produtor;
+- blocos/classes, hierarchy e reading order;
+- páginas, bounding boxes, origem/sistema de coordenadas e transformação interna;
+- tabelas, linhas, colunas, células, spans e cabeçalhos;
+- `provider_item_ref`/JSON Pointer e `charspan` quando disponíveis;
+- vínculos com `RecognitionArtifact` quando disponíveis;
+- provider invocation/execution, outputs produzidos ou `not_run`/`not_available`, raw artifact, warnings e confidence/grades brutos;
+- source artifact, `derived_from`, modelo/configuração e versões.
+
+Raw schemas como `DoclingDocument` permanecem na borda. Sua serialização pode preservar o modelo do provider sem representar o original, o envelope da conversão ou todos os intermediários; esses registros são correlacionados separadamente. O artifact normalizado não substitui `EvidenceRef`, snapshot aceito ou lineage operacional.
+
+Existe um `DocumentStructureArtifact` por execution/capability. Quando uma invocation física gerar layout e tabela, ela origina artifacts distintos que podem compartilhar raw envelope; qualquer visão fusionada é novo artifact com `derived_from` explícito.
 
 ### 3.8 ExtractionResult
 
@@ -299,13 +330,22 @@ DocumentVersion
   1 -> N DocumentProbe
   1 -> N NativeTextAssessment
   1 -> N RecognitionArtifact
+  1 -> N DocumentStructureArtifact
   1 -> N ExtractionResult
   1 -> N ClassificationResult
 
 ProcessingJob
   1 -> N ProcessingAttempt
 ProcessingAttempt
-  1 -> N ProviderExecution
+  1 -> N ProviderInvocation
+ProviderInvocation
+  1 -> 1..N ProviderExecution
+
+ExperimentManifest
+  1 -> N BenchmarkRun
+PromotionDecision
+  1 -> 1..N BenchmarkRun (evidências)
+  1 -> 0..N ProviderExecution (runtime elegível)
 
 ExtractionResult / ClassificationResult
   1 -> N ValidationResult

@@ -29,7 +29,8 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](projec
 5. [Roadmap](project/ROADMAP.md)
 6. [Arquitetura de referência](architecture/ARCHITECTURE.md)
 7. [Contratos especializados](architecture/README.md)
-8. [Catálogo UML](uml/README.md)
+8. [Engenharia de experimentos e componentes de dados](architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md)
+9. [Catálogo UML](uml/README.md)
 
 ### Entender decisões e impacto
 
@@ -58,6 +59,7 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](projec
 | O que o Codex pode fazer? | [`AGENTS.md`](../AGENTS.md) | [`.codex/config.toml`](../.codex/config.toml) define capacidade técnica local; a Issue/envelope concede escopo. |
 | Por que uma decisão arquitetural foi tomada? | ADR aplicável em [`docs/adr/`](adr/README.md) | Arquitetura, mapas e UML devem derivar da decisão e respeitar seu status. |
 | Como as capabilities e o domínio deverão funcionar? | [ARCHITECTURE.md](architecture/ARCHITECTURE.md) e contratos especializados | Produto define o resultado; roadmap define ordem; UML representa visualmente; nenhum deles prova implementação. |
+| Como um notebook/experimento se torna componente promovível? | [DATA_SCIENCE_ENGINEERING_LIFECYCLE.md](architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | Processing profile define o caso; benchmark e decisão provam a promoção. |
 | O que está implementado? | Código, testes e contratos executáveis | Mapas registram a evidência da Issue/PR quando código existir. |
 
 Quando duas fontes divergirem, não combinar regras silenciosamente. Usar a fonte primária da pergunta, verificar ADRs aplicáveis e abrir uma Issue para resolver a inconsistência.

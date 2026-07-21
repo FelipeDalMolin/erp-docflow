@@ -11,8 +11,11 @@ Mapa de conceitos planejados. Ainda não há entidades, tabelas, schemas ou stat
 | `NativeTextAssessment` | decidir uso do texto nativo, OCR, review ou quarentena por policy | processing | activity UML | ADR-0016 (proposto); #85 | não implementado |
 | `ProcessingJob` | objetivo/task graph de processamento | processing | job state | ADR-0012, 0016 (proposto) | não implementado |
 | `ProcessingAttempt` | tentativa imutável de job | processing | job state | ADR-0016 (proposto) | não implementado |
-| `ProviderExecution` | capability + provider/modelo/input/artefato | providers | process sequence | ADR-0016 (proposto) | não implementado |
-| `RecognitionArtifact` | texto/layout observado com origem `NATIVE`, `OCR`, `FUSED` ou `OCR_DERIVED_TEXT_LAYER` | processing | domain UML | ADR-0012, 0016 (proposto) | não implementado |
+| `ProviderInvocation` | chamada física, componentes, configuração, recursos, raw envelope e unidade de retry | providers | process sequence | #45; ADR-0016 (proposto) | não implementado |
+| `ProviderExecution` | uma capability normalizada por invocation e referência à decisão de promoção | providers | process sequence | #45; ADR-0016 (proposto) | não implementado |
+| `ExperimentManifest` / `BenchmarkRun` / `PromotionDecision` | reproduzir, comparar e autorizar componente para profile/ambiente | evaluation | data science lifecycle | #88; ADR-0007, 0009; 0016 (proposto quando provider) | não implementado |
+| `RecognitionArtifact` | texto observado com origem `NATIVE`, `OCR`, `FUSED` ou `OCR_DERIVED_TEXT_LAYER` | processing | domain UML | ADR-0012, 0016 (proposto) | não implementado |
+| `DocumentStructureArtifact` | blocos, hierarchy, reading order e tabelas/células com proveniência | processing | pipeline/profile | #89; ADR-0012, 0016 (proposto) | não implementado |
 | `EvidenceRef` | referência versionada a campo, linha, trecho, página, região ou artefato | lineage | pipeline/domain UML | ADR-0012, 0013; #78 | não implementado |
 | `ExtractionResult` | campos/tabelas sugeridos | processing | domain UML | ADR-0012, 0016 (proposto) | não implementado |
 | `ClassificationResult` | tipo/rótulo sugerido | processing | domain UML | ADR-0012, 0016 (proposto) | não implementado |
