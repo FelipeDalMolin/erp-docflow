@@ -17,7 +17,7 @@ Phase 1 / R0: execução controlada autorizada pela Epic #26
 Próximo gate: review humano + squash merge do PR #72
 #34 e #35: especificadas, bloqueadas até o merge da #33
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
-Realinhamento documental/backlog: Issue #73 em execução
+Realinhamento documental/backlog: PR #87 draft, mergeable e com Structural CI verde; aguardando review humano
 ```
 
 A autorização da Phase 1 não transforma todas as suas slices em elegíveis. A #33 é a única entrega preparada; #34–#37 continuam obedecendo suas dependências. Também não autoriza automaticamente a Phase 2 nem a release R1.
@@ -35,7 +35,7 @@ A autorização da Phase 1 não transforma todas as suas slices em elegíveis. A
 | Phase 6 — geração documental | [#31](https://github.com/FelipeDalMolin/erp-docflow/issues/31) | backlog | `GeneratedDocument` não é pacote contábil nem release do produto |
 | Phase 7 — integrações | [#32](https://github.com/FelipeDalMolin/erp-docflow/issues/32) | backlog | XLSX/CSV local pertence ao R1; OFX/webhooks ficam nesta trilha |
 | R1 — Golden Month | [#75](https://github.com/FelipeDalMolin/erp-docflow/issues/75) | Rascunho | discovery/refinamento; sem envelope aprovado |
-| Alinhamento produto/processamento | [#73](https://github.com/FelipeDalMolin/erp-docflow/issues/73) | em execução | PR documental deve preservar estado planejado e não implementar produto |
+| Alinhamento produto/processamento | [#73](https://github.com/FelipeDalMolin/erp-docflow/issues/73) / [PR #87](https://github.com/FelipeDalMolin/erp-docflow/pull/87) | checkpoint de revisão | entrega técnica em draft, mergeable e com Structural CI verde; não implementa produto |
 
 As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma waterfall obrigatória para releases: o R1 compõe o menor conjunto de capabilities necessário e não depende de OCR.
 
