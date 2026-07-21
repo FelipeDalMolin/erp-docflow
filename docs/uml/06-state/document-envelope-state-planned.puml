@@ -1,5 +1,5 @@
 @startuml
-' Issue #22
+' Issues #22 and #73
 ' Related ADRs: ADR-0012, ADR-0013
 ' Guardrail: candidate lifecycle for review; not an implemented state machine.
 
@@ -7,7 +7,9 @@ title DocumentEnvelope - estados planejados
 
 [*] --> RECEIVED
 RECEIVED --> MATERIALIZED : original + hash + versão
-MATERIALIZED --> PROCESSING : job solicitado
+MATERIALIZED --> INSPECTION_PENDING : intake concluído
+INSPECTION_PENDING --> PROCESSING : job Phase 3 solicitado
+INSPECTION_PENDING --> QUARANTINED : política / integridade
 PROCESSING --> REVIEW_REQUIRED : gate / conflito / baixa confiança
 PROCESSING --> ACCEPTED : autoaceite permitido
 PROCESSING --> QUARANTINED : política / segurança
@@ -36,5 +38,9 @@ note left of MATERIALIZED
   Original preservado e documento identificado.
 end note
 
-@enduml
+note left of INSPECTION_PENDING
+  Phase 2 termina aqui.
+  Tika/probe inicia somente na Phase 3.
+end note
 
+@enduml

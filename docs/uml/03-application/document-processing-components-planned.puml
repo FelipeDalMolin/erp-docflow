@@ -1,57 +1,106 @@
 @startuml
-' Issue #22
+' Issues #22 and #73
 ' Related ADRs: ADR-0009, ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned logical boundaries in a modular monolith; not implemented services.
 
-title Componentes lógicos de processamento planejados
+title Componentes lógicos do produto planejados
 
-component "Inbox / Intake" as Intake
+component "UX / Workbenches" as UX
+component "Document Intake" as Intake
+component "Structured Import" as Imports
+component "Manual Entry" as Manual
 component "Documents" as Documents
 component "Files" as Files
 component "Processing Orchestrator" as Processing
-component "Capability Registry\n& Routing Policy" as Router
-component "Provider Adapters" as Adapters
+component "Capability Registry\n& Provider Selection" as Registry
+component "Native Text Assessment" as Assessment
+component "Workflow Routing Policy" as Routing
+component "Tika Adapter\nprobe + native text" as TikaAdapter
+component "Normalization / OCR /\nExtraction Adapters" as OtherAdapters
 component "Validation" as Validation
 component "Review & Acceptance" as Review
 component "Audit" as Audit
-component "Linking" as Linking
-component "Finance / módulos ERP" as Finance
+component "Evidence & Lineage" as Lineage
+component "Master Data / Linking" as Linking
+component "Assets & Contracts" as AssetsContracts
+component "Managerial Core\nObligations / Settlements / Reconciliation" as Managerial
+component "Reporting & Closing" as Reporting
+component "Accounting Delivery" as Accounting
 component "Search / RAG" as Search
 
 database "Metadados transacionais" as DB
 storage "Objetos e artefatos" as Objects
 
-Intake --> Documents : materializa
+UX --> Intake
+UX --> Imports
+UX --> Manual
+UX --> Review
+UX --> Reporting
+Intake --> Documents : materializa documento
+Imports --> Validation : linha bruta/normalizada
+Manual --> Validation : fato proposto + autoria/motivo
 Documents --> Files : referencia versões
 Files --> Objects
 Documents --> Processing : solicita job
-Processing --> Router : resolve task/candidates
-Router --> Adapters : executa capability
-Adapters --> Objects : raw/derived artifacts
-Adapters --> Processing : resultado normalizado
+Processing --> Registry : resolve adapter por capability
+Registry --> TikaAdapter : probe/native text
+Registry --> OtherAdapters : adapter elegível
+TikaAdapter --> Processing : observações + texto nativo
+Processing --> Assessment : probe + artifact NATIVE
+Assessment --> Processing : USE_NATIVE / OCR_REQUIRED / review / quarantine
+OtherAdapters --> Processing : resultado normalizado
+Processing --> Objects : raw/derived artifacts
 Processing --> Validation
-Validation --> Review : conflitos/gates
+Validation --> Routing : resultados + conflitos
+Routing --> Review : OPEN_REVIEW
+Routing --> Processing : fallback / reprocessamento
 Review --> Documents : snapshot aceito
+Review --> Lineage : decisão/evidência aceita
+Documents --> Lineage : EvidenceRef
+Imports --> Lineage : lote/linha/célula
+Manual --> Lineage : ator/motivo
+Lineage --> Managerial : sustenta fato
 Documents --> Linking
-Linking --> Finance : efeito autorizado
+Linking --> AssetsContracts
+Linking --> Managerial
+Managerial --> Reporting
+Reporting --> Accounting : pacote/protocolo autorizado
 Documents --> Search : conteúdo/status
+Managerial --> Search : read models autorizados
 
 Documents --> DB
+Imports --> DB
 Processing --> DB
 Review --> DB
 Linking --> DB
+Managerial --> DB
+Reporting --> DB
 
 Intake ..> Audit
+Imports ..> Audit
+Manual ..> Audit
 Documents ..> Audit
 Processing ..> Audit
 Review ..> Audit
 Linking ..> Audit
+Managerial ..> Audit
+Reporting ..> Audit
+Accounting ..> Audit
 
-note bottom of Adapters
-  Tika, Stirling, OCRmyPDF, Tesseract,
-  PaddleOCR, Document AI, OpenAI etc.
-  Cada adapter declara capabilities.
+note bottom of TikaAdapter
+  Tika observa MIME/metadados e extrai texto nativo.
+  A policy interna avalia suficiência; OCR permanece separado.
+end note
+
+note bottom of Routing
+  RoutingDecision ocorre após sinais e validações aplicáveis.
+  Não se confunde com seleção de provider nem com outcomes do Codex.
+end note
+
+note bottom of OtherAdapters
+  OpenCV, OCRmyPDF, Tesseract/pytesseract, PaddleOCR,
+  Document AI ou OpenAI são candidatos por capability/perfil.
+  Regex, parsers e validators são regras internas versionadas.
 end note
 
 @enduml
-

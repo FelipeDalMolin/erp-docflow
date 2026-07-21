@@ -1,8 +1,8 @@
 # Estratégia de providers e modelos documentais
 
 Status documental: proposta para decisão, não implementada  
-Atualizado em: 2026-07-10  
-Issue de origem: #22  
+Atualizado em: 2026-07-21
+Issues de origem: #22 e #73
 ADR relacionado: ADR-0016 (proposto)
 
 ## 1. Resposta arquitetural
@@ -16,7 +16,7 @@ errado: provider=google executa "processar documento"
 
 planejado:
   normalize_pdf -> stirling
-  detect_native_text -> tika
+  probe_document + extract_native_text -> tika (OCR interno desligado)
   recognize_text -> paddleocr
   extract_fields -> google-document-ai
   classify_semantically -> openai
@@ -26,11 +26,25 @@ planejado:
 
 Isso permite combinar local e proprietário, substituir uma etapa sem reescrever o domínio e auditar qual ferramenta produziu cada artefato.
 
+### 1.1 Papéis que não devem ser confundidos
+
+| Papel | Exemplo | Contrato |
+| --- | --- | --- |
+| engine/serviço | Tika Server, Tesseract, PaddleOCR, Document AI | executa uma capability e produz observação/raw output |
+| adapter | adapter HTTP do Tika, adapter CLI/worker do OCR | traduz contrato interno ↔ ferramenta e normaliza falhas |
+| binding/biblioteca | `pytesseract`, OpenCV | invoca engine ou transforma imagem; não é provider de negócio |
+| regra/parser interno | regex, parser de data/`Decimal`, CPF/CNPJ | lógica determinística versionada com evidência |
+| policy de seleção | provider selection policy | escolhe adapter elegível para uma capability já decidida, usando profile, benchmark, saúde, custo e residência |
+| policy de workflow | `NativeTextAssessment`, `RoutingDecision` e review policy | decide o próximo passo usando observações, validações, thresholds e risco; não escolhe capability de forma implícita |
+| orquestrador | task graph do profile | coordena etapas, jobs e artefatos; não interpreta o domínio sozinho |
+
+Regex não é provider; `pytesseract` não é uma engine distinta; OpenCV não aprova documento. O [contrato de profile](PROCESSING_PROFILE_CONTRACT.md) liga cada papel a versão, parâmetros, artefatos e métricas.
+
 ## 2. Capabilities planejadas
 
 | Capability | Entrada | Saída normalizada |
 | --- | --- | --- |
-| `probe_document` | arquivo/versão | MIME, páginas, texto disponível, qualidade e flags |
+| `probe_document` | arquivo/versão | MIME observado, parser, páginas/metadados, criptografia, warnings e limites |
 | `extract_native_text` | arquivo digital | texto, estrutura e metadados existentes |
 | `normalize_document` | original/derivado | novo arquivo derivado + relatório de transformação |
 | `recognize_text` | PDF/imagem | texto, página, layout, coordenadas e confiança |
@@ -46,10 +60,10 @@ Validação determinística, política de roteamento, review e aceite são respo
 
 | Provider/adapter | Implantação | Capacidades úteis | Papel recomendado | Limites |
 | --- | --- | --- | --- | --- |
-| Apache Tika | local | probe, texto nativo, metadados | primeira inspeção e bypass de OCR | não é OCR avançado nem extrator de negócio |
+| Apache Tika | local/isolado | probe, texto nativo, metadados | primeira inspeção da Phase 3; OCR interno desligado | não avalia suficiência, qualidade visual ou malware; não é fronteira de segurança |
 | Stirling PDF | self-hosted | normalização, split/merge/rotate/compress, OCR auxiliar | ferramenta/serviço de preparação de PDF | não substitui orquestração, domínio, validação ou auditoria |
 | OCRmyPDF | local/self-hosted | limpeza e PDF pesquisável | normalização/OCR de PDFs escaneados | não entrega entendimento semântico |
-| Tesseract | local | OCR | baseline simples e fallback por perfil | layout/tabelas complexos exigem componentes adicionais |
+| Tesseract | local | OCR | engine baseline sob benchmark | `pytesseract` é apenas binding; layout/tabelas exigem componentes adicionais |
 | PaddleOCR / PaddleOCR-VL | local, GPU/CPU conforme modelo | OCR, layout e entendimento documental | candidato local principal em perfis aprovados | operação, dependências e benchmark precisam ser validados |
 | Google Document AI | cloud gerenciada | OCR, layout, key-value, tabelas, classificação e processors | escalation para perfis complexos ou processors específicos | custo, residência, credenciais, lock-in e schemas do provider |
 | OpenAI multimodal/texto | cloud gerenciada | entendimento visual/semântico, extração estruturada, classificação, sumarização | inteligência seletiva após política; Structured Outputs quando aplicável | não é substituto do GED, da auditoria ou da validação determinística |
@@ -59,6 +73,8 @@ Validação determinística, política de roteamento, review e aceite são respo
 
 A presença no catálogo não torna o provider aprovado, configurado ou elegível para dados reais.
 
+O catálogo registra candidatos, não uma ordem obrigatória. A #83 compara estratégias permitidas antes da integração produtiva; a #48 mede regressão E2E depois que o pipeline existir.
+
 ## 4. Provider != produto
 
 O domínio conhece contratos normalizados, IDs de execução e artefatos. SDKs e formatos proprietários ficam no adapter.
@@ -66,12 +82,13 @@ O domínio conhece contratos normalizados, IDs de execução e artefatos. SDKs e
 ```text
 Document Processing Orchestrator
   -> Capability Registry
-  -> Routing Policy
+  -> Provider Selection Policy
   -> Provider Adapter
   -> Raw Provider Response (artefato)
   -> Normalized Result
   -> Validators
-  -> Review Policy
+  -> Workflow Routing Policy
+  -> Review / accepted flow
 ```
 
 Respostas brutas devem ser preservadas conforme retenção e segurança para permitir auditoria, debugging e renormalização. O domínio não deve depender delas diretamente.
@@ -150,6 +167,8 @@ Todo adapter precisa declarar:
 - comportamento de idempotência;
 - suporte a batch/assíncrono;
 - política de retenção do serviço externo.
+
+O adapter Tika também precisa declarar OCR/recursão desligados ou limitados, digest/configuração, limites de processo e ausência de acesso direto a banco/storage. A policy interna — não o adapter — produz `NativeTextAssessment`.
 
 ## 7. Configuração por ambiente e tenant
 
@@ -235,6 +254,13 @@ Avaliação por perfil precisa de:
 - latência, custo e consumo de recursos;
 - erros por qualidade, tipo, idioma e fornecedor.
 
+Existem dois gates diferentes:
+
+1. **benchmark pré-implementação** (#83): compara texto nativo, Tesseract cru, OpenCV+Tesseract e PaddleOCR no mesmo manifest/splits e sustenta a decisão;
+2. **benchmark E2E/regressão** (#48): mede o task graph implementado, incluindo falha, routing, revisão, custo e latência.
+
+Provider não deve ser promovido para implementação produtiva apenas porque sua integração antecede a #48.
+
 Thresholds devem ser calibrados por provider, modelo, campo e perfil. “0,90” não significa a mesma qualidade em todos os providers.
 
 ## 11. Segurança e governança
@@ -276,4 +302,4 @@ Troca de modelo/processor que pode alterar output deve gerar nova versão de pol
 - estratégia de GPU on-prem;
 - retenção das respostas brutas.
 
-Essas escolhas devem vir de spike/benchmark e decisão humana, não de preferência abstrata.
+As Issues #43, #82 e #83 materializam profile/dataset, Tika e benchmark pré-implementação. #84, #85 e #86 separam rule packs, avaliação do texto nativo e routing posterior. Essas escolhas devem vir de spike/benchmark e decisão humana, não de preferência abstrata ou curso/tutorial.

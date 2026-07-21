@@ -6,6 +6,18 @@ Descrever o objetivo geral da Epic.
 
 Explicar por que esta Epic existe e qual problema ou frente ela organiza.
 
+Phase/capability:
+
+- `<Phase, track ou não aplicável>`
+
+Release/result target:
+
+- `<R0/R1/... ou não aplicável>`
+
+Resultado observável para usuário/operação:
+
+- `<resultado ponta a ponta; não apenas lista de componentes>`
+
 ## Escopo geral
 
 - Item 1
@@ -32,6 +44,8 @@ Explicar por que esta Epic existe e qual problema ou frente ela organiza.
 
 - Risco ou decisão pendente 1
 - Risco ou decisão pendente 2
+
+Uma decisão pendente mantém o envelope em `Rascunho` ou a slice correspondente bloqueada; não delegar escolha arquitetural implícita ao Codex.
 
 ## Envelope de execução do Codex
 

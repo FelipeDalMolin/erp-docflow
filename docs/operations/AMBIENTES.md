@@ -19,7 +19,7 @@ onprem-lab
 prod-onprem
 ```
 
-O projeto começa pelo ambiente local e pelo ambiente CI.
+O projeto começa pelo ambiente local e pelo ambiente CI. O `onprem-lab` é o alvo do candidato R1 Golden Month com dataset sintético/anonimizado; `prod-onprem` e dados reais exigem gates posteriores.
 
 Ambientes de produção e laboratório on-prem serão documentados antes de serem automatizados.
 
@@ -124,7 +124,7 @@ Criar uma distribuição WSL dedicada apenas quando houver motivo real, como:
 - necessidade de export/import independente;
 - operação contínua separada do ambiente de desenvolvimento.
 
-Enquanto o projeto estiver em MVP documental leve, a WSL principal compartilhada é suficiente.
+Enquanto o projeto estiver no bootstrap R0 e antes de um `onprem-lab` isolado ser exigido pelo R1, a WSL principal compartilhada é suficiente.
 
 Documento detalhado: [WSL multi-projetos](WSL_MULTI_PROJETOS.md).
 
@@ -165,7 +165,7 @@ Validações futuras:
 
 ## 5. Ambiente onprem-lab
 
-O ambiente `onprem-lab` será um ambiente local dedicado ou servidor pequeno para simular operação real.
+O ambiente `onprem-lab` será um ambiente local dedicado ou servidor pequeno para comprovar instalação e operação controlada do candidato R1. Ele não equivale a produção.
 
 Uso:
 
@@ -176,7 +176,11 @@ Uso:
 - testar workers;
 - testar backup;
 - testar restore;
+- executar o Golden Month com dataset sintético/anonimizado;
+- validar TLS/lab, smoke, E2E, atualização, rollback e diagnóstico;
 - validar comportamento fora da máquina de desenvolvimento.
+
+O bundle do piloto é distinto do Compose de desenvolvimento. Tika e OCR só entram quando suas capabilities estiverem aprovadas e não podem bloquear o caminho XLSX/CSV + manual do Golden Month.
 
 Exemplos possíveis:
 
@@ -216,7 +220,7 @@ Uso:
 
 Este ambiente não será criado no início.
 
-Antes de existir produção, devem existir:
+Antes de existir produção ou envio externo real, devem existir:
 
 - estratégia de backup;
 - estratégia de restore;
@@ -228,6 +232,8 @@ Antes de existir produção, devem existir:
 - documentação operacional;
 - plano de rollback;
 - baseline de segurança.
+
+Os critérios observáveis de maturidade estão em [Entrega e aceite do produto](../product/PRODUCT_DELIVERY_AND_ACCEPTANCE.md); o contrato técnico do bundle, fechamento e recuperação está em [Fechamento e entrega técnica](../architecture/ACCOUNTING_CLOSE_AND_DELIVERY.md).
 
 ## 7. Estratégia cloud-like
 
@@ -283,9 +289,9 @@ Fluxo futuro previsto:
 ```text
 main estável
 tag/release
-deploy manual em onprem-lab
+instalação manual do bundle candidato em onprem-lab
 validação
-deploy manual em prod-onprem
+deploy manual em prod-onprem somente após autorização própria
 ```
 
 Automação de deploy só deve entrar depois que CI, branch protection e estratégia de backup estiverem maduros.

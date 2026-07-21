@@ -1,8 +1,8 @@
 # Baseline conceitual do modelo documental
 
 Status documental: modelo planejado, não implementado  
-Atualizado em: 2026-07-10  
-Issue de origem: #22  
+Atualizado em: 2026-07-21
+Issues de origem: #22 e #73
 ADRs relacionados: ADR-0010, ADR-0011, ADR-0012, ADR-0013, ADR-0015 e ADR-0016 (proposto)
 
 ## 1. Escopo
@@ -17,6 +17,9 @@ documento != versão
 versão != conteúdo reconhecido
 resultado de modelo != dado aceito
 dado aceito != lançamento financeiro
+score bruto != score calibrado
+texto nativo != camada textual derivada de OCR
+evidência != verdade automática
 log técnico != trilha de auditoria
 índice de busca != fonte da verdade
 ```
@@ -69,7 +72,9 @@ Metadados conceituais:
 - storage key opaca;
 - SHA-256;
 - tamanho;
-- MIME detectado;
+- `advertised_mime` informado pelo canal;
+- `intake_detected_mime` preliminar;
+- `mime_mismatch` preservado;
 - nome original separado da chave;
 - criptografia/classificação;
 - data e fonte;
@@ -85,6 +90,7 @@ O storage key não deve carregar dado sensível desnecessário.
 Responsabilidades:
 
 - task graph e versão de política;
+- `ProcessingProfileRef` com ID, versão e digest;
 - estado, prioridade e correlação;
 - attempts, provider executions e erros;
 - idempotência;
@@ -115,26 +121,42 @@ Precisa referenciar:
 
 Resultado da inspeção anterior ao OCR:
 
-- MIME;
+- `probe_detected_mime`, sem sobrescrever os MIME do intake;
+- parser, versão/configuração/digest;
 - páginas;
-- texto nativo;
-- qualidade;
-- orientação;
+- texto/metadados nativos observados;
 - proteção/corrupção;
-- sinais de tabelas/imagens;
-- flags de segurança e limites.
+- warnings, limites e reason codes;
+- referência à resposta bruta e resultado normalizado.
+
+Qualidade visual, orientação/resolução e malware pertencem a inspetores/controles próprios. `DocumentProbe` não carrega “confiança Tika”.
+
+### 3.6.1 NativeTextAssessment
+
+Decisão interna, separada do Tika, que aplica profile/policy às observações:
+
+- `USE_NATIVE`;
+- `OCR_REQUIRED`;
+- `REVIEW_REQUIRED`;
+- `QUARANTINE`;
+- policy/threshold version;
+- sinais e reason codes;
+- escopo documento/página/região;
+- próximo passo.
 
 ### 3.7 RecognitionArtifact
 
 Texto/layout observado em uma versão ou derivado:
 
+- origem `NATIVE`, `OCR`, `FUSED` ou `OCR_DERIVED_TEXT_LAYER`;
 - conteúdo por página;
 - blocos/linhas/palavras;
 - bounding boxes;
 - idioma e orientação;
-- confiança;
+- score bruto e, quando existir, score calibrado separados;
 - provider execution;
-- artefato de origem.
+- artefato de origem e `derived_from`;
+- cadeia de transformações, algoritmo/configuração e versões.
 
 Pode existir mais de um por versão.
 
@@ -147,10 +169,23 @@ Cada `ExtractedField` preserva:
 - nome e tipo;
 - valor bruto e normalizado;
 - confiança;
-- evidência;
+- score bruto/calibrado separados quando aplicável;
+- `EvidenceRef`;
 - página/coordenadas;
 - warnings;
 - provider/rule de origem.
+
+### 3.8.1 EvidenceRef
+
+Referência verificável e tipada à origem de uma afirmação/campo. Pode apontar para:
+
+- documento, versão e página/região/trecho;
+- arquivo estruturado, lote, aba, linha e célula;
+- lançamento manual, ator, horário e justificativa;
+- evento/registro de integração;
+- artefato derivado e cadeia `derived_from`.
+
+Ela registra tipo de origem, IDs/hashes, localização, transformações, regra/profile/modelo e versão. `EvidenceRef` sustenta auditoria e drill-through; não declara que o valor está aceito.
 
 ### 3.9 ClassificationResult
 
@@ -159,6 +194,7 @@ Classes e rótulos propostos:
 - taxonomy/schema version;
 - classe;
 - score;
+- score bruto e calibrado separados;
 - evidências;
 - alternativas;
 - provider execution.
@@ -261,6 +297,7 @@ DocumentEnvelope
 DocumentVersion
   1 -> N FileObject
   1 -> N DocumentProbe
+  1 -> N NativeTextAssessment
   1 -> N RecognitionArtifact
   1 -> N ExtractionResult
   1 -> N ClassificationResult
@@ -272,6 +309,7 @@ ProcessingAttempt
 
 ExtractionResult / ClassificationResult
   1 -> N ValidationResult
+  1 -> N EvidenceRef
 
 ReviewCase
   1 -> N ReviewDecision
@@ -288,6 +326,7 @@ Estado do envelope e estado do processamento não devem ser misturados.
 ```text
 RECEIVED
 MATERIALIZED
+INSPECTION_PENDING
 PROCESSING
 REVIEW_REQUIRED
 ACCEPTED
@@ -322,7 +361,7 @@ Quatro eixos precisam de versão independente:
 | --- | --- |
 | conteúdo material | versão original ou derivado normalizado |
 | interpretação | extraction/classification/accepted snapshot |
-| configuração | profile, routing policy e schema |
+| configuração | processing profile, rule pack, routing policy e schema |
 | executor | adapter, modelo e processor version |
 
 Reproduzir um resultado exige registrar os quatro. “Processado em 10/07” sem modelo, policy e input hash não é proveniência suficiente.
@@ -378,5 +417,14 @@ Definições finais dependem do ADR sucessor do ADR-0015.
 - como modelar correções concorrentes?
 - qual mecanismo de outbox/fila?
 - quais campos precisam de índice relacional?
+- qual representação mínima de `EvidenceRef` atende documento e linha estruturada?
+- quais scores exigem calibração e como a versão é registrada?
 
 Nenhuma migration deve ser criada antes de responder ao mínimo necessário para o primeiro slice da Phase 2.
+
+Domínio gerencial, importação, lineage e fechamento possuem baselines especializados:
+
+- [Domínio financeiro-gerencial](MANAGERIAL_FINANCIAL_DOMAIN.md)
+- [Pipeline de importação estruturada](STRUCTURED_IMPORT_PIPELINE.md)
+- [Lineage de evidência a relatório](EVIDENCE_TO_REPORT_LINEAGE.md)
+- [Fechamento e entrega contábil](ACCOUNTING_CLOSE_AND_DELIVERY.md)

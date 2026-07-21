@@ -1,20 +1,20 @@
 # Arquitetura de referência do ERP Docflow
 
 Status documental: baseline planejado, não implementado  
-Atualizado em: 2026-07-10  
-Issue de origem: #22  
+Atualizado em: 2026-07-21
+Issues de origem: #22 e #73
 ADRs relacionados: ADR-0001, ADR-0008, ADR-0009, ADR-0010, ADR-0011, ADR-0012, ADR-0013, ADR-0015 e ADR-0016 (proposto)
 
 ## 1. Objetivo
 
-Este documento consolida a arquitetura de referência para o núcleo ERP/GED discutido em **Gestão Documental Inteligente**.
+Este documento consolida a arquitetura de referência do ERP/GED. O [North Star](../product/PRODUCT_NORTH_STAR.md) define o resultado de produto; aqui ficam boundaries, componentes e invariantes planejados.
 
 Ele descreve o destino arquitetural e os limites entre responsabilidades. Não declara backend, frontend, workers, banco, filas, rotas, tabelas ou integrações como implementados.
 
 ## 2. Princípios arquiteturais
 
 1. **On-prem first, cloud-like**: a operação principal deve poder permanecer sob controle local, sem abandonar containers, healthchecks, filas, observabilidade, configuração por ambiente, backup e deploy reproduzível.
-2. **Documento antes do ERP**: um arquivo recebido deve tornar-se uma unidade documental versionável, auditável e independente do lançamento financeiro ao qual poderá ser vinculado.
+2. **Evidência e proveniência antes do efeito**: uma fonte documental, estruturada, manual ou integrada deve preservar origem e transformações antes de gerar fato, vínculo ou efeito. Documento é evidência de primeira classe, não a única origem.
 3. **Original imutável**: arquivo original, derivados normalizados, resultados de reconhecimento e decisões humanas são artefatos distintos.
 4. **Automação assistida**: modelos sugerem; regras validam; pessoas aceitam, corrigem, rejeitam ou fazem override quando a política exigir.
 5. **Providers por capacidade**: nenhuma ferramenta representa o pipeline inteiro. Cada adapter declara tarefas que realmente executa.
@@ -39,18 +39,24 @@ Ele descreve o destino arquitetural e os limites entre responsabilidades. Não d
 ## 4. Visão lógica
 
 ```text
-Canais de entrada
-  -> Intake e materialização documental
-  -> Orquestrador de processamento
+Canais documentais
+  -> Intake e materialização GED
+  -> Orquestrador de processamento documental
        -> probe/texto nativo
        -> normalização
        -> OCR/layout
        -> extração/classificação
        -> validação
-  -> Fila de revisão humana
-  -> Aceite/correção/override/rejeição
-  -> Vínculos e efetivação operacional
-  -> Indexação, consulta e integrações
+Fontes estruturadas
+  -> ImportBatch + mapping + parsing/validação
+Lançamento manual ou integração
+  -> origem + autoridade + validação
+Todos os ramos
+  -> candidatos + EvidenceRef
+  -> revisão/aceite proporcional ao risco
+  -> fatos, obrigações, settlements e reconciliação
+  -> relatórios com drill-through
+  -> fechamento, pacote, busca e integrações
 ```
 
 Todo o fluxo escreve eventos e artefatos de auditoria. Arquivos binários ficam no object storage; estado transacional e metadados ficam no banco relacional; processamento assíncrono usa fila/cache quando essa infraestrutura for aprovada e implementada.
@@ -60,6 +66,7 @@ Todo o fluxo escreve eventos e artefatos de auditoria. Arquivos binários ficam 
 | Módulo planejado | Responsabilidade | Não deve assumir |
 | --- | --- | --- |
 | `intake` | receber arquivo, identificar fonte, calcular hash, criar envelope e versão inicial | OCR, classificação ou lançamento financeiro |
+| `imports` | ingerir XLSX/CSV/formatos estruturados com mapping, raw row, normalização e erros | transformar células em texto livre ou descartar linha silenciosamente |
 | `documents` | ciclo de vida do `DocumentEnvelope`, versões e metadados canônicos | detalhes de SDK de provider |
 | `files` | objetos binários, derivados, integridade, retenção e referências | semântica do documento |
 | `processing` | jobs, tentativas, task graph, políticas e resultados | decisão humana final |
@@ -68,7 +75,13 @@ Todo o fluxo escreve eventos e artefatos de auditoria. Arquivos binários ficam 
 | `review` | fila, correções, aceite, override, rejeição e reprocessamento | apagar sugestão ou evidência anterior |
 | `audit` | eventos append-only, proveniência e trilha de decisão | armazenar conteúdo sensível em log comum |
 | `linking` | sugestões e vínculos entre documento e entidades do ERP | efetivar automaticamente operação sensível |
-| `finance` | lançamentos, pagamentos e caixa após gates aplicáveis | ser proprietário do arquivo original |
+| `assets` / `contracts` | ativos, contratos, aditivos, vigência e dossiês | ser proprietário de documento ou settlement |
+| `obligations` | contas a pagar/receber, charges e recorrências | representar liquidação como simples flag |
+| `finance` | fatos gerenciais, settlements, allocations, movimentos e conciliação | exigir documento como origem ou ser proprietário do original |
+| `reporting` / `lineage` | read models, saved views e drill-through até fato/evidência | tornar agregado uma fonte canônica editável |
+| `closing` / `accounting` | fechamento, autoridade contábil, pacote e protocolo | confundir pacote de negócio com release do software |
+| `ux` | jornadas, estados, acessibilidade e linguagem de produto | conceder permissão ou regra de domínio |
+| `delivery` | bundle instalável, upgrade, backup/restore e diagnóstico | reutilizar Compose de desenvolvimento como release implícita |
 | `search` | indexação, recuperação, RAG e citações para origem | tornar resposta de LLM dado canônico |
 | `integrations` | Drive, OneDrive, e-mail, bancos e contabilidade | contornar intake, política ou auditoria |
 
@@ -76,7 +89,7 @@ Esses nomes representam boundaries planejados no modular monolith. Não implicam
 
 ## 6. DocumentEnvelope
 
-`DocumentEnvelope` é o agregado que dá identidade e ciclo de vida ao documento. Ele não é:
+`DocumentEnvelope` é o agregado que dá identidade e ciclo de vida ao **documento materializado**. Ele permanece núcleo GED, mas não é a raiz obrigatória de importações estruturadas ou fatos gerenciais. Ele não é:
 
 - o blob do PDF;
 - o texto de OCR;
@@ -106,6 +119,9 @@ Aceitar uma interpretação não reescreve o original. Corrigir um campo cria no
 | índice textual/vetorial | search store a decidir | reconstruível a partir de conteúdo versionado |
 | logs técnicos | observabilidade | sem documento integral ou segredo por padrão |
 | audit trail | persistência append-only lógica | ator, ação, antes/depois, motivo e correlação |
+| linha estruturada bruta/normalizada | banco e/ou artefato versionado conforme volume | preservar lote, mapping, origem e erro sem coerção silenciosa |
+| fatos, obrigações, settlements e fechamento | PostgreSQL | relações tipadas, autoridade e idempotência transacional |
+| read models de relatório | PostgreSQL/search store conforme benchmark | reconstruíveis a partir de fatos e lineage |
 
 ## 8. Providers e orquestração
 
@@ -114,7 +130,7 @@ O orquestrador seleciona uma sequência de tarefas; ele não escolhe simplesment
 Exemplo:
 
 ```text
-Apache Tika: detectar texto nativo
+Apache Tika: probe, MIME/metadados observados e texto nativo; OCR interno desligado
 Stirling PDF/OCRmyPDF/OpenCV: normalizar quando necessário
 PaddleOCR ou Tesseract: reconhecer texto local
 Google Document AI: escalar layout/tabelas/campos de um perfil elegível
@@ -123,7 +139,9 @@ Regras internas: validar CNPJ, datas, totais e consistência
 Humano: decidir quando houver gate, baixa confiança ou conflito
 ```
 
-Stirling PDF pode ser exposto por adapter de normalização e OCR auxiliar. Isso não o transforma no provider do fluxo inteiro. A mesma regra vale para Google Document AI, OpenAI, PaddleOCR ou Tesseract: cada integração implementa capacidades explícitas.
+Tika observa e extrai; uma política interna produz `NativeTextAssessment`. `pytesseract` é binding da engine Tesseract, OpenCV é biblioteca de transformação, e regex/parsers/validators são regras internas versionadas — nenhum deles controla o domínio.
+
+Stirling PDF pode ser exposto por adapter de normalização e OCR auxiliar. Isso não o transforma no provider do fluxo inteiro. A mesma regra vale para Google Document AI, OpenAI, PaddleOCR ou Tesseract: cada integração implementa capacidades explícitas e só é promovida pelo benchmark aplicável.
 
 Detalhes: [PROVIDER_STRATEGY.md](PROVIDER_STRATEGY.md).
 
@@ -134,6 +152,7 @@ Comandos iniciam trabalho; eventos registram fatos. Nomes abaixo são vocabulár
 ```text
 DocumentReceived
 DocumentMaterialized
+StructuredImportReceived
 ProcessingRequested
 NativeTextDetected
 NormalizationCompleted
@@ -146,6 +165,9 @@ ReviewDecisionRecorded
 DocumentAccepted
 OperationalLinkSuggested
 OperationalEffectuationAuthorized
+ManagerialFactAccepted
+PeriodClosed
+AccountingDeliveryPackageCreated
 SearchIndexUpdated
 ```
 
@@ -184,6 +206,10 @@ Métricas mínimas planejadas:
 - precisão/recall por campo em dataset rotulado;
 - tempo humano por revisão;
 - completude de proveniência e auditoria.
+- cobertura de evidência e drill-through por fato/relatório;
+- diferenças de reconciliação classificadas;
+- tempo e reaberturas de fechamento;
+- instalação, upgrade, smoke e restore por release.
 
 Confianças brutas de engines diferentes não devem ser comparadas como se tivessem a mesma escala. A política deve usar calibração por perfil, validação determinística e resultados de benchmark.
 
@@ -199,7 +225,7 @@ Esta baseline foi consolidada durante a Phase 0 e continua descrevendo arquitetu
 - não autoriza dados reais, credenciais ou deploy;
 - não muda ADR aceito.
 
-As decisões ainda abertas estão registradas em [reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md](../reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md).
+As decisões ainda abertas estão registradas nas Issues #74, #80, #82 e #83 e nos ADRs propostos aplicáveis. A revisão [Gestão Documental Inteligente](../reviews/GESTAO_DOCUMENTAL_INTELIGENTE.md) permanece evidência histórica.
 
 ## 13. Diagramas relacionados
 
@@ -212,3 +238,11 @@ As decisões ainda abertas estão registradas em [reviews/GESTAO_DOCUMENTAL_INTE
 - [Sequência de processamento e revisão](../uml/05-sequence/process-review-accept-planned.puml)
 - [Estado do DocumentEnvelope](../uml/06-state/document-envelope-state-planned.puml)
 - [Estado do ProcessingJob](../uml/06-state/processing-job-state-planned.puml)
+
+Contratos relacionados:
+
+- [Domínio financeiro-gerencial](MANAGERIAL_FINANCIAL_DOMAIN.md)
+- [Importação estruturada](STRUCTURED_IMPORT_PIPELINE.md)
+- [Perfil de processamento](PROCESSING_PROFILE_CONTRACT.md)
+- [Lineage de evidência a relatório](EVIDENCE_TO_REPORT_LINEAGE.md)
+- [Fechamento e entrega contábil](ACCOUNTING_CLOSE_AND_DELIVERY.md)

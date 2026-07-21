@@ -4,7 +4,7 @@ Instrucoes operacionais para uso do Codex neste repositorio.
 
 ## Contexto do projeto
 
-O baseline da Phase 0 esta concluido. A Phase 1 esta aberta em refinamento, mas nenhuma slice de codigo esta automaticamente autorizada.
+O baseline da Phase 0 esta concluido. A Epic #26 autorizou a execucao controlada da Phase 1 em 2026-07-17; a #33 foi preparada no PR #72 e aguarda review/merge humano. Essa autorizacao nao se estende automaticamente a outra slice, Phase ou release.
 
 Antes de executar, consultar:
 
@@ -51,7 +51,7 @@ Regras:
 - confirmar escopo, fora de escopo e criterios de aceite pela Issue e pelo envelope aprovado antes de editar;
 - manter PRs pequenos e revisaveis;
 - nao fazer merge automatico;
-- nao iniciar codigo de produto enquanto a slice da Phase 1 permanecer em `Precisa Especificacao` ou fora de envelope aprovado;
+- nao iniciar codigo de produto enquanto a slice permanecer sem `Condicoes Verificadas`, fora de envelope aprovado ou com dependencia pendente;
 - nao criar deploy;
 - nao usar secrets;
 - nao alterar ADR aceito sem novo ADR;

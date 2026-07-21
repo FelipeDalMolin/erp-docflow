@@ -4,7 +4,7 @@
 - **Estado:** vigente
 - **Fonte de classificação:** [portal documental](../README.md)
 
-Esta pasta conecta decisões, documentação, módulos, entidades, rotas, diagramas, Issues e Pull Requests.
+Esta pasta conecta decisões, documentação de produto e arquitetura, módulos, entidades, rotas, diagramas, Issues e Pull Requests.
 
 ## 1. Hierarquia de fontes
 
@@ -12,7 +12,7 @@ Quando houver divergência:
 
 ```text
 ADR aceito
-  -> documento canônico vigente
+  -> documento canônico vigente, com classe/status explícitos
   -> mapa de rastreabilidade
   -> diagrama
   -> review/registro de descoberta
@@ -20,6 +20,7 @@ ADR aceito
 
 - ADR `Proposto` representa decisão pendente.
 - Documento `planejado` orienta descoberta, não contrato implementado.
+- Baseline de produto aprovado para documentação não substitui ADR exigido antes de schema, efeito sensível ou infraestrutura real.
 - Código/testes descrevem comportamento real quando existirem, mas não substituem decisão arquitetural necessária.
 - Chat não deve permanecer como única fonte de decisão.
 
@@ -28,8 +29,10 @@ ADR aceito
 - qual ADR justifica esta direção?
 - o status permite implementação?
 - qual documento define o conceito?
+- qual fonte de evidência sustenta um fato gerencial?
 - qual módulo/entidade será afetado?
 - qual UML representa o fluxo?
+- qual artefato é entregue à contabilidade e qual bundle instala o produto?
 - que outros artefatos precisam mudar?
 - qual Issue/PR introduziu a mudança?
 
@@ -73,6 +76,10 @@ Atualizar os mapas quando houver mudança em:
 - infraestrutura;
 - segurança/LGPD;
 - provider/modelo com impacto estrutural;
+- importação estruturada, lançamento manual ou outra fonte de evidência;
+- fato gerencial, obrigação, liquidação, conciliação ou rateio;
+- relatório, fechamento de período ou entrega contábil;
+- UX do produto ou bundle de entrega on-prem;
 - integração;
 - Issue/PR que materialize conceito planejado.
 
@@ -88,4 +95,4 @@ Atualizar os mapas quando houver mudança em:
 
 ## 7. Diretriz final
 
-A rastreabilidade deve ser leve, mas suficiente para impedir decisões invisíveis e para explicar o impacto de mudar o `DocumentEnvelope`, o fluxo de review, um provider ou um efeito financeiro.
+A rastreabilidade deve ser leve, mas suficiente para impedir decisões invisíveis e para explicar o impacto de mudar o `DocumentEnvelope`, uma fonte de evidência, o fluxo de review, um provider, um fato gerencial, o fechamento ou a entrega on-prem.

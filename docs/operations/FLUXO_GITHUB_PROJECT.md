@@ -21,7 +21,7 @@ Todo trabalho relevante deve seguir:
 Epic -> Issue/Slice -> Sub-issue opcional -> Branch -> Commit -> Pull Request -> Review humana -> Squash merge
 ```
 
-A Phase 0 foi encerrada; a Phase 1 está em refinamento. Uma Epic aberta não torna suas slices executáveis. O snapshot atual e o gate ficam em [Status do projeto](../project/PROJECT_STATUS.md).
+Uma Epic, Phase ou release aberta não torna suas slices executáveis. O snapshot atual, o gate e a fila ficam exclusivamente em [Status do projeto](../project/PROJECT_STATUS.md).
 
 ## 2. Tipos de item
 
@@ -112,7 +112,7 @@ Regras:
 
 A taxonomia abaixo é o vocabulário alvo para organizar o Project. Ela não descreve automaticamente labels já criadas ou aplicadas.
 
-No snapshot de 2026-07-14, as Issues legadas não possuem essa taxonomia aplicada. A materialização e aplicação retroativa exigem trabalho operacional próprio. O estado desse gap pertence a [Status do projeto](../project/PROJECT_STATUS.md).
+No snapshot de 2026-07-21, as Issues legadas ainda não possuem essa taxonomia aplicada. A materialização e aplicação retroativa pertencem à Issue #66. O estado desse gap pertence a [Status do projeto](../project/PROJECT_STATUS.md).
 
 ### 4.1 Tipo
 
@@ -125,6 +125,9 @@ type:adr
 type:chore
 type:ci
 type:security
+type:spike
+type:ux
+type:delivery
 ```
 
 ### 4.2 Fase
@@ -133,6 +136,20 @@ type:security
 phase:0
 phase:1
 phase:2
+phase:3
+phase:4
+phase:5
+phase:6
+phase:7
+```
+
+Release não deve reutilizar labels de Phase:
+
+```text
+release:r0
+release:r1
+release:r2
+release:r3
 ```
 
 ### 4.3 Status operacional
@@ -167,6 +184,22 @@ area:adr
 area:ci
 area:security
 area:environment
+area:product
+area:documents
+area:processing
+area:review
+area:import
+area:assets
+area:contracts
+area:obligations
+area:finance
+area:reporting
+area:closing
+area:accounting
+area:lineage
+area:ux
+area:delivery
+area:integrations
 ```
 
 A criação efetiva dessas labels no GitHub pode ser feita manualmente ou em Issue própria. Até isso ocorrer, título, campos do Project e corpo da Issue continuam sendo as evidências; não se deve fingir que uma label proposta está configurada.
@@ -185,10 +218,11 @@ Campos mínimos recomendados:
 | Tipo | Epic, Slice, Sub-issue, ADR, documentação, chore. |
 | Área | Parte do projeto afetada. |
 | Fase | Phase 0, Phase 1 etc. |
+| Release | R0, R1 etc.; resultado utilizável, distinto da Phase/capability. |
 | Prioridade | Ordem relativa de execução. |
 | Issue pai/Epic | Relação com entrega maior. |
 
-Esta lista define o modelo desejado. Antes de usar um valor como critério automatizado, conferir se o campo e a opção existem de fato no Project. `Fase` deve ser o classificador primário; milestones não são usadas atualmente e não devem duplicar a mesma função sem decisão explícita.
+Esta lista define o modelo desejado. Antes de usar um valor como critério automatizado, conferir se o campo e a opção existem de fato no Project. `Fase` classifica maturidade/capability; `Release` classifica o resultado. Milestones não são usadas atualmente e não devem duplicar nenhuma das duas sem decisão explícita.
 
 ## 6. Status
 
@@ -292,12 +326,22 @@ Usar quando a Issue já pode virar branch e PR.
 
 Critérios mínimos:
 
-- escopo claro;
-- fora de escopo definido;
-- critérios de aceite verificáveis;
-- riscos conhecidos;
-- nenhuma decisão arquitetural pendente;
+- objetivo, escopo e fora de escopo claros;
+- entradas, saídas e invariantes explícitas;
+- dependências, paths e ownership conhecidos;
+- ADRs e decisões aplicáveis resolvidos;
+- tecnologia decidida separada de candidato sob benchmark;
+- perfil, algoritmo, regra ou política aplicável identificados;
+- artefatos persistidos, proveniência e lineage definidos;
+- falhas, idempotência, retry e reason codes previstos;
+- fixtures ou dataset permitido e classificação de sensibilidade;
+- métricas, targets e critérios de aceite verificáveis;
+- comandos de validação reproduzíveis;
+- estados UX/permissões, quando houver interface;
+- envelope aprovado e outcomes aplicáveis;
 - nenhuma área protegida sem autorização explícita.
+
+Itens que não se aplicam devem ser marcados como tal com justificativa curta. Uma incógnita material deve gerar spike, benchmark, decisão humana ou ADR; não pode ficar como escolha silenciosa durante a execução.
 
 `Não Verificado` é o estado inicial. `Bloqueado` registra impedimento objetivo. Conclusão pertence ao campo `Status = Done`, não à Condição de Execução.
 
@@ -343,16 +387,15 @@ Quando útil, registrar o nível esperado no plano ou na Issue, sem misturá-lo 
 
 Uma Issue pode entrar na fila elegível — e receber `codex:eligible` quando a label existir — quando:
 
-- possui objetivo claro;
-- possui escopo e fora de escopo;
-- possui critérios de aceite;
+- satisfaz a Definition of Ready de `Condições Verificadas` acima;
 - não exige segredo, credencial ou dado real;
 - não exige deploy;
 - não altera branch protection;
 - não altera ADR aceito sem novo ADR;
 - não exige comando destrutivo;
 - pode ser entregue em PR pequeno;
-- validações cabíveis são conhecidas ou justificáveis.
+- comandos, fixtures e evidências de validação são conhecidos;
+- qualquer tecnologia candidata continua atrás do benchmark/decisão registrados.
 
 Se faltar qualquer item relevante, manter `Precisa Especificação`, `Precisa Decisão Humana`, `Precisa ADR` ou `Bloqueado`. Labels auxiliares não substituem o campo canônico.
 
