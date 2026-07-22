@@ -4,7 +4,7 @@ Instrucoes operacionais para uso do Codex neste repositorio.
 
 ## Contexto do projeto
 
-O baseline da Phase 0 esta concluido. A Phase 1 esta aberta em refinamento, mas nenhuma slice de codigo esta automaticamente autorizada.
+O baseline da Phase 0 esta concluido. A Epic #26 autorizou a execucao controlada da Phase 1 em 2026-07-17; a #33 foi preparada no PR #72 e aguarda review/merge humano. Essa autorizacao nao se estende automaticamente a outra slice, Phase ou release.
 
 Antes de executar, consultar:
 
@@ -51,11 +51,26 @@ Regras:
 - confirmar escopo, fora de escopo e criterios de aceite pela Issue e pelo envelope aprovado antes de editar;
 - manter PRs pequenos e revisaveis;
 - nao fazer merge automatico;
-- nao iniciar codigo de produto enquanto a slice da Phase 1 permanecer em `Precisa Especificacao` ou fora de envelope aprovado;
+- nao iniciar codigo de produto enquanto a slice permanecer sem `Condicoes Verificadas`, fora de envelope aprovado ou com dependencia pendente;
 - nao criar deploy;
 - nao usar secrets;
 - nao alterar ADR aceito sem novo ADR;
 - nao usar `danger-full-access` como padrao.
+
+## Experimentos, notebooks e componentes de dados
+
+Quando uma Issue envolver OCR, layout, classificacao, modelos, regras derivadas de dados ou benchmark, consultar `docs/architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md`.
+
+Regras:
+
+- notebook pode ser usado somente como ambiente de exploracao/relatorio quando a Issue autorizar;
+- codigo reutilizavel deve ser extraido para modulo/CLI testavel antes de integracao;
+- runtime, worker, API e CI nao podem depender de estado de celula ou executar notebook como fonte canonica;
+- manifest deve registrar dataset/hash, commit, dependencias, provider/modelo/configuracao, hardware, comando e metricas;
+- benchmark, adapter e release devem preservar commit, lock, configuracao e digests de dados/modelos; rebuild exige provenance e regressao da imagem final;
+- Codex nao escolhe nem promove automaticamente o vencedor do benchmark;
+- dados, modelos e servicos remotos obedecem aos gates de seguranca, licenca e residencia;
+- provider pesado roda assincronamente e respeita o envelope de recursos do ambiente.
 
 ## Loop de continuidade
 

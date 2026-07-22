@@ -1,15 +1,22 @@
 @startuml
-' Issue #22
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0001, ADR-0008, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016 (proposed)
 ' Guardrail: target deployment view; no service/container is implemented.
 
-title ERP Docflow - Deployment on-prem planejado
+title ERP Docflow - Desenvolvimento e piloto on-prem planejados
 
 node "Cliente" as Client {
   artifact "Browser" as Browser
 }
 
-node "Ambiente on-prem\n<<planejado>>" as OnPrem {
+node "Compose de desenvolvimento\n<<planejado na Phase 1 / sem dados persistentes>>" as Dev {
+  node "Web dev" as DevWeb
+  node "API dev" as DevAPI
+}
+
+artifact "ProductReleaseBundle\n<<planejado>>" as ReleaseBundle
+
+node "onprem-lab / piloto\n<<planejado / não implementado>>" as OnPrem {
   node "Entrada / reverse proxy" as Edge
   node "Frontend" as Frontend
   node "API modular monolith" as API
@@ -17,7 +24,9 @@ node "Ambiente on-prem\n<<planejado>>" as OnPrem {
   queue "Fila / cache" as Queue
   database "PostgreSQL" as Postgres
   storage "Object storage\nS3-compatible / MinIO candidato" as Objects
-  node "Stirling / OCR local\nquando elegível" as LocalProviders
+  node "Tika Server isolado\n<<capability opcional / Phase 3>>\nprobe + texto nativo; OCR desligado" as Tika
+  node "Normalização / OCR local\n<<capability opcional / benchmark>>" as LocalOCR
+  node "Docling CPU isolado\n<<layout/tabelas opcional / spike #89>>\nOCR desligado no baseline" as Docling
   node "Observabilidade" as Observability
 }
 
@@ -25,13 +34,18 @@ cloud "Providers externos elegíveis\nDocument AI / OpenAI / outros" as CloudPro
 storage "Backup separado" as Backup
 
 Browser --> Edge
+Browser --> DevWeb : desenvolvimento
+DevWeb --> DevAPI
+ReleaseBundle ..> OnPrem : instala/atualiza
 Edge --> Frontend
 Edge --> API
 API --> Postgres
 API --> Objects
 API --> Queue
 Queue --> Workers
-Workers --> LocalProviders
+Workers ..> Tika : profile aprovado; não bloqueia R1 import-first
+Workers ..> LocalOCR : capability separada e elegível
+Workers ..> Docling : profile aprovado; adapter único
 Workers --> CloudProviders : somente por política
 Workers --> Postgres
 Workers --> Objects
@@ -40,15 +54,31 @@ Workers --> Observability
 Postgres --> Backup
 Objects --> Backup
 
+note right of Tika
+  Rede interna e privilégio mínimo.
+  Sem credenciais de PostgreSQL ou object storage.
+  Observa/extrai; a policy interna avalia suficiência.
+end note
+
 note right of CloudProviders
   Envio externo depende de classificação,
   tenant, residência, secrets e ADR de segurança.
 end note
 
+note right of Docling
+  Sem porta publicada diretamente na LAN.
+  Modelos prefetched; URL/egress/plugins bloqueados.
+  Limites e workers definidos pelo benchmark.
+end note
+
 note bottom
+  Compose de desenvolvimento não é o bundle do piloto.
   Modular monolith descreve boundaries do produto.
   Workers podem rodar em processos/containers separados.
+  O profile core independe de Tika, OCR e Docling.
+  Profiles pesados compartilham admission control global.
+  Tika, OCR e Docling só integram o bundle quando aprovados;
+  não são dependências do percurso XLSX/CSV + manual do Golden Month.
 end note
 
 @enduml
-

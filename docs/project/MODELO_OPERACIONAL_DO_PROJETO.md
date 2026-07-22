@@ -5,9 +5,9 @@
 - **Autoridade:** princípios de governança; detalhes especializados pertencem às fontes indicadas no [portal documental](../README.md)
 - **Atualizar quando:** o modelo de trabalho, responsabilidades ou fontes de verdade mudarem
 
-Este projeto tem como objetivo construir uma plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, focada em materialização documental, versionamento, revisão humana, aceite, auditoria e evolução futura para fluxos financeiros, contábeis, geração documental e integrações.
+Este projeto tem como objetivo construir uma plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, que transforme fontes documentais, estruturadas, manuais e externas em fatos gerenciais sustentados por evidências. O GED preserva materialização, versionamento, revisão, aceite e auditoria de documentos, mas documento não é a única porta de entrada do produto.
 
-A proposta do projeto não é começar criando um ERP completo de uma vez. O objetivo inicial é construir uma base confiável para que documentos, arquivos, decisões, revisões, aceite humano, vínculos financeiros e histórico possam evoluir de forma rastreável.
+A proposta não é criar um ERP completo de uma vez. A Phase 1 entrega o bootstrap técnico R0; o primeiro produto utilizável é o R1 Golden Month, import-first e manual-assisted, da entrada de um mês representativo ao fechamento. Processamento documental, geração e integrações evoluem como capabilities rastreáveis sem bloquear esse percurso inicial.
 
 ## 1. Visão geral
 
@@ -237,6 +237,21 @@ Uma Issue só deve ser executada quando:
 Condição de Execução = Condições Verificadas
 ```
 
+Antes dessa transição, a Issue deve informar, na medida aplicável:
+
+- entradas, saídas e invariantes;
+- dependências, paths e ownership;
+- tecnologia decidida e candidatos ainda sujeitos a benchmark;
+- perfil, algoritmo, regra ou política esperada;
+- artefatos persistidos e lineage;
+- falhas, idempotência, retry e reason codes;
+- fixtures/dataset permitido;
+- métricas, targets e comandos de validação;
+- estados UX e permissões afetadas;
+- envelope e condições dos quatro outcomes.
+
+Uma escolha ainda desconhecida deve virar decisão, spike ou benchmark explícito. Ela não pode ser delegada implicitamente ao Codex por uma expressão como “validações cabíveis”. A lista normativa completa permanece no [Fluxo do GitHub Project](../operations/FLUXO_GITHUB_PROJECT.md).
+
 Quando várias Issues com condições verificadas pertencem a um envelope aprovado, elas formam uma fila de pull. O Codex pode escolher a próxima por prioridade e dependência sem pedir autorização a cada transição.
 
 ## 11. Modo de Execução
@@ -318,22 +333,29 @@ O projeto será conduzido por fases:
 Phase 0 — Sistema do Projeto
 Phase 1 — Bootstrap App
 Phase 2 — Núcleo GED
-Phase 3 — OCR Extract Classify
+Phase 3 — Processamento documental
 Phase 4 — Review Acceptance
-Phase 5 — Núcleo Financeiro
+Phase 5 — Domínio gerencial e reconciliação
 Phase 6 — Geração Documental
 Phase 7 — Integrações
 ```
 
-A Phase 0 deve ser concluída antes do início do código de produto.
+As Phases organizam maturidade/capabilities. Releases combinam o menor conjunto de capabilities necessário para um resultado utilizável:
 
-O baseline da Phase 0 está encerrado. A Epic da Phase 1 está aberta em refinamento, mas o código só começa quando o gate e a primeira slice estiverem aprovados conforme [Status do projeto](PROJECT_STATUS.md).
+```text
+R0 — bootstrap técnico
+R1 — Golden Month
+R2 — piloto operacional
+R3 — inteligência e escala
+```
+
+O baseline da Phase 0 está encerrado. O estado, o gate e a fila vigente não pertencem a este documento: consultar [Status do projeto](PROJECT_STATUS.md). O escopo permanente de Phases e releases está no [Roadmap](ROADMAP.md).
 
 ## 13. Critério de maturidade para iniciar código
 
 O ADR-0002 define a decisão histórica de concluir um baseline operacional antes do código. O [Roadmap](ROADMAP.md) mantém os critérios permanentes da transição, e [Status do projeto](PROJECT_STATUS.md) registra evidências, pendências e aprovação do gate atual.
 
-Uma Epic aberta ou uma lista de Issues não equivale a autorização de execução. Para iniciar código, a slice deve ter escopo verificável, dependências satisfeitas, condição `Condições Verificadas`, paths/validações conhecidos e vínculo com envelope aprovado.
+Uma Epic aberta ou uma lista de Issues não equivale a autorização de execução. Para iniciar código, a slice deve ter contrato verificável, dependências satisfeitas, condição `Condições Verificadas`, validações conhecidas e vínculo com envelope aprovado. Phase e release também não concedem elegibilidade por associação.
 
 ## 14. O que evitar
 

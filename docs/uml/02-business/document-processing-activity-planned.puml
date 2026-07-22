@@ -1,51 +1,81 @@
 @startuml
-' Issue #22
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned business flow; states and actions are not implemented contracts.
 
-title Pipeline documental planejado
+title Evidência até fechamento - fluxo planejado
 
 start
-:Capturar entrada;
-:Calcular hash e materializar\nEnvelope + versão + original;
-:Probe de MIME, páginas,\ntexto nativo e qualidade;
+:Capturar entrada e origem;
 
-if (Texto nativo suficiente?) then (sim)
-  :Extrair texto nativo;
-else (não)
-  if (Normalização necessária?) then (sim)
-    :Criar derivado normalizado;
+if (Entrada documental?) then (sim)
+  :Materializar DocumentEnvelope,\nversão, original e SHA-256;
+  :Tika: probe_document e\nextract_native_text;
+  :Persistir DocumentProbe e\nRecognitionArtifact NATIVE;
+  :Produzir NativeTextAssessment\ncom policy versionada;
+  if (NativeTextAssessment?) then (USE_NATIVE)
+    :Usar texto nativo observado;
+  elseif (OCR_REQUIRED) then (OCR_REQUIRED)
+    if (Normalização necessária?) then (sim)
+      :Criar derivado versionado\ncom OpenCV/OCRmyPDF quando elegível;
+    endif
+    :Executar recognize_text separado\npor OCR elegível;
+    :Persistir artifact OCR ou FUSED\nsem sobrescrever o nativo;
+  elseif (REVIEW_REQUIRED) then (REVIEW_REQUIRED)
+    :Abrir review técnico com\nreason codes e evidências;
+    stop
+  else (QUARANTINE)
+    :Quarentenar entrada sem\nsucesso vazio;
+    stop
   endif
-  :Executar OCR/layout\npor provider elegível;
+  if (Estrutura/layout exigidos?) then (sim)
+    :Executar extract_layout e/ou\nextract_table_structure por capability;
+    :Persistir DocumentStructureArtifact\ncom item refs e origem espacial;
+  endif
+  :Extrair/classificar por perfil\ncom evidência por campo;
+else (não)
+  if (Entrada estruturada?) then (sim)
+    if (XLSX/CSV local?) then (sim)
+      :Criar ImportBatch idempotente;
+      :Parsear XLSX/CSV com\nmapping versionado;
+    else (bancária aprovada)
+      :Executar adapter OFX/CNAB\nversionado e autorizado;
+    endif
+    :Preservar linha bruta, normalizada\ne erros sem descarte silencioso;
+  else (manual)
+    :Registrar lançamento manual\ncom ator, motivo e evidência;
+  endif
 endif
 
-:Extrair campos e classificar\nconforme task graph;
-:Executar validações determinísticas;
+:Executar parsers, validators,\nreconciliações e reason codes;
+:Construir EvidenceRef e propor vínculos;
 
-if (Output elegível e sem gate?) then (sim)
-  :Criar snapshot aceito\nconforme política;
-else (não)
+if (Revisão exigida?) then (sim)
   :Abrir ReviewCase;
-  :Humano aceita, corrige,\nfaz override, rejeita\nou pede reprocessamento;
+  :Humano aceita, corrige, faz override,\nrejeita ou pede reprocessamento;
   if (Reprocessar?) then (sim)
-    :Criar nova tentativa;
+    :Criar nova tentativa preservando histórico;
     stop
   elseif (Aceito?) then (sim)
-    :Criar snapshot aceito;
+    :Registrar snapshot/decisão aceita;
   else (não)
-    :Rejeitar ou colocar\nem quarentena;
+    :Rejeitar ou colocar em quarentena;
     stop
   endif
+else (não)
+  :Registrar decisão permitida\npela policy versionada;
 endif
 
-:Sugerir/confirmar vínculos;
+:Criar ou atualizar ManagerialFact\nsem depender de DocumentEnvelope;
+:Gerir obrigações, cobranças, liquidações,\nconciliação e rateios;
+:Atualizar livro, matriz e read models\ncom drill-through até EvidenceRef;
 
-if (Efeito operacional autorizado?) then (sim)
-  :Efetivar no módulo de destino;
+if (Fechamento autorizado?) then (sim)
+  :Executar checklist e registrar PeriodClose;
+  :Gerar AccountingDeliveryPackage\ne protocolo auditável;
 endif
 
-:Atualizar índices/read models\ne registrar auditoria;
+:Registrar lineage e auditoria;
 stop
 
 @enduml
-

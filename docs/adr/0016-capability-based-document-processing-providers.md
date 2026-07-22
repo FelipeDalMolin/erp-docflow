@@ -2,12 +2,13 @@
 
 Status: Proposto  
 Data: 2026-07-10  
+Atualizado em: 2026-07-21, durante refinamento documental #73/#89
 Decisores: FelipeDalMolin (aprovação pendente)  
 Tags: ocr, providers, processamento-documental, roteamento, ml, human-in-the-loop
 
 ## Contexto
 
-O projeto precisa combinar preparação de PDF, OCR, layout, extração de campos, classificação, sumarização e validação. O material de descoberta menciona soluções locais/self-hosted e gerenciadas — Apache Tika, Stirling PDF, OCRmyPDF, Tesseract, PaddleOCR, Google Document AI e OpenAI — com custos, capacidades, riscos e formatos diferentes.
+O projeto precisa combinar preparação de PDF, OCR, layout, extração de campos, classificação, sumarização e validação. O material de descoberta menciona soluções locais/self-hosted e gerenciadas — Apache Tika, Stirling PDF, OCRmyPDF, Tesseract, Docling, PaddleOCR, Google Document AI e OpenAI — com custos, capacidades, riscos e formatos diferentes.
 
 Tratar uma delas como “provider do documento” acoplaria o domínio a um workflow proprietário e confundiria normalização, reconhecimento, interpretação, validação e decisão humana.
 
@@ -22,7 +23,7 @@ Adotar, após aprovação e benchmark do primeiro perfil documental:
 3. um orquestrador com task graph e política versionada por perfil;
 4. roteamento local-first, com escalation quando qualidade, risco, prazo e política justificarem;
 5. resultados normalizados e respostas brutas referenciadas;
-6. proveniência por execução, modelo/processor, versão, input, configuração e tentativa;
+6. proveniência por invocation física e execution por capability, modelo/processor, versão, input, configuração e tentativa;
 7. validação determinística separada dos providers;
 8. human-in-the-loop conforme confiança calibrada, conflito, sensibilidade e efeito operacional;
 9. elegibilidade por ambiente, tenant, classificação de dados, custo e disponibilidade;
@@ -37,6 +38,7 @@ Este ADR, enquanto `Proposto`, documenta a direção candidata e **não autoriza
 - `normalize_document`;
 - `recognize_text`;
 - `extract_layout`;
+- `extract_table_structure`;
 - `extract_fields`;
 - `classify_document`;
 - `summarize_document`;
@@ -103,13 +105,13 @@ Alternativa proposta: preserva limites, permite workers/processos separados e ev
 
 ### Módulos afetados
 
-Planejados: `processing`, `providers`, `validation`, `review`, `audit`, `documents` e `files`.
+Planejados: `processing`, `providers`, `evaluation`, `validation`, `review`, `audit`, `documents` e `files`.
 
 Nenhum módulo está implementado nesta ADR.
 
 ### Entidades afetadas
 
-Planejadas: `ProcessingJob`, `ProcessingAttempt`, `ProviderExecution`, `RecognitionArtifact`, `ExtractionResult`, `ClassificationResult`, `ValidationResult`, `RoutingDecision` e `ReviewDecision`.
+Planejadas: `ProcessingJob`, `ProcessingAttempt`, `ProviderInvocation`, `ProviderExecution`, `RecognitionArtifact`, `DocumentStructureArtifact`, `ExperimentManifest`, `BenchmarkRun`, `PromotionDecision`, `ExtractionResult`, `ClassificationResult`, `ValidationResult`, `RoutingDecision` e `ReviewDecision`.
 
 Nenhuma entidade ou tabela é criada nesta ADR.
 
@@ -124,6 +126,7 @@ Futuros workers, CPU/GPU, fila, object storage, secrets, observabilidade e conec
 ### Testes necessários
 
 - contract tests por adapter;
+- invocation física, execution por capability e retry composto;
 - golden fixtures;
 - outputs inválidos e erros normalizados;
 - idempotência/retry/cancelamento;
@@ -177,4 +180,3 @@ Antes de implementar integração real de OCR/ML na Phase 3 e após spike com do
 ### Impactos previstos
 
 A aprovação, rejeição ou substituição afeta módulos, schemas, workers, infraestrutura, segurança, custos, métricas, UMLs e rastreabilidade.
-

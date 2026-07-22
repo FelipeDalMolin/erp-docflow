@@ -19,7 +19,7 @@ onprem-lab
 prod-onprem
 ```
 
-O projeto começa pelo ambiente local e pelo ambiente CI.
+O projeto começa pelo ambiente local e pelo ambiente CI. O `onprem-lab` é o alvo do candidato R1 Golden Month com dataset sintético/anonimizado; `prod-onprem` e dados reais exigem gates posteriores.
 
 Ambientes de produção e laboratório on-prem serão documentados antes de serem automatizados.
 
@@ -124,7 +124,7 @@ Criar uma distribuição WSL dedicada apenas quando houver motivo real, como:
 - necessidade de export/import independente;
 - operação contínua separada do ambiente de desenvolvimento.
 
-Enquanto o projeto estiver em MVP documental leve, a WSL principal compartilhada é suficiente.
+Enquanto o projeto estiver no bootstrap R0 e antes de um `onprem-lab` isolado ser exigido pelo R1, a WSL principal compartilhada é suficiente.
 
 Documento detalhado: [WSL multi-projetos](WSL_MULTI_PROJETOS.md).
 
@@ -165,7 +165,7 @@ Validações futuras:
 
 ## 5. Ambiente onprem-lab
 
-O ambiente `onprem-lab` será um ambiente local dedicado ou servidor pequeno para simular operação real.
+O ambiente `onprem-lab` será um ambiente local dedicado ou servidor pequeno para comprovar instalação e operação controlada do candidato R1. Ele não equivale a produção.
 
 Uso:
 
@@ -176,7 +176,11 @@ Uso:
 - testar workers;
 - testar backup;
 - testar restore;
+- executar o Golden Month com dataset sintético/anonimizado;
+- validar TLS/lab, smoke, E2E, atualização, rollback e diagnóstico;
 - validar comportamento fora da máquina de desenvolvimento.
+
+O bundle do piloto é distinto do Compose de desenvolvimento. Tika, OCR e Docling só entram quando suas capabilities estiverem aprovadas e não podem bloquear o caminho XLSX/CSV + manual do Golden Month.
 
 Exemplos possíveis:
 
@@ -186,16 +190,61 @@ Exemplos possíveis:
 - servidor local;
 - NAS com suporte a containers.
 
-Requisitos estimados Atual/Futuros:
+Requisitos a materializar por release/profile:
 
 ```text
-CPU: 4 a 8 cores
-RAM: 8 GB / 16 GB recomendado
-Disco: SSD/NVMe
-Sistema: WSL / Ubuntu Server LTS
-Docker: sim
-Backup: obrigatório
+CPU/RAM/disco: medidos por classe de host e workload
+Sistema/runtime: declarados pelo bundle suportado
+Containers: conforme topologia aprovada
+Backup/restore: obrigatórios no ambiente elegível
 ```
+
+Não existe recomendação genérica de CPU/RAM antes do capacity benchmark conjunto; a release registra mínimo, recomendado e profiles habilitados somente após evidência.
+
+### 5.1 Classe de host pequeno observada
+
+O primeiro sizing deve incluir a classe disponível para laboratório/rede local:
+
+```text
+host_class: small-cpu-lab
+CPU: 4 processadores lógicos
+RAM: aproximadamente 12 GB
+Disco: SSD/NVMe
+GPU: não presumida
+Concorrência de uso: poucos usuários
+```
+
+Essa é a classe-alvo para validar o R1 `core` e avaliar providers CPU de modo assíncrono e controlado. A aptidão de cada provider ainda depende de benchmark; a classe não comprova capacidade para VLM, GPU ou múltiplos stacks pesados simultâneos.
+
+Profiles de implantação planejados, ainda não materializados:
+
+| Profile | Conteúdo | Regra |
+| --- | --- | --- |
+| `core` | web, API, persistência e caminho import/manual | não depende de Tika, OCR ou Docling |
+| `processing-tika` | probe/texto nativo | opcional até capability/profile aprovados |
+| `processing-basic-ocr` | normalização + Tesseract, PaddleOCR CPU ou engine local selecionada | ativa com `core` + `processing-tika`; somente por `OCR_REQUIRED` e benchmark |
+| `processing-docling` | layout/estrutura/tabelas CPU, com OCR desligado no baseline | ativa com `core` + `processing-tika`; challenger desligado por padrão; variante composta é profile separado |
+| `processing-gpu` | variante acelerada de PaddleOCR/VLM ou outro worker | futuro e preferencialmente em host próprio |
+
+Envelope operacional inicial para qualquer provider pesado:
+
+- processamento somente por worker/fila;
+- `processing_profile` limita paralelismo dentro de um job; `deployment_profile/resource_envelope` define capacidade agregada do host;
+- o `small-cpu-lab` começa com `host_heavy_concurrency=1` entre todos os workers/profiles pesados, até benchmark contrário;
+- admission control atômico pertence ao runtime/orquestrador compartilhado, não a cada container de provider;
+- lease/heartbeat/fencing ou mecanismo equivalente recupera crash/restart sem executar duas invocations; a fila/semaphore não é fonte canônica;
+- threads, workers, batch, páginas, tamanho e timeout explícitos;
+- API, banco, storage e UI preservam prioridade de responsividade;
+- cold/warm start, peak RSS, CPU, disco/model cache, throughput e falhas medidos em conjunto;
+- backpressure impede que uploads derrubem o host;
+- OOM/timeout/limite produz `RESOURCE_LIMIT_EXCEEDED` ou reason code específico;
+- modelos e pesos são prefetched, pinados e verificados antes da operação;
+- download em runtime, plugins e serviços remotos permanecem desligados por padrão;
+- apenas um stack pesado — Docling, OCR avançado ou VLM — executa por vez até capacity test.
+
+O teste de capacidade satura a fila com jobs de profiles diferentes e comprova limite host-wide, backpressure, prioridade do `core`, liberação/recovery de lease e ausência de execução duplicada após restart.
+
+Valores numéricos de memória/threads/batch são hipóteses da spike, não contrato deste runbook. O provider só entra no bundle após comprovar que cabe no host sem swap sustentado nem degradação indevida do núcleo.
 
 ## 6. Ambiente prod-onprem
 
@@ -216,7 +265,7 @@ Uso:
 
 Este ambiente não será criado no início.
 
-Antes de existir produção, devem existir:
+Antes de existir produção ou envio externo real, devem existir:
 
 - estratégia de backup;
 - estratégia de restore;
@@ -228,6 +277,8 @@ Antes de existir produção, devem existir:
 - documentação operacional;
 - plano de rollback;
 - baseline de segurança.
+
+Os critérios observáveis de maturidade estão em [Entrega e aceite do produto](../product/PRODUCT_DELIVERY_AND_ACCEPTANCE.md); o contrato técnico do bundle, fechamento e recuperação está em [Fechamento e entrega técnica](../architecture/ACCOUNTING_CLOSE_AND_DELIVERY.md).
 
 ## 7. Estratégia cloud-like
 
@@ -283,9 +334,9 @@ Fluxo futuro previsto:
 ```text
 main estável
 tag/release
-deploy manual em onprem-lab
+instalação manual do bundle candidato em onprem-lab
 validação
-deploy manual em prod-onprem
+deploy manual em prod-onprem somente após autorização própria
 ```
 
 Automação de deploy só deve entrar depois que CI, branch protection e estratégia de backup estiverem maduros.

@@ -1,24 +1,25 @@
 @startuml
-' Issue #22
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0012, ADR-0013, ADR-0016 (proposed)
 ' Guardrail: planned sequence; capabilities, messages and states are not implemented contracts.
 
 title Processamento, revisão e aceite - planejado
 
 participant "Processing Orchestrator" as Orchestrator
-participant "Routing Policy" as Router
+participant "Capability Registry / Provider Selection" as Registry
 participant "Provider Adapter" as Provider
 participant "Validation" as Validation
+participant "Workflow Routing Policy" as Router
 participant "Review" as Review
 actor "Revisor" as Human
 participant "Documents" as Documents
 participant "Linking / ERP" as Linking
 participant "Audit" as Audit
 
-Orchestrator -> Router : resolver próxima capability
-Router --> Orchestrator : provider elegível + policy version
-Orchestrator -> Provider : executar capability
-Provider --> Orchestrator : raw artifact + normalized result
+Orchestrator -> Registry : resolver adapter da capability planejada
+Registry --> Orchestrator : provider elegível + selection policy version
+Orchestrator -> Provider : criar invocation / executar capability(s) declaradas
+Provider --> Orchestrator : raw envelope + execution/output por capability
 Orchestrator -> Validation : validar output
 Validation --> Orchestrator : passes, warnings e conflicts
 Orchestrator -> Router : avaliar qualidade, risco e gates
@@ -46,8 +47,9 @@ opt snapshot aceito e efeito autorizado
 end
 
 note bottom
+  Invocation representa a chamada física; ProviderExecution representa uma capability.
   Um output de modelo não efetiva pagamento ou lançamento sozinho.
+  RoutingDecision não seleciona a capability inicial e não usa outcomes do Codex.
 end note
 
 @enduml
-

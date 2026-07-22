@@ -1,355 +1,315 @@
 # Roadmap
 
-- **Classe:** planejamento canônico de fases e gates
+- **Classe:** planejamento canônico de Phases, releases e gates
 - **Estado:** vigente
-- **Status corrente:** [Phase 0 encerrada; Phase 1 em refinamento](PROJECT_STATUS.md)
-- **Atualizar quando:** escopo, dependência, resultado ou gate de fase mudar
+- **Status corrente:** [Phase 1 em execução controlada; R1 em descoberta](PROJECT_STATUS.md)
+- **Atualizar quando:** escopo, dependência, resultado ou gate de Phase/release mudar
 
-Este roadmap organiza a evolução do ERP/GED em fases incrementais.
+Este roadmap organiza a evolução do `erp-docflow` por duas dimensões complementares:
 
-A proposta não é construir o sistema inteiro de uma vez. O projeto começa pelo sistema de trabalho e por uma arquitetura documental revisável, avança para um vertical slice de intake e só então adiciona processamento, revisão, financeiro, geração e integrações.
+- **Phases:** maturidade técnica e capabilities;
+- **releases:** resultados utilizáveis que combinam apenas as capabilities necessárias.
 
-## Visão de destino
+Phase 1 e R1 não são sinônimos. A Phase 1 entrega o bootstrap técnico **R0**; a release **R1 Golden Month** entrega o primeiro percurso de produto utilizável.
 
-A plataforma **on-prem first**, com arquitetura **cloud-like**, deverá ser capaz de:
+## 1. Direção de produto
 
-- receber documentos por uma Inbox e canais integrados;
-- materializar `DocumentEnvelope`, original e versões;
-- armazenar arquivos com integridade, versionamento e rastreabilidade;
-- extrair texto nativo ou executar OCR quando necessário;
-- extrair campos, tabelas e entidades;
-- sugerir classificação e vínculos;
-- validar regras determinísticas;
-- permitir revisão humana;
-- registrar aceite, correção, rejeição ou override;
-- vincular snapshots aceitos a fluxos financeiros;
-- gerar e versionar documentos;
-- manter auditoria e proveniência;
-- evoluir para bancos, escritórios contábeis e fontes externas.
-
-## Dependências entre fases
+O produto deverá transformar fontes documentais, estruturadas, manuais ou integradas em informação gerencial auditável, preservando a linhagem até evidência, relatório e fechamento.
 
 ```text
-Phase 0: governança + decisões + arquitetura planejada
-  -> Phase 1: aplicação mínima reproduzível
-  -> Phase 2: intake + materialização documental
-  -> Phase 3: um task graph de processamento
-  -> Phase 4: review + accepted snapshot
-  -> Phase 5: primeiro efeito ERP autorizado
+fonte identificada
+  -> conteúdo bruto preservado
+  -> interpretação candidata
+  -> validação + decisão proporcional ao risco
+  -> fato gerencial ou vínculo autorizado
+  -> relatório com drill-through
+  -> fechamento e pacote versionados
 ```
 
-Integrações e geração podem evoluir depois que os boundaries que utilizam estiverem estáveis.
+O `DocumentEnvelope` permanece o núcleo do domínio GED. Ele não é o núcleo de todo o produto e não deve ser a origem obrigatória de todo fato gerencial. Essa direção permanece baseline planejada até a decisão da [#74](https://github.com/FelipeDalMolin/erp-docflow/issues/74).
 
-## Phase 0 — Sistema do Projeto e baseline arquitetural
+Fontes de produto:
 
-Objetivo: criar o sistema operacional do projeto e tornar decisões de produto rastreáveis antes de código.
+- [North Star](../product/PRODUCT_NORTH_STAR.md);
+- [Piloto Golden Month](../product/PILOT_VERTICAL_SLICE.md);
+- [Jornadas e UX](../product/USER_JOURNEYS_AND_UX.md);
+- [Entrega e aceite](../product/PRODUCT_DELIVERY_AND_ACCEPTANCE.md).
 
-Estado: **encerrada administrativamente**. Evidências e hardening posterior estão registrados em [Status do projeto](PROJECT_STATUS.md).
+## 2. Overlay de releases
+
+| Release | Resultado verificável | Gate de saída |
+| --- | --- | --- |
+| R0 — bootstrap técnico | workspace, API, web, Compose de desenvolvimento, CI e runbooks | #26/#33–#37 integradas; ambiente reproduzível |
+| R1 — Golden Month | um mês sintético/anonimizado com classes/master data, veículo, imóvel, contrato/aditivo e recebível, importado, reconciliado, analisado, fechado e submetido a handoff contábil simulado com lineage | Epic #75, TLS/lab isolado, restore demonstrado e E2E ponta a ponta aprovados no `onprem-lab` |
+| R2 — piloto operacional | dados reais autorizados, controles de segurança ratificados, gestão contratual/conciliação ampliadas e operação suportada | gates do ADR-0015, backup/restore recorrentes, RPO/RTO e aceite operacional |
+| R3 — inteligência e escala | processamento documental ampliado, learning, busca híbrida e novas integrações | benchmark, segurança, custo e operação por capability |
+
+Uma release pode atravessar várias Phases. Isso não autoriza pular gates arquiteturais, de segurança ou de dados.
+
+## 3. Relação entre as capabilities
+
+```text
+governança + bootstrap
+  -> materialização de fontes/evidências
+  -> interpretação + validação + review
+  -> fatos gerenciais + reconciliação
+  -> relatórios + fechamento + entrega
+
+trilha paralela:
+  probe/texto nativo -> OCR seletivo -> extração/classificação -> feedback
+```
+
+As Epics #27–#32 são trilhas de capability e maturidade. Não existe a regra “terminar todo OCR antes de iniciar valor gerencial”. O Golden Month começa por XLSX/CSV e correção manual auditada; Tika/OCR agregam automação posteriormente.
+
+## 4. Phase 0 — Sistema do Projeto
+
+Objetivo: estabelecer governança, decisões, documentação, rastreabilidade e guardrails antes de código de produto.
+
+Estado: **encerrada**. Hardening #65, #67 e #69 foi integrado pelos PRs #68, #71 e #70.
+
+Resultado preservado:
+
+- fluxo Issue → branch → PR → CI → review → squash merge;
+- Plan Mode por envelope e loop controlado do Codex;
+- ADRs, UML, templates e Structural CI;
+- baselines de arquitetura/documentos/providers;
+- distinção entre planejado, decidido e implementado.
+
+## 5. Phase 1 / R0 — Bootstrap App
+
+Objetivo: criar a aplicação mínima reproduzível sem antecipar GED, processamento ou domínio gerencial.
+
+Estado: **Epic #26 autorizada para execução controlada**. A #33 aguarda review/merge no PR #72.
 
 Inclui:
 
-- GitHub Project, Issues, slices, branches e PRs;
-- modelo operacional;
-- estratégia Git, VS Code, GitHub CLI e Codex;
-- ADR e traceability baseline;
-- UML operacional;
-- CI estrutural e branch protection planejada;
-- arquitetura, pipeline, glossário e modelo conceitual planejados;
-- revisão do chat **Gestão Documental Inteligente**;
-- ADR-0016 proposto para providers por capability.
+- workspace mínimo;
+- backend FastAPI com `GET /health`;
+- frontend React/Vite técnico;
+- Compose de desenvolvimento apenas para API/web;
+- CI de aplicação e runbooks.
 
-Critério de saída:
+Fora de escopo:
 
-- fluxo Issue → branch → PR → CI → review → squash merge operacional;
-- fontes canônicas, status e gaps conhecidos rastreáveis;
-- decisões propostas não confundidas com decisões aceitas;
-- segurança, dados reais e providers externos continuam bloqueados até decisões aplicáveis;
-- backlog da Phase 1 inventariado, com refinamentos e gates ainda pendentes explicitados.
+- Inbox funcional, upload, banco, MinIO ou workers;
+- Tika, OCR, regex ou provider;
+- domínio gerencial e fechamento;
+- bundle instalável de piloto ou deploy.
 
-A escolha do primeiro perfil documental pertence ao gate da Phase 3, na Issue #43. Não é condição retroativa para o fechamento da Phase 0.
-
-## Phase 1 — Bootstrap App
-
-Objetivo: criar a estrutura mínima da aplicação, sem antecipar o GED completo.
-
-Estado: **Epic #26 aberta em refinamento**. As Issues #33–#37 ainda não formam fila executável. A autorização do primeiro envelope deve seguir o gate em [Status do projeto](PROJECT_STATUS.md).
-
-Inclui:
-
-- monorepo inicial;
-- backend FastAPI com `/health`;
-- frontend React/Vite;
-- boundaries de módulos planejados;
-- configuração inicial de ambiente local;
-- README de execução;
-- Docker Compose inicial;
-- observabilidade e configuração mínimas sem secrets.
-
-Fora de escopo inicial:
-
-- autenticação completa;
-- OCR/provider real;
-- financeiro;
-- integração bancária;
-- produção.
-
-Resultado esperado:
+Resultado R0:
 
 ```text
 frontend abre
 backend responde /health
-estrutura modular existe
 ambiente local é reproduzível
+CI executa os mesmos comandos documentados
 ```
 
-Ordem planejada:
+Esse resultado é fundação técnica, não produto utilizável.
+
+## 6. Phase 2 — Núcleo GED e intake
+
+Objetivo: materializar a entrada documental com identidade, integridade e auditoria, antes de processamento profundo.
+
+Inclui:
+
+- `DocumentEnvelope`, `DocumentVersion` e `FileObject`;
+- upload/Inbox documental;
+- original imutável, SHA-256, tamanho e origem;
+- `advertised_mime` informado pelo cliente;
+- `intake_detected_mime` preliminar e `mime_mismatch` preservado;
+- object storage, metadados transacionais e idempotência;
+- estado final de intake `INSPECTION_PENDING`;
+- visualização de estado, versão e auditoria inicial.
+
+Não inclui:
+
+- Apache Tika;
+- `probe_detected_mime`;
+- texto nativo, OCR, extração ou classificação.
+
+Gates: revisar ADR-0010, ADR-0011, ADR-0012 e acesso mínimo conforme ADR-0015 antes de persistência/storage reais.
+
+## 7. Phase 3 — Processamento documental
+
+Objetivo: implementar um task graph observável por perfil, com decisões baseadas em benchmark.
+
+### 7.1 Descoberta e decisão antes de implementação
+
+1. #43 define profile, dataset manifest, ground truth, splits, sensibilidade, hardware e métricas.
+2. #88 materializa o harness reproduzível de experimento: notebook fino, pacote/CLI, manifest, testes e artifact bundle imutável.
+3. #82 valida Tika isolado para probe/texto nativo.
+4. #83 compara candidatos somente para `recognize_text`, enquanto #89 avalia Docling CPU sem OCR para `extract_layout` e `extract_table_structure`; as trilhas podem executar em paralelo após profile/harness, e #83 usa a evidência Tika da #82 quando aplicável.
+5. O perfil Docling composto com OCR, se testado, registra também engine, modelo e configuração subjacentes.
+6. ADR-0016 é revisado e a decisão específica de cada capability/provider é registrada.
+7. Somente então adapters produtivos tornam-se elegíveis.
+
+### 7.2 Baseline Tika
+
+Na primeira capability real de processamento, um worker chama Tika Server interno para:
+
+- `probe_document`;
+- `extract_native_text`;
+- `probe_detected_mime`, metadados e warnings;
+- resposta bruta referenciada e saída normalizada;
+- versão, configuração e digest registrados.
+
+OCR interno do Tika permanece desabilitado. O serviço não recebe credenciais de banco/storage e opera com limites de timeout, CPU, memória, tamanho, temporários e recursão.
+
+O projeto, não o Tika, produz `NativeTextAssessment`:
 
 ```text
-#33 workspace
-  -> #34 backend e #35 frontend, independentes após o merge de #33
-  -> #36 Compose
-  -> #37 CI e documentação de execução
+USE_NATIVE | OCR_REQUIRED | REVIEW_REQUIRED | QUARANTINE
 ```
 
-## Phase 2 — Núcleo GED e intake
+### 7.3 Evolução seletiva
 
-Objetivo: implementar um vertical slice de materialização documental antes de ML/OCR.
+O Tika continua primeiro quando OCR existir. Apenas páginas/regiões insuficientes seguem para normalização e `recognize_text`. Artefatos `NATIVE`, `OCR` e `FUSED` preservam `derived_from`; texto de camada pesquisável gerada não se torna “nativo”.
+
+Layout/ordem de leitura (`extract_layout`) e tabelas (`extract_table_structure`) são capabilities separadas de OCR e produzem `DocumentStructureArtifact`. Docling é challenger inicial e relê o original ou derivado autorizado; ele não consome implicitamente o texto do Tika. A serialização JSON preserva o modelo `DoclingDocument`, enquanto envelope/status/erros/timings/confidence/opções ficam correlacionados separadamente. Se o Docling orquestrar OCR, a invocation gera execution por capability e nunca transforma a saída em texto `NATIVE`; origem não resolvida bloqueia uso canônico.
+
+Avaliação do texto nativo (#85), rule packs (#84), classificação/registry de validação (#47) e routing explicável (#86) permanecem capabilities separadas. A #48 mede regressão E2E do pipeline implementado; não substitui o benchmark pré-implementação.
+
+## 8. Phase 4 — Review, acceptance e audit
+
+Objetivo: permitir decisão humana/política antes de uso ou efeito sensível.
 
 Inclui:
 
-- `DocumentEnvelope`;
-- `DocumentVersion`;
-- `FileObject`;
-- upload inicial pela Inbox;
-- original imutável;
-- SHA-256, MIME detectado e origem;
-- idempotência de ingestão;
-- object storage;
-- metadados transacionais;
-- evento/auditoria de materialização;
-- visualização de estado e versão.
+- `ReviewCase`, `ReviewDecision` e `AcceptedSnapshot`;
+- documento, linha estruturada ou evidência ao lado da proposta;
+- valor bruto, normalizado, alternativas e conflitos;
+- aceitar, corrigir, override, rejeitar ou reprocessar;
+- revisão de classificação, vínculos, obrigação/recebível e fato proposto;
+- timeline da fonte até relatório/fechamento;
+- audit trail e autorização proporcional ao risco.
 
-Gates antes de implementar:
+Gates: ADR-0013, estratégia de auth/autorização, autoaceite por perfil e eventual dupla aprovação.
 
-- revisar ADR-0010 antes de schema/migrations;
-- revisar ADR-0011 antes de object storage real;
-- revisar ADR-0012 com o primeiro caso;
-- definir tenant/acesso mínimo sem contornar ADR-0015.
+## 9. Phase 5 — Domínio gerencial e reconciliação
 
-Resultado esperado:
+Objetivo: representar fatos e compromissos multiorigem sem tornar documento condição obrigatória.
+
+Baseline planejada:
+
+- `ManagerialFact`;
+- `Obligation` com `PAYABLE` e `RECEIVABLE`;
+- `Charge` e recorrência quando aplicável;
+- `Settlement` para pagamento, recebimento, estorno e compensação;
+- `SettlementAllocation` N:N;
+- `BankMovement` e reconciliação;
+- transferências com duas pernas;
+- rateios;
+- previsto e realizado preservados separadamente;
+- `EvidenceRef` para fonte documental, estruturada, manual ou externa.
+
+As #54–#57 devem ser refinadas com essas relações tipadas. `EntityLink` continua útil para sugestões/vínculos, mas não substitui contratos, parcelas, settlements ou allocations.
+
+Gates: decisão #74, autoridade #80, persistência/segurança e idempotência de efeito.
+
+## 10. Phase 6 — Geração documental
+
+Objetivo: gerar artefatos versionados a partir de dados estruturados.
+
+Inclui templates, PDF, recibos/contratos e `GeneratedDocument` relacionado ao `DocumentEnvelope` quando aplicável.
+
+Três objetos não podem ser confundidos:
+
+| Objeto | Finalidade |
+| --- | --- |
+| `GeneratedDocument` | documento produzido pelo domínio |
+| `AccountingDeliveryPackage` | snapshot/pacote de fechamento entregue ao contador |
+| `ProductReleaseBundle` | software instalável e operável |
+
+## 11. Phase 7 — Integrações
+
+Objetivo: conectar canais externos sem contornar intake, autorização, idempotência ou auditoria.
+
+Inclui:
+
+- Drive, OneDrive ou e-mail como canais documentais;
+- OFX/CNAB como importação bancária estruturada;
+- APIs e webhooks;
+- integração bancária e contábil futura.
+
+Upload local de XLSX/CSV do Golden Month pertence à [#77](https://github.com/FelipeDalMolin/erp-docflow/issues/77) e não depende desta Phase. A #63 deve escolher um formato bancário; a #64 deve tratar webhook/saída de integração, não o pacote contábil.
+
+## 12. R1 — Golden Month
+
+Objetivo: provar o produto em uma entidade e um mês completos.
+
+Percurso:
 
 ```text
-arquivo recebido
-original íntegro armazenado
-envelope e versão materializados
-metadados persistidos
-documento aparece na Inbox
-auditoria permite rastrear a origem
+dataset anonimizado
+  -> importar/mapping/validar
+  -> normalizar classes/aliases/master data
+  -> vincular veículo ao ledger
+  -> vincular imóvel + contrato/aditivo + recebível
+  -> revisar exceções
+  -> fatos + obrigações + settlements
+  -> reconciliar
+  -> livro/matriz com drill-through
+  -> fechar período
+  -> AccountingDeliveryPackage + protocolo
+  -> instalar e comprovar no onprem-lab
 ```
 
-## Phase 3 — Probe, OCR, Extract, Classify e Validate
+Issues de produto: [#75](https://github.com/FelipeDalMolin/erp-docflow/issues/75), #76–#81. Capabilities existentes #39–#40 e #49–#57 serão reutilizadas/refinadas. Processamento documental #82–#86 e #88–#89 não bloqueia o percurso.
 
-Objetivo: implementar um task graph vertical e observável para o primeiro perfil.
+## 13. Tracks transversais
 
-Inclui:
+### Segurança, privacidade e autoridade
 
-- `DocumentProbe` e bypass de OCR quando texto nativo for suficiente;
-- normalização condicional;
-- `ProcessingJob`, attempts e idempotência;
-- um adapter local inicial;
-- um adapter de escalation apenas se aprovado;
-- `RecognitionArtifact`;
-- `ExtractionResult`;
-- `ClassificationResult`;
-- `ValidationResult`;
-- `RoutingDecision`;
-- raw output referenciado e resultado normalizado;
-- reprocessamento manual;
-- erro, retry e limite;
-- métricas de qualidade, latência e custo.
+- autenticação/autorização e segregação;
+- classificação, residência, retenção, descarte e legal hold;
+- criptografia, secrets, logs e auditoria;
+- níveis gerencial-caixa, gerencial-competência, candidato contábil, revisado e fechado.
 
-Gates antes de implementar:
+### UX e acessibilidade
 
-- escolher o primeiro tipo documental na #43;
-- definir dataset permitido e ground truth;
-- executar benchmark local versus alternativas permitidas;
-- aprovar, revisar ou substituir ADR-0016;
-- definir classificação/residência de dados;
-- estabilizar apenas o schema mínimo necessário.
+- contexto entidade/período;
+- preview e erros por linha;
+- workbench com evidência;
+- estados loading/vazio/erro/bloqueio/sem permissão;
+- teclado, foco, contraste e desktop-first responsivo;
+- drill-through e filtros preservados.
 
-Campos candidatos, sujeitos ao primeiro perfil:
+### Qualidade de processamento
 
-- fornecedor;
-- valor;
-- data de emissão;
-- vencimento;
-- competência;
-- linha digitável;
-- CNPJ/CPF;
-- tipo provável.
-
-Resultado esperado:
-
-```text
-texto nativo é reaproveitado ou OCR é justificado
-cada etapa produz artefato e proveniência
-campos/classificação são sugestões
-regras registram passes, warnings e conflicts
-router indica próximo passo
-```
-
-## Phase 4 — Review, Acceptance e Audit
-
-Objetivo: implementar revisão humana antes de efeito sensível.
-
-Inclui:
-
-- `ReviewCase`;
-- `ReviewDecision`;
-- `AcceptedSnapshot`;
-- tela com original, evidência, confiança e validações;
-- aceitar, corrigir, override, rejeitar e reprocessar;
-- antes/depois e justificativa;
-- timeline documental;
-- audit trail;
-- gates por risco/campo/perfil;
-- autorização conforme ADR de segurança futuro.
-
-Gates:
-
-- revisar ADR-0013;
-- decidir auth/autorização e segregação necessárias;
-- definir quais perfis permitem autoaceite;
-- definir ações que exigem dupla aprovação.
-
-Resultado esperado:
-
-```text
-sistema sugere
-regras validam
-pessoa/política decide
-snapshot aceito é versionado
-decisão e evidência são auditáveis
-```
-
-## Phase 5 — Núcleo Financeiro
-
-Objetivo: conectar snapshots aceitos aos fluxos ERP.
-
-Inclui:
-
-- `FinancialEntry`;
-- `PaymentIntent` inicial;
-- `CashMovement` inicial;
-- `EntityLink`;
-- sugestão e confirmação de vínculo;
-- idempotência de efetivação;
-- autorização independente;
-- dashboard de pendências.
-
-Resultado esperado:
-
-```text
-snapshot documental aceito
-vínculo confirmado
-efeito autorizado
-lançamento criado uma única vez
-documento e auditoria preservados
-```
-
-## Phase 6 — Geração Documental
-
-Objetivo: gerar documentos a partir de dados estruturados.
-
-Inclui:
-
-- templates versionados;
-- recibos e contratos simples;
-- cobranças;
-- PDFs;
-- `GeneratedDocument`;
-- armazenamento, versão e vínculo com `DocumentEnvelope`;
-- revisão/aceite quando aplicável.
-
-## Phase 7 — Integrações
-
-Objetivo: conectar fontes e destinos externos sem contornar o núcleo documental.
-
-Inclui:
-
-- Google Drive e OneDrive como entrada;
-- e-mail ingestion;
-- importação OFX/CNAB;
-- integração bancária futura;
-- plano de contas e exportação contábil;
-- escritório contábil;
-- webhooks e APIs externas.
-
-Toda entrada deve passar por intake/materialização. Toda saída deve preservar autorização, idempotência e auditoria.
-
-## Tracks transversais
-
-### Segurança e LGPD
-
-- autenticação/autorização;
-- tenant e segregação;
-- data residency;
-- retenção/descarte/legal hold;
-- criptografia, secrets e logs;
-- acesso e auditoria.
-
-### Qualidade de modelos
-
-- datasets versionados;
-- golden fixtures;
-- benchmark por campo/perfil;
-- calibração;
-- drift e mudança de modelo;
-- custo, latência e taxa de revisão.
+- datasets/versionamento/golden fixtures;
+- métricas por campo/perfil;
+- abstention, calibração, drift e regressão;
+- custo, latência, hardware e taxa de review;
+- promoção/rollback por evidência reproduzível.
 
 ### Operação on-prem
 
-- observabilidade;
-- capacity planning CPU/GPU;
-- backup/restore;
-- atualização/rollback;
-- dead letter e reprocessamento;
-- disponibilidade de providers.
+- Compose de piloto separado do desenvolvimento;
+- imagens imutáveis, migrations e rollback;
+- health/readiness, logs e diagnóstico;
+- backup/restore testado;
+- release notes, manifest e SBOM;
+- smoke/E2E Golden Month.
 
-## Princípio de execução
+## 14. Princípio de execução
 
-Cada fase deve ser quebrada em slices pequenos:
+Cada slice precisa informar entradas, saídas, invariantes, ownership, dependências, decisão técnica, fixtures, lineage, reason codes, métricas e comandos antes de receber `Condições Verificadas`.
 
 ```text
 Issue clara
-  -> condição de execução verificada
+  -> envelope aprovado
   -> branch curta
-  -> commits
-  -> Pull Request
-  -> CI e validação proporcional
-  -> revisão humana
-  -> squash merge
+  -> implementação + validação
+  -> draft PR
+  -> CI + review humano
+  -> squash merge humano
 ```
 
-Plan Mode pode aprovar um envelope com vários slices da mesma frente. Dentro desse envelope, o Codex pode puxar o próximo item pronto sem nova aprovação mecânica, mantendo Issue, branch e PR por slice.
-
-Depois de cada entrega técnica, o Codex deve decidir:
+Plan Mode pode aprovar vários slices, mas mantém Issue/branch/PR por slice. Depois de cada entrega técnica, o Codex registra exatamente um outcome:
 
 ```text
-CONTINUE
-AWAIT_DEPENDENCY
-CHECKPOINT
-STOP
+CONTINUE | AWAIT_DEPENDENCY | CHECKPOINT | STOP
 ```
 
-Checkpoints são exigidos por mudança de direção, risco, decisão/ação humana não prevista, área protegida ou gate de Phase — não apenas porque um slice terminou.
-
-Uma dependência conhecida e já modelada usa `AWAIT_DEPENDENCY`. Dependência inesperada que exija decisão, nova coordenação ou mudança de escopo usa `CHECKPOINT`.
-
-O lifecycle do envelope, a exclusividade dos outcomes e as condições de retomada pertencem ao ADR-0018.
-
-O Codex pode iniciar trabalho independente enquanto outro PR aguarda review. Trabalho dependente aguarda merge, salvo estratégia de PR empilhado explicitamente aprovada.
-
-Merge permanece humano.
-
-Spikes respondem perguntas e produzem evidência; não promovem automaticamente a hipótese a decisão aceita.
+Mudança de release, decisão, risco, dado real, segurança, provider, persistência, deploy ou gate exige `CHECKPOINT`. Spikes produzem evidência; não promovem automaticamente hipótese a decisão aceita.

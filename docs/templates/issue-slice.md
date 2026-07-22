@@ -45,6 +45,70 @@ Paths protegidos ou excluídos:
 
 - `<path>`
 
+Ownership e sobreposição:
+
+- owner por path:
+- branches/PRs concorrentes verificados:
+- condição de desbloqueio:
+
+## Contrato de execução
+
+Entradas:
+
+- `<tipo, schema/versão, origem e classificação>`
+
+Saídas:
+
+- `<artefato, estado, evento ou comportamento observável>`
+
+Invariantes:
+
+- `<o que nunca pode ser perdido, sobrescrito ou duplicado>`
+
+Tecnologia e estratégia:
+
+- decidida: `<tecnologia/algoritmo/política e fonte da decisão>`
+- candidata sob benchmark: `<candidato, spike/benchmark e gate de promoção>`
+- não aplicável: `<justificativa, quando não houver escolha técnica>`
+
+Experimento e promoção, quando aplicável:
+
+- pergunta/hipótese e baseline:
+- `ExperimentManifest` / `BenchmarkRun`:
+- package, lockfile, config e artifact digest usados:
+- paridade entre experimento, teste, runtime e release:
+- critério de promoção, rejeição ou inconclusão:
+
+Artefatos, proveniência e lineage:
+
+- persistidos:
+- `derived_from` / referência à origem:
+- regra/profile/modelo e versão:
+
+Falhas e controle:
+
+- reason codes:
+- idempotência:
+- timeout/retry/replay:
+- comportamento parcial/indisponível:
+
+Fixtures e dados permitidos:
+
+- dataset/manifest:
+- casos válidos, inválidos, ambíguos e limites:
+- sensibilidade/autorização:
+
+Métricas e targets:
+
+- qualidade/correção:
+- latência/custo/recursos, quando aplicável: `<p50/p95, throughput, CPU-seconds, RSS pico, cold/warm start, disco/cache>`
+- taxa de review/erro, quando aplicável:
+
+UX, quando aplicável:
+
+- loading, vazio, sucesso parcial, erro, bloqueado e sem permissão:
+- teclado/foco/acessibilidade:
+
 ## Relação com Epic
 
 Epic relacionada:

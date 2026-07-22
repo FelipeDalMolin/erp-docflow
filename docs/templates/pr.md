@@ -63,11 +63,12 @@ Resultado: selecionar exatamente uma:
 - [ ] O PR referencia a Issue correta.
 - [ ] O escopo da Issue foi respeitado.
 - [ ] O fora de escopo foi mantido.
-- [ ] As validações cabíveis foram executadas ou justificadas.
+- [ ] Os comandos, fixtures e targets definidos na Issue foram executados ou o bloqueio foi registrado.
 - [ ] A documentação afetada foi atualizada ou avaliada.
 - [ ] ADRs e rastreabilidade foram considerados quando aplicável.
 - [ ] Nenhum secret, deploy, automerge ou merge automático foi criado.
 - [ ] O PR está pequeno e revisável.
+- [ ] Capacidades planejadas não foram apresentadas como implementadas.
 
 ## Issues relacionadas
 

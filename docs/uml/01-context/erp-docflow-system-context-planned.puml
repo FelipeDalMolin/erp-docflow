@@ -1,5 +1,5 @@
 @startuml
-' Issue #22
+' Issues #22 and #73
 ' Related ADRs: ADR-0001, ADR-0012, ADR-0013, ADR-0015, ADR-0016 (proposed)
 ' Guardrail: planned product context; no component or integration is implemented.
 
@@ -10,27 +10,33 @@ left to right direction
 actor "Usuário operacional" as Operator
 actor "Revisor / aprovador" as Reviewer
 actor "Administrador" as Admin
-actor "Contador / financeiro" as FinanceUser
+actor "Gestor / financeiro" as Manager
+actor "Contador" as Accountant
 
 rectangle "ERP Docflow\n<<planejado / não implementado>>" as System
 
-cloud "Fontes documentais\nUpload / Drive / OneDrive / E-mail" as Sources
+cloud "Fontes documentais\nUpload / Drive / OneDrive / E-mail" as DocumentSources
+cloud "Fontes estruturadas\nXLSX / CSV / OFX / integrações" as StructuredSources
+rectangle "Lançamento manual\nauditado" as ManualSource
 cloud "Providers de processamento\nlocais / self-hosted / cloud" as Providers
-cloud "Sistemas financeiros,\ncontábeis e bancários" as ExternalSystems
+cloud "Sistemas bancários\ne contábeis" as ExternalSystems
 
 Operator --> System : envia e acompanha documentos
 Reviewer --> System : revisa, corrige, aceita ou rejeita
 Admin --> System : governa perfis, acesso e operação
-FinanceUser --> System : confirma vínculos e efeitos autorizados
+Manager --> System : gere fatos, obrigações,\nliquidações e fechamento
+Accountant --> System : recebe pacote, devolve\nprotocolo e ajustes
 
-Sources --> System : entradas documentais
+DocumentSources --> System : evidências documentais
+StructuredSources --> System : lotes e movimentos
+ManualSource --> System : fatos com autoria e motivo
 System --> Providers : capabilities elegíveis
-System --> ExternalSystems : integrações após gates
+System --> ExternalSystems : importações/entregas após gates
 
 note bottom of System
-  Núcleo: DocumentEnvelope, versões, processamento,
-  revisão humana, aceite, vínculos e auditoria.
+  Núcleo do produto: fato gerencial sustentado por evidências.
+  DocumentEnvelope continua sendo o núcleo GED, sem ser a única
+  origem possível. Relatórios e fechamento preservam drill-through.
 end note
 
 @enduml
-

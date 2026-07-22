@@ -1,5 +1,5 @@
 @startuml
-' Issue #22
+' Issues #22, #73, #88 and #89
 ' Related ADRs: ADR-0010, ADR-0011, ADR-0012, ADR-0013, ADR-0015, ADR-0016 (proposed)
 ' Guardrail: conceptual model only; no class, table or schema is implemented.
 
@@ -10,8 +10,13 @@ class DocumentVersion <<planned>>
 class FileObject <<planned>>
 class ProcessingJob <<planned>>
 class ProcessingAttempt <<planned>>
+class ProviderInvocation <<planned>>
 class ProviderExecution <<planned>>
 class RecognitionArtifact <<planned>>
+class DocumentStructureArtifact <<planned>>
+class ExperimentManifest <<planned>>
+class BenchmarkRun <<planned>>
+class PromotionDecision <<planned>>
 class ExtractionResult <<planned>>
 class ClassificationResult <<planned>>
 class ValidationResult <<planned>>
@@ -25,8 +30,11 @@ DocumentEnvelope "1" o-- "1..*" DocumentVersion
 DocumentVersion "1" o-- "1..*" FileObject
 DocumentEnvelope "1" o-- "0..*" ProcessingJob
 ProcessingJob "1" o-- "1..*" ProcessingAttempt
-ProcessingAttempt "1" o-- "0..*" ProviderExecution
+ProcessingAttempt "1" o-- "0..*" ProviderInvocation
+ProviderInvocation "1" o-- "1..*" ProviderExecution
+ProviderExecution "1" --> "0..1" DocumentStructureArtifact : produz por capability
 DocumentVersion "1" o-- "0..*" RecognitionArtifact
+DocumentVersion "1" o-- "0..*" DocumentStructureArtifact
 DocumentVersion "1" o-- "0..*" ExtractionResult
 DocumentVersion "1" o-- "0..*" ClassificationResult
 ExtractionResult "1" o-- "0..*" ValidationResult
@@ -37,12 +45,16 @@ ReviewDecision "1" --> "0..1" AcceptedSnapshot : cria
 DocumentEnvelope "1" o-- "0..*" AcceptedSnapshot
 DocumentEnvelope "1" o-- "0..*" EntityLink
 DocumentEnvelope "1" o-- "0..*" AuditEvent
+ExperimentManifest "1" o-- "0..*" BenchmarkRun
+PromotionDecision "0..*" --> "1..*" BenchmarkRun : fundamenta-se
+ProviderExecution "0..*" --> "0..1" PromotionDecision : autorizado por
 
 note bottom
   Resultado de provider não é snapshot aceito.
+  Invocation física e execution por capability são separadas.
+  Notebook/benchmark não promovem componente sem PromotionDecision.
   Snapshot aceito não é entidade financeira.
   Original e tentativas anteriores permanecem auditáveis.
 end note
 
 @enduml
-

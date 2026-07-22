@@ -22,13 +22,15 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](projec
 
 ### Entender produto e arquitetura planejada
 
-1. [Roadmap](project/ROADMAP.md)
-2. [Arquitetura de referência](architecture/ARCHITECTURE.md)
-3. [Pipeline documental](architecture/DOCUMENT_PIPELINE.md)
-4. [Baseline conceitual de dados](architecture/DATA_MODEL_BASELINE.md)
-5. [Estratégia de providers](architecture/PROVIDER_STRATEGY.md)
-6. [Glossário documental](architecture/GLOSSARIO_DOCUMENTAL.md)
-7. [Catálogo UML](uml/README.md)
+1. [North Star do produto](product/PRODUCT_NORTH_STAR.md)
+2. [Piloto Golden Month](product/PILOT_VERTICAL_SLICE.md)
+3. [Jornadas e UX](product/USER_JOURNEYS_AND_UX.md)
+4. [Entrega e aceite](product/PRODUCT_DELIVERY_AND_ACCEPTANCE.md)
+5. [Roadmap](project/ROADMAP.md)
+6. [Arquitetura de referência](architecture/ARCHITECTURE.md)
+7. [Contratos especializados](architecture/README.md)
+8. [Engenharia de experimentos e componentes de dados](architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md)
+9. [Catálogo UML](uml/README.md)
 
 ### Entender decisões e impacto
 
@@ -50,12 +52,14 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](projec
 | --- | --- | --- |
 | Qual é o estado atual e o próximo gate? | [PROJECT_STATUS.md](project/PROJECT_STATUS.md) | Issues/PRs fornecem a evidência operacional. |
 | Quais fases, resultados e gates existem? | [ROADMAP.md](project/ROADMAP.md) | O status registra a posição atual; Epics decompõem o trabalho. |
+| Qual problema, piloto, jornada e unidade de entrega orientam o produto? | [`docs/product/`](product/README.md) | Roadmap ordena; arquitetura define contratos; código/testes provam implementação. |
 | Como o projeto governa Issues, PRs, decisões e rastreabilidade? | [MODELO_OPERACIONAL_DO_PROJETO.md](project/MODELO_OPERACIONAL_DO_PROJETO.md) | Documentos especializados detalham cada mecanismo. |
 | Qual é o lifecycle de um item e quando ele está executável? | [FLUXO_GITHUB_PROJECT.md](operations/FLUXO_GITHUB_PROJECT.md) | Templates aplicam o vocabulário; o Project exibe o estado. |
 | Quais são as regras de branch, commit, PR e merge? | [ESTRATEGIA_GIT.md](operations/ESTRATEGIA_GIT.md) | O runbook mostra comandos; `AGENTS.md` adiciona limites do Codex. |
 | O que o Codex pode fazer? | [`AGENTS.md`](../AGENTS.md) | [`.codex/config.toml`](../.codex/config.toml) define capacidade técnica local; a Issue/envelope concede escopo. |
 | Por que uma decisão arquitetural foi tomada? | ADR aplicável em [`docs/adr/`](adr/README.md) | Arquitetura, mapas e UML devem derivar da decisão e respeitar seu status. |
-| Como o produto deverá funcionar? | [ARCHITECTURE.md](architecture/ARCHITECTURE.md) e documentos de domínio | Roadmap define ordem; UML representa visualmente; nenhum deles prova implementação. |
+| Como as capabilities e o domínio deverão funcionar? | [ARCHITECTURE.md](architecture/ARCHITECTURE.md) e contratos especializados | Produto define o resultado; roadmap define ordem; UML representa visualmente; nenhum deles prova implementação. |
+| Como um notebook/experimento se torna componente promovível? | [DATA_SCIENCE_ENGINEERING_LIFECYCLE.md](architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | Processing profile define o caso; benchmark e decisão provam a promoção. |
 | O que está implementado? | Código, testes e contratos executáveis | Mapas registram a evidência da Issue/PR quando código existir. |
 
 Quando duas fontes divergirem, não combinar regras silenciosamente. Usar a fonte primária da pergunta, verificar ADRs aplicáveis e abrir uma Issue para resolver a inconsistência.
@@ -96,6 +100,7 @@ Qualificadores como `proposto` e `não implementado` devem acompanhar o conceito
 ```text
 docs/
 ├── README.md                    # portal e matriz de autoridade
+├── product/                    # north star, piloto, jornadas e entrega
 ├── project/                     # status, roadmap e governança do projeto
 ├── architecture/                # arquitetura e baselines documentais planejados
 ├── operations/                  # ambiente, Git, GitHub Project e runbooks
@@ -106,7 +111,7 @@ docs/
 └── uml/                         # representações visuais
 ```
 
-A organização física foi materializada pela Issue #69. Cada agrupamento possui um índice que delimita responsabilidade e reduz duplicação normativa. Movimentos futuros continuam exigindo Issue própria, atualização atômica de links e preservação do histórico.
+A organização física inicial foi materializada pela Issue #69; a área de produto foi adicionada pela #73. Cada agrupamento possui um índice que delimita responsabilidade e reduz duplicação normativa. Movimentos futuros continuam exigindo Issue própria, atualização atômica de links e preservação do histórico.
 
 ## Regra de manutenção
 
