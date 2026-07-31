@@ -128,7 +128,15 @@ Não inclui:
 - `probe_detected_mime`;
 - texto nativo, OCR, extração ou classificação.
 
-Gates: revisar ADR-0010, ADR-0011, ADR-0012 e acesso mínimo conforme ADR-0015 antes de persistência/storage reais.
+Direção ratificada documentalmente pela #38 para o protótipo local sintético:
+
+- PostgreSQL será a fonte canônica do estado transacional;
+- MinIO por interface S3-compatible armazenará originais e futuros derivados, sem blobs no PostgreSQL;
+- SHA-256/tamanho, observações de MIME separadas, idempotência por tenant e reconciliação banco/storage são invariantes obrigatórias;
+- tenant e ator/reviewer fixos de desenvolvimento serão injetados pelo servidor, sem constituir autenticação ou autorização;
+- persistência após restart será comprovada no protótipo; restore conjunto de banco e objetos continua obrigatório antes de `onprem-lab` ou dado real.
+
+O [contrato de persistência e storage do intake](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) registra os limites e o ownership. Essa ratificação **não declara banco, storage, schema, migrations, upload, volumes ou acesso implementados**. A #39 só pode materializar o domínio e a persistência relacional após merge humano da #38, conclusão de #36/#37, encerramento da #26 e refinamento próprio; a #40 depende também do merge da #39 para implementar a fronteira MinIO, integridade, reconciliação e restart. Autenticação, exposição externa e dado real permanecem bloqueados pela ADR-0015.
 
 ## 7. Phase 3 — Processamento documental
 

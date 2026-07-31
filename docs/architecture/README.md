@@ -8,6 +8,7 @@ Este diretório reúne **baselines planejados do produto**. Esses documentos exp
 | [Arquitetura do frontend](FRONTEND_ARCHITECTURE.md) | shell, rotas, estados, acessibilidade, responsividade e contratos da UI |
 | [Pipeline documental](DOCUMENT_PIPELINE.md) | etapas, gates e artefatos do processamento |
 | [Baseline de dados](DATA_MODEL_BASELINE.md) | conceitos e invariantes, sem schema físico |
+| [Contrato de persistência e storage do intake](INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) | PostgreSQL/MinIO, integridade, idempotência, consistência e acesso provisório do intake PDF-first |
 | [Estratégia de providers](PROVIDER_STRATEGY.md) | capabilities, adapters e critérios de seleção |
 | [Contrato de processing profile](PROCESSING_PROFILE_CONTRACT.md) | profile, task graph, rules, routing, fixtures e promoção |
 | [Engenharia de experimentos e componentes de dados](DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | notebook, reprodução, pacote, benchmark, promoção e operação |
