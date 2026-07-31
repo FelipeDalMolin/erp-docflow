@@ -5,6 +5,7 @@ Este diretório reúne **baselines planejados do produto**. Esses documentos exp
 | Documento | Responsabilidade exclusiva |
 | --- | --- |
 | [Arquitetura](ARCHITECTURE.md) | boundaries, componentes e visão lógica |
+| [Arquitetura do frontend](FRONTEND_ARCHITECTURE.md) | shell, rotas, estados, acessibilidade, responsividade e contratos da UI |
 | [Pipeline documental](DOCUMENT_PIPELINE.md) | etapas, gates e artefatos do processamento |
 | [Baseline de dados](DATA_MODEL_BASELINE.md) | conceitos e invariantes, sem schema físico |
 | [Estratégia de providers](PROVIDER_STRATEGY.md) | capabilities, adapters e critérios de seleção |
