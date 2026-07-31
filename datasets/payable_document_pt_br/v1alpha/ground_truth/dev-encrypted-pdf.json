@@ -1,0 +1,13 @@
+{
+  "canonical_text": "",
+  "classification": null,
+  "expected_failure_stage": "probe",
+  "expected_output": null,
+  "expected_validations": [],
+  "fixture_id": "dev-encrypted-pdf",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}

@@ -1,0 +1,21 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: RECEIPT\nNUMERO: NAO APLICAVEL\nEMISSOR: CASA LUMEN TESTE\nCNPJ: NAO APLICAVEL\nEMISSAO: 16/07/2026\nVENCIMENTO: NAO APLICAVEL\nVALOR: R$ 245,90\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "RECEIPT"
+  },
+  "expected_failure_stage": "intake",
+  "expected_output": null,
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "dev-unsupported-tiff",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}

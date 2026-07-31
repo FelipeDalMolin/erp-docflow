@@ -1,0 +1,21 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: INVOICE\nNUMERO: INV-2026-003\nEMISSOR: IRIS TECNOLOGIA FICTICIA\nCNPJ: 45DEF67804GH91\nEMISSAO: 20/07/2026\nVENCIMENTO: 20/08/2026\nVALOR: R$ 5.678,90\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "INVOICE"
+  },
+  "expected_failure_stage": "probe",
+  "expected_output": null,
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "val-resource-limit",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 21
+}

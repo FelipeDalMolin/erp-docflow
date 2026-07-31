@@ -1,0 +1,21 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: INVOICE\nNUMERO: INV-2026-002\nEMISSOR: DELTA PAPELARIA FICTICIA\nCNPJ: 23BCD45602EF50\nEMISSAO: 17/07/2026\nVENCIMENTO: 17/08/2026\nVALOR: R$ 3.210,00\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "INVOICE"
+  },
+  "expected_failure_stage": "probe",
+  "expected_output": null,
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "test-corrupt-pdf",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}

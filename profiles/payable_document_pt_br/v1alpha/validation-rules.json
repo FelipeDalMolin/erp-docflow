@@ -1,0 +1,85 @@
+{
+  "rule_pack_id": "payable_document_validators",
+  "rule_pack_version": "v1alpha",
+  "applicability_policy": {
+    "required_present_failure_applicabilities": [
+      "NOT_APPLICABLE",
+      "MISSING",
+      "AMBIGUOUS"
+    ]
+  },
+  "document_types": {
+    "INVOICE": {
+      "required_present": [
+        "document_number",
+        "issuer_name",
+        "issuer_tax_id",
+        "issued_on",
+        "due_on",
+        "total_amount",
+        "currency"
+      ],
+      "allowed_not_applicable": []
+    },
+    "PAYMENT_SLIP": {
+      "required_present": [
+        "document_number",
+        "issuer_name",
+        "issuer_tax_id",
+        "due_on",
+        "total_amount",
+        "currency"
+      ],
+      "allowed_not_applicable": ["issued_on"]
+    },
+    "RECEIPT": {
+      "required_present": [
+        "issuer_name",
+        "issued_on",
+        "total_amount",
+        "currency"
+      ],
+      "allowed_not_applicable": [
+        "document_number",
+        "issuer_tax_id",
+        "due_on"
+      ]
+    },
+    "OTHER": {
+      "required_present": [],
+      "allowed_not_applicable": [
+        "document_number",
+        "issuer_name",
+        "issuer_tax_id",
+        "issued_on",
+        "due_on",
+        "total_amount",
+        "currency"
+      ],
+      "always_review": true
+    }
+  },
+  "cross_field_rules": [
+    {
+      "id": "valid_iso_dates",
+      "fields": ["issued_on", "due_on"],
+      "when_applicability": "PRESENT",
+      "failure_reason_code": "INVALID_DATE"
+    },
+    {
+      "id": "issued_on_not_after_due_on",
+      "when_present": ["issued_on", "due_on"],
+      "failure_reason_code": "VALIDATION_CONFLICT"
+    },
+    {
+      "id": "valid_cnpj_check_digits",
+      "when_present": ["issuer_tax_id"],
+      "failure_reason_code": "INVALID_TAX_ID"
+    },
+    {
+      "id": "positive_decimal_amount",
+      "when_present": ["total_amount"],
+      "failure_reason_code": "INVALID_AMOUNT"
+    }
+  ]
+}

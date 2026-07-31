@@ -1,0 +1,130 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: PAYMENT_SLIP\nNUMERO: BOL-2026-303\nEMISSOR: GAMA LOCACOES TESTE\nCNPJ: 34.567.890/0001-30\nEMISSAO: NAO APLICAVEL\nVENCIMENTO: 22/08/2026\nVALOR: R$ 2.000,50\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "PAYMENT_SLIP"
+  },
+  "expected_failure_stage": null,
+  "expected_output": {
+    "document_type": {
+      "applicability": "PRESENT",
+      "evidence_refs": [
+        {
+          "artifact_ref": "files/test-slip003-scan.pdf",
+          "bbox": null,
+          "coordinate_space": null,
+          "excerpt": "TIPO: PAYMENT_SLIP",
+          "page": 1
+        }
+      ],
+      "normalized_value": "PAYMENT_SLIP",
+      "raw_value": "PAYMENT_SLIP"
+    },
+    "fields": {
+      "currency": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "MOEDA: BRL",
+            "page": 1
+          }
+        ],
+        "normalized_value": "BRL",
+        "raw_value": "BRL"
+      },
+      "document_number": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "NUMERO: BOL-2026-303",
+            "page": 1
+          }
+        ],
+        "normalized_value": "BOL-2026-303",
+        "raw_value": "BOL-2026-303"
+      },
+      "due_on": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VENCIMENTO: 22/08/2026",
+            "page": 1
+          }
+        ],
+        "normalized_value": "2026-08-22",
+        "raw_value": "22/08/2026"
+      },
+      "issued_on": {
+        "applicability": "NOT_APPLICABLE",
+        "evidence_refs": [],
+        "normalized_value": null,
+        "raw_value": null
+      },
+      "issuer_name": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSOR: GAMA LOCACOES TESTE",
+            "page": 1
+          }
+        ],
+        "normalized_value": "GAMA LOCACOES TESTE",
+        "raw_value": "GAMA LOCACOES TESTE"
+      },
+      "issuer_tax_id": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "CNPJ: 34.567.890/0001-30",
+            "page": 1
+          }
+        ],
+        "normalized_value": "34567890000130",
+        "raw_value": "34.567.890/0001-30"
+      },
+      "total_amount": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/test-slip003-scan.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VALOR: R$ 2.000,50",
+            "page": 1
+          }
+        ],
+        "normalized_value": "2000.50",
+        "raw_value": "R$ 2.000,50"
+      }
+    },
+    "schema_id": "payable_document",
+    "schema_version": "v1alpha"
+  },
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "test-slip003-scan",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}

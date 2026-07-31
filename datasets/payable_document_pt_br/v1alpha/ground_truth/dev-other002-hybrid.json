@@ -1,0 +1,130 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: OTHER\nNUMERO: DOC-2026-902\nEMISSOR: NORTE ARQUIVOS FICTICIOS\nCNPJ: 78GHJ90107KL03\nEMISSAO: 24/07/2026\nVENCIMENTO: NAO APLICAVEL\nVALOR: R$ 42,00\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "OTHER"
+  },
+  "expected_failure_stage": null,
+  "expected_output": {
+    "document_type": {
+      "applicability": "PRESENT",
+      "evidence_refs": [
+        {
+          "artifact_ref": "files/dev-other002-hybrid.pdf",
+          "bbox": null,
+          "coordinate_space": null,
+          "excerpt": "TIPO: OTHER",
+          "page": 2
+        }
+      ],
+      "normalized_value": "OTHER",
+      "raw_value": "OTHER"
+    },
+    "fields": {
+      "currency": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "MOEDA: BRL",
+            "page": 2
+          }
+        ],
+        "normalized_value": "BRL",
+        "raw_value": "BRL"
+      },
+      "document_number": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "NUMERO: DOC-2026-902",
+            "page": 2
+          }
+        ],
+        "normalized_value": "DOC-2026-902",
+        "raw_value": "DOC-2026-902"
+      },
+      "due_on": {
+        "applicability": "NOT_APPLICABLE",
+        "evidence_refs": [],
+        "normalized_value": null,
+        "raw_value": null
+      },
+      "issued_on": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSAO: 24/07/2026",
+            "page": 2
+          }
+        ],
+        "normalized_value": "2026-07-24",
+        "raw_value": "24/07/2026"
+      },
+      "issuer_name": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSOR: NORTE ARQUIVOS FICTICIOS",
+            "page": 2
+          }
+        ],
+        "normalized_value": "NORTE ARQUIVOS FICTICIOS",
+        "raw_value": "NORTE ARQUIVOS FICTICIOS"
+      },
+      "issuer_tax_id": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "CNPJ: 78GHJ90107KL03",
+            "page": 2
+          }
+        ],
+        "normalized_value": "78GHJ90107KL03",
+        "raw_value": "78GHJ90107KL03"
+      },
+      "total_amount": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-other002-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VALOR: R$ 42,00",
+            "page": 2
+          }
+        ],
+        "normalized_value": "42.00",
+        "raw_value": "R$ 42,00"
+      }
+    },
+    "schema_id": "payable_document",
+    "schema_version": "v1alpha"
+  },
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "dev-other002-hybrid",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 2
+}

@@ -1,0 +1,21 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: INVOICE\nNUMERO: INV-2026-001\nEMISSOR: AURORA SUPRIMENTOS TESTE\nCNPJ: 12.345.678/0001-95\nEMISSAO: 15/07/2026\nVENCIMENTO: 30/07/2026\nVALOR: R$ 1.234,56\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "INVOICE"
+  },
+  "expected_failure_stage": "probe",
+  "expected_output": null,
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "dev-mime-mismatch",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}
