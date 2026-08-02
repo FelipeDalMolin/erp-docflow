@@ -1,0 +1,31 @@
+FROM node:24.18.0-bookworm-slim@sha256:6f7b03f7c2c8e2e784dcf9295400527b9b1270fd37b7e9a7285cf83b6951452d
+
+ENV PNPM_HOME=/pnpm
+ENV PATH=/pnpm:$PATH
+
+RUN corepack enable \
+    && corepack prepare pnpm@11.13.1 --activate
+
+WORKDIR /workspace
+
+# The development image is built from the repository root so the workspace
+# definition and the single lockfile remain authoritative.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/package.json
+
+RUN pnpm install --filter @erp-docflow/web... --frozen-lockfile
+
+# Copy only the public development inputs; environment files are intentionally
+# supplied by Compose instead of becoming image layers.
+COPY apps/web/index.html \
+    apps/web/eslint.config.js \
+    apps/web/tsconfig.app.json \
+    apps/web/tsconfig.json \
+    apps/web/tsconfig.node.json \
+    apps/web/vite.config.ts \
+    ./apps/web/
+COPY apps/web/src ./apps/web/src
+
+EXPOSE 5173
+
+CMD ["pnpm", "--filter", "@erp-docflow/web", "dev", "--host", "0.0.0.0", "--port", "5173", "--strictPort"]
