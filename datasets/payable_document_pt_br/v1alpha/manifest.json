@@ -1,0 +1,963 @@
+{
+  "classification": "synthetic",
+  "dataset_id": "payable_document_pt_br",
+  "dataset_version": "v1alpha",
+  "expected_output_schema_ref": "profiles/payable_document_pt_br/v1alpha/extraction.schema.json",
+  "fixtures": [
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv001",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-inv001-native.json",
+      "ground_truth_sha256": "988cc2a4cae324b9d784f4ebde183d1fdc3d9b81e75550db3aa29d39e2e2a7b3",
+      "ground_truth_size_bytes": 3947,
+      "id": "dev-inv001-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-inv001-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "84e6a59e1a75d48556a6c59356d843ac7a9efcacddfe5c8da692aa280babc4f4",
+      "size_bytes": 948,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": "dev-inv001-native",
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv001",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-inv001-scan.json",
+      "ground_truth_sha256": "ee94694a8bfc25be86c5ca4a74f1e5fbc1d60180107eee1445becb2a62748565",
+      "ground_truth_size_bytes": 3929,
+      "id": "dev-inv001-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/dev-inv001-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "c46ec5a8343c498aba7159d06f7d0f42df97296016a232c75294c1768d251ecb",
+      "size_bytes": 3226,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "PAYMENT_SLIP",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-slip001",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/val-slip001-native.json",
+      "ground_truth_sha256": "107867450a5535c0f86a99483a86ac2a2e859676978483f259ea5a659238497b",
+      "ground_truth_size_bytes": 3731,
+      "id": "val-slip001-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/val-slip001-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "dfb61a9d69320fa4d121f411d22ecf0261aadd465298106a4a1403e088913749",
+      "size_bytes": 950,
+      "split": "validation"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": "val-slip001-native",
+      "document_type": "PAYMENT_SLIP",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-slip001",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/val-slip001-scan.json",
+      "ground_truth_sha256": "6cfa51395062dc966a934ff4530497ce8348a5dea22dafeb815f849a08aa23d3",
+      "ground_truth_size_bytes": 3715,
+      "id": "val-slip001-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/val-slip001-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "ee66610e18694cc6a09c01571c360974c42e5537f8e421b7119bfde9591db65d",
+      "size_bytes": 3159,
+      "split": "validation"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-rec001",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-rec001-native.json",
+      "ground_truth_sha256": "ac54d9489a72f6449397462946a8ede6d215a817a5f8ae629d5b742619684a09",
+      "ground_truth_size_bytes": 3183,
+      "id": "dev-rec001-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-rec001-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "0e8525d7a3abe32bd583fe1867966864f790bc3bc7ad5c0c86e552eac77b5fa8",
+      "size_bytes": 937,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": "dev-rec001-native",
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-rec001",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-rec001-scan.json",
+      "ground_truth_sha256": "5453f8ce8e920d8aec62e1c775420216fff233651768ef5aa1aee9a1e0090868",
+      "ground_truth_size_bytes": 3171,
+      "id": "dev-rec001-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/dev-rec001-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "bb8705aed2e0da810409d9293cc2cda7fcb5c8f621ff3b5141b449ba22830800",
+      "size_bytes": 3060,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv002",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-inv002-native.json",
+      "ground_truth_sha256": "632b38ff968d21ebc4bb2224b7ec7518acb5a48779879f4ebc15ccfe0dc3ec52",
+      "ground_truth_size_bytes": 3944,
+      "id": "test-inv002-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/test-inv002-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "615bb88672eb448201eb5a257b2bfe01ebfa6780893ad52276f19d66603eacca",
+      "size_bytes": 944,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": "test-inv002-native",
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv002",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-inv002-scan.json",
+      "ground_truth_sha256": "2523db473ed28db2a6091b368db4593ab6e415fea76254fe88e4e78dbd106eb6",
+      "ground_truth_size_bytes": 3926,
+      "id": "test-inv002-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/test-inv002-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "6c52dff204be7b63feaa2a1c73050b21d67e3c6983c9c8003c8835003feecee8",
+      "size_bytes": 3108,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "PAYMENT_SLIP",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-slip002",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-slip002-native.json",
+      "ground_truth_sha256": "18060e82cf03b9fe1f7b111d0c6ca8899162b0c4b52d682e0b2eb94f7b25d194",
+      "ground_truth_size_bytes": 3727,
+      "id": "dev-slip002-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-slip002-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "bba625598f17c279065f1cf711287a4a547ad28ac8fb44f92ac5eb8dc848b728",
+      "size_bytes": 950,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-rec002",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-rec002-native.json",
+      "ground_truth_sha256": "7070fb400dfeb83c16bfcee1b8f98d32366a0e5745c6d27e5d680dcfd588a4b1",
+      "ground_truth_size_bytes": 3687,
+      "id": "test-rec002-native",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/test-rec002-native.pdf",
+      "scenario_group": "BORN_DIGITAL",
+      "sha256": "2ba3b52f613bd449a2572f71a9491cd54f2174ab3c9d0d870b4d7ee044b4a97a",
+      "size_bytes": 941,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "PAYMENT_SLIP",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-slip003",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-slip003-scan.json",
+      "ground_truth_sha256": "4bd05801a2466541d34a24e0be9101fb9d920d14a118d7a9a72161ac6c309b78",
+      "ground_truth_size_bytes": 3722,
+      "id": "test-slip003-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/test-slip003-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "7e7ef53849e5fa58d4ecaac55e7808e662325b2f9f7ec2642b82aec54eaf4801",
+      "size_bytes": 3246,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-rec003",
+      "generation": {
+        "kind": "scan_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-rec003-scan.json",
+      "ground_truth_sha256": "336de556251ca17fd61a9598dee0b884ac4bfc186e3fa87ea9fbf9ea739cdc8f",
+      "ground_truth_size_bytes": 3699,
+      "id": "dev-rec003-scan",
+      "modality": "SCAN",
+      "page_count": 1,
+      "path": "files/dev-rec003-scan.pdf",
+      "scenario_group": "SCAN",
+      "sha256": "c639081dce93dcea798e8c3d19f49d282df8fd38b55e9346b06409eb8e4353d5",
+      "size_bytes": 3247,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "image/png",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "image/png",
+      "family_id": "cf-inv003",
+      "generation": {
+        "kind": "png",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/val-inv003-png.json",
+      "ground_truth_sha256": "f29b07fc1d44543d9a72e1c8e676e018d8fcc0a75b92d96346b4155799479f28",
+      "ground_truth_size_bytes": 3908,
+      "id": "val-inv003-png",
+      "modality": "IMAGE",
+      "page_count": 1,
+      "path": "files/val-inv003-png.png",
+      "scenario_group": "IMAGE",
+      "sha256": "397cf8c0fda987d7701518d5751f70dc7487571dd8cec6a1f708526fd01555ae",
+      "size_bytes": 2756,
+      "split": "validation"
+    },
+    {
+      "advertised_mime": "image/jpeg",
+      "derived_from": null,
+      "document_type": "PAYMENT_SLIP",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "image/jpeg",
+      "family_id": "cf-slip004",
+      "generation": {
+        "kind": "jpeg",
+        "parameters": {
+          "degraded": true
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-slip004-jpeg-deg.json",
+      "ground_truth_sha256": "8ba256dfc28ffacfd5236fe5d149c273b3a35b09966b1b43eab68505898f306e",
+      "ground_truth_size_bytes": 3731,
+      "id": "dev-slip004-jpeg-deg",
+      "modality": "IMAGE",
+      "page_count": 1,
+      "path": "files/dev-slip004-jpeg-deg.jpg",
+      "scenario_group": "IMAGE",
+      "sha256": "4c5d7108da9aeb1d9338e934e5327588ef9f05019d8775c89dad9a9804f63ce7",
+      "size_bytes": 42100,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "image/png",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "image/png",
+      "family_id": "cf-rec004",
+      "generation": {
+        "kind": "png",
+        "parameters": {
+          "rotation": 90
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-rec004-png-r090.json",
+      "ground_truth_sha256": "fb05351886735fe79fc75b68798e3aee925051e5e75d8c19822f200ae7075df8",
+      "ground_truth_size_bytes": 3703,
+      "id": "dev-rec004-png-r090",
+      "modality": "IMAGE",
+      "page_count": 1,
+      "path": "files/dev-rec004-png-r090.png",
+      "scenario_group": "IMAGE",
+      "sha256": "d4378984e4f11e90fabed68495f0ad296ad4e663bb83d07ee3d1ad8e229ee635",
+      "size_bytes": 3132,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "image/jpeg",
+      "derived_from": null,
+      "document_type": "OTHER",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "OCR_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_ABSENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "image/jpeg",
+      "family_id": "cf-other001",
+      "generation": {
+        "kind": "jpeg",
+        "parameters": {
+          "degraded": true
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-other001-jpeg.json",
+      "ground_truth_sha256": "89a4ee8a29e4e7919bed1a7e60c4c67b50be45d4d77a9131c5980d1831697567",
+      "ground_truth_size_bytes": 3665,
+      "id": "test-other001-jpeg",
+      "modality": "IMAGE",
+      "page_count": 1,
+      "path": "files/test-other001-jpeg.jpg",
+      "scenario_group": "IMAGE",
+      "sha256": "2186bfe0180edf1302381f7369c2813ac4c87926993cb9545144f799e3f23d25",
+      "size_bytes": 41233,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "REVIEW_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_PARTIAL",
+          "HYBRID_CONTENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-rec005",
+      "generation": {
+        "kind": "hybrid_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/val-rec005-hybrid.json",
+      "ground_truth_sha256": "92444b3adaaa7311d65f3d87b2e9bc36881bffab7c7fee3ac38d2b554b501ced",
+      "ground_truth_size_bytes": 3687,
+      "id": "val-rec005-hybrid",
+      "modality": "HYBRID",
+      "page_count": 2,
+      "path": "files/val-rec005-hybrid.pdf",
+      "scenario_group": "HYBRID",
+      "sha256": "1d584624a3138504431b98a89ea42f8f36cb286dbedb952479ced60906957c7f",
+      "size_bytes": 3447,
+      "split": "validation"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "OTHER",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "REVIEW_REQUIRED",
+        "failure_stage": null,
+        "reason_codes": [
+          "NATIVE_TEXT_PARTIAL",
+          "HYBRID_CONTENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-other002",
+      "generation": {
+        "kind": "hybrid_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-other002-hybrid.json",
+      "ground_truth_sha256": "0a323a13d21064a6846aba5308ba14fe2916771431a1c422be70a83db15ea2d7",
+      "ground_truth_size_bytes": 3697,
+      "id": "dev-other002-hybrid",
+      "modality": "HYBRID",
+      "page_count": 2,
+      "path": "files/dev-other002-hybrid.pdf",
+      "scenario_group": "HYBRID",
+      "sha256": "da3d348c136e679b3b96ad5276767e055d7dc861b928c7745ab925948f5f6947",
+      "size_bytes": 3450,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": "dev-inv001-native",
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": "intake_deduplication",
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "DUPLICATE_CONTENT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv001",
+      "generation": {
+        "kind": "duplicate",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-inv001-duplicate.json",
+      "ground_truth_sha256": "c56357bb5d0bd3876e8e8f33180332a9168c07b8ccddb057653843cb59b749f5",
+      "ground_truth_size_bytes": 3992,
+      "id": "dev-inv001-duplicate",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-inv001-duplicate.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "84e6a59e1a75d48556a6c59356d843ac7a9efcacddfe5c8da692aa280babc4f4",
+      "size_bytes": 948,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "OTHER",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "QUARANTINE",
+        "failure_stage": "probe",
+        "reason_codes": [
+          "ENCRYPTED_INPUT"
+        ],
+        "routing": "QUARANTINE_INPUT"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-encrypted",
+      "generation": {
+        "kind": "encrypted_pdf",
+        "parameters": {
+          "password": "erp-docflow"
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-encrypted-pdf.json",
+      "ground_truth_sha256": "c7ffa1128b57edfbfe945c6457ec7f27732893edf90b91c8bade45913361cded",
+      "ground_truth_size_bytes": 316,
+      "id": "dev-encrypted-pdf",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-encrypted-pdf.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "5e35fb08eb332f52b43f2fab777e5bd089134c597b67a27d4f6bfc3c013615b3",
+      "size_bytes": 947,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": "test-inv002-native",
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "QUARANTINE",
+        "failure_stage": "probe",
+        "reason_codes": [
+          "CORRUPT_INPUT"
+        ],
+        "routing": "QUARANTINE_INPUT"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "cf-inv002",
+      "generation": {
+        "kind": "corrupt_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/test-corrupt-pdf.json",
+      "ground_truth_sha256": "b1d29967a20a52074b9c5172f3067d42f5c4fea47d2b930bb00423c96755d9ef",
+      "ground_truth_size_bytes": 677,
+      "id": "test-corrupt-pdf",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/test-corrupt-pdf.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "8b8784542dd7df3e9da5543064b1837c0a4b00bb7ba83a38f56180b2a45766eb",
+      "size_bytes": 143,
+      "split": "test"
+    },
+    {
+      "advertised_mime": "image/jpeg",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "REVIEW_REQUIRED",
+        "failure_stage": "probe",
+        "reason_codes": [
+          "MIME_MISMATCH"
+        ],
+        "routing": "QUARANTINE_INPUT"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-mime",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-mime-mismatch.json",
+      "ground_truth_sha256": "f379f761b02abb4f2a0fca11ef94d5ebb8e61a1c1422141ce9053e3f4be8c4af",
+      "ground_truth_size_bytes": 682,
+      "id": "dev-mime-mismatch",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-mime-mismatch.jpg",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "84e6a59e1a75d48556a6c59356d843ac7a9efcacddfe5c8da692aa280babc4f4",
+      "size_bytes": 948,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "image/tiff",
+      "derived_from": null,
+      "document_type": "RECEIPT",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "QUARANTINE",
+        "failure_stage": "intake",
+        "reason_codes": [
+          "UNSUPPORTED_FORMAT"
+        ],
+        "routing": "QUARANTINE_INPUT"
+      },
+      "expected_mime": "image/tiff",
+      "family_id": "af-unsupported",
+      "generation": {
+        "kind": "tiff",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-unsupported-tiff.json",
+      "ground_truth_sha256": "19b9b5de9b3ab895ee94ce04bf8dc48954d0c47a75be6f1d9b8fc2d72ea01f95",
+      "ground_truth_size_bytes": 675,
+      "id": "dev-unsupported-tiff",
+      "modality": "IMAGE",
+      "page_count": 1,
+      "path": "files/dev-unsupported-tiff.tiff",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "257449d1e5829a94e1dce89c2b6fd852692ab750798e290ef71615fb8ee176c5",
+      "size_bytes": 345722,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "QUARANTINE",
+        "failure_stage": "probe",
+        "reason_codes": [
+          "RESOURCE_LIMIT_EXCEEDED"
+        ],
+        "routing": "QUARANTINE_INPUT"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-resource",
+      "generation": {
+        "kind": "resource_limit_pdf",
+        "parameters": {},
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/val-resource-limit.json",
+      "ground_truth_sha256": "8092d0dc670da634adb44d51cd4066d27dc446332b00097c32315cffc2f72b0e",
+      "ground_truth_size_bytes": 680,
+      "id": "val-resource-limit",
+      "modality": "BORN_DIGITAL",
+      "page_count": 21,
+      "path": "files/val-resource-limit.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "dbe4cbd8bc843e6a1ec3bff5e57f282a1d25d1602e19d02a93baa320d3f1e94b",
+      "size_bytes": 20971521,
+      "split": "validation"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": "validate",
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REQUIRED_FIELD_MISSING",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-validation",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {
+          "mutation": "missing_field"
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-val-missing-field.json",
+      "ground_truth_sha256": "a51da2da14bdf11c30897303ac179a35b17f89f27b73adabe6a0ae6a6f6e616b",
+      "ground_truth_size_bytes": 3743,
+      "id": "dev-val-missing-field",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-val-missing-field.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "9997cba6ccee738eab0fa0f917b0c3d0abd9e3dde6dfb9cd3bf7faf7feb76709",
+      "size_bytes": 943,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": "validate",
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "VALIDATION_CONFLICT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-validation",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {
+          "mutation": "date_conflict"
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-val-date-conflict.json",
+      "ground_truth_sha256": "afdc951bf5582993271c8af786c8af7b1ecdf9c5afd3ab797854f17b08236904",
+      "ground_truth_size_bytes": 3994,
+      "id": "dev-val-date-conflict",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-val-date-conflict.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "80a4bdf40ba66f08cdf5fa849bad63b7ef38213f799b0b4e2d3272446aef5053",
+      "size_bytes": 948,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": "validate",
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "REQUIRED_FIELD_MISSING",
+          "INVALID_AMOUNT",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-validation",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {
+          "mutation": "invalid_amount"
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-val-invalid-amount.json",
+      "ground_truth_sha256": "781138094ed6f1d0103763a032f8c8cc6d29617dfb81e6e6477c2ebb25501cbf",
+      "ground_truth_size_bytes": 4089,
+      "id": "dev-val-invalid-amount",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-val-invalid-amount.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "60719d39eed6851f0cd3981d940195c911cd68d5750f3d0036e8655371b1c853",
+      "size_bytes": 954,
+      "split": "development"
+    },
+    {
+      "advertised_mime": "application/pdf",
+      "derived_from": null,
+      "document_type": "INVOICE",
+      "duplicate_of": null,
+      "expected": {
+        "assessment": "USE_NATIVE",
+        "failure_stage": "validate",
+        "reason_codes": [
+          "NATIVE_TEXT_SUFFICIENT",
+          "INVALID_TAX_ID",
+          "REVIEW_POLICY_TRIGGERED"
+        ],
+        "routing": "OPEN_REVIEW"
+      },
+      "expected_mime": "application/pdf",
+      "family_id": "af-invalid-taxid",
+      "generation": {
+        "kind": "text_pdf",
+        "parameters": {
+          "mutation": "invalid_tax_id"
+        },
+        "seed": 20260731
+      },
+      "ground_truth": "ground_truth/dev-val-invalid-taxid.json",
+      "ground_truth_sha256": "76f926e90d4f5e490faf392fbdc5053dc07757e64a1e4b8fd401f15e14773c23",
+      "ground_truth_size_bytes": 3977,
+      "id": "dev-val-invalid-taxid",
+      "modality": "BORN_DIGITAL",
+      "page_count": 1,
+      "path": "files/dev-val-invalid-taxid.pdf",
+      "scenario_group": "FAILURE_LIMIT",
+      "sha256": "8b644e20b7ebbba97a5a5c85319f225759ea646a78238eeeb8b9d925ebe39fc0",
+      "size_bytes": 944,
+      "split": "development"
+    }
+  ],
+  "generated_by": "tools/document_fixtures/generate.py",
+  "license": "Project-generated synthetic fixtures",
+  "profile_ref": "profiles/payable_document_pt_br/v1alpha/profile.json",
+  "purpose": "Local development, benchmark and acceptance only",
+  "seed": 20260731,
+  "split_policy": {
+    "development": 0.6,
+    "leakage_rule": "all variants and duplicates of a family stay in one split",
+    "test": 0.2,
+    "unit": "family_id",
+    "validation": 0.2
+  }
+}

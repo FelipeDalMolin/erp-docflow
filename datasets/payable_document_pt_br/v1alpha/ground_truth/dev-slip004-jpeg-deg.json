@@ -1,0 +1,130 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: PAYMENT_SLIP\nNUMERO: BOL-2026-404\nEMISSOR: JARDIM TELECOM TESTE\nCNPJ: 56EFG78905HJ98\nEMISSAO: NAO APLICAVEL\nVENCIMENTO: 25/08/2026\nVALOR: R$ 345,67\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "PAYMENT_SLIP"
+  },
+  "expected_failure_stage": null,
+  "expected_output": {
+    "document_type": {
+      "applicability": "PRESENT",
+      "evidence_refs": [
+        {
+          "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+          "bbox": null,
+          "coordinate_space": null,
+          "excerpt": "TIPO: PAYMENT_SLIP",
+          "page": 1
+        }
+      ],
+      "normalized_value": "PAYMENT_SLIP",
+      "raw_value": "PAYMENT_SLIP"
+    },
+    "fields": {
+      "currency": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "MOEDA: BRL",
+            "page": 1
+          }
+        ],
+        "normalized_value": "BRL",
+        "raw_value": "BRL"
+      },
+      "document_number": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "NUMERO: BOL-2026-404",
+            "page": 1
+          }
+        ],
+        "normalized_value": "BOL-2026-404",
+        "raw_value": "BOL-2026-404"
+      },
+      "due_on": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VENCIMENTO: 25/08/2026",
+            "page": 1
+          }
+        ],
+        "normalized_value": "2026-08-25",
+        "raw_value": "25/08/2026"
+      },
+      "issued_on": {
+        "applicability": "NOT_APPLICABLE",
+        "evidence_refs": [],
+        "normalized_value": null,
+        "raw_value": null
+      },
+      "issuer_name": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSOR: JARDIM TELECOM TESTE",
+            "page": 1
+          }
+        ],
+        "normalized_value": "JARDIM TELECOM TESTE",
+        "raw_value": "JARDIM TELECOM TESTE"
+      },
+      "issuer_tax_id": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "CNPJ: 56EFG78905HJ98",
+            "page": 1
+          }
+        ],
+        "normalized_value": "56EFG78905HJ98",
+        "raw_value": "56EFG78905HJ98"
+      },
+      "total_amount": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/dev-slip004-jpeg-deg.jpg",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VALOR: R$ 345,67",
+            "page": 1
+          }
+        ],
+        "normalized_value": "345.67",
+        "raw_value": "R$ 345,67"
+      }
+    },
+    "schema_id": "payable_document",
+    "schema_version": "v1alpha"
+  },
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "dev-slip004-jpeg-deg",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 1
+}

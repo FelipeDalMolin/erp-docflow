@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "profile_id": "payable_document_pt_br",
+  "profile_version": "v1alpha",
+  "status": "candidate",
+  "language": "pt-BR",
+  "data_classification": "synthetic",
+  "accepted_mime": [
+    "application/pdf",
+    "image/png",
+    "image/jpeg"
+  ],
+  "limits": {
+    "max_file_bytes": 20971520,
+    "max_pages": 20,
+    "max_attempts": 2,
+    "max_parallel_heavy_tasks_per_job": 1
+  },
+  "required_outputs": {
+    "text": true,
+    "layout": false,
+    "reading_order": false,
+    "tables": false
+  },
+  "schemas": {
+    "extraction": "profiles/payable_document_pt_br/v1alpha/extraction.schema.json",
+    "reason_codes": "profiles/payable_document_pt_br/v1alpha/reason-codes.json"
+  },
+  "rule_packs": {
+    "validation": "profiles/payable_document_pt_br/v1alpha/validation-rules.json"
+  },
+  "task_graph": [
+    {
+      "id": "probe",
+      "capability": "probe_document",
+      "candidates": ["candidate_from_spike_82"]
+    },
+    {
+      "id": "native_text",
+      "capability": "extract_native_text",
+      "candidates": ["candidate_from_spike_82"]
+    },
+    {
+      "id": "assess_native",
+      "internal_policy": "native_text_assessment/v1alpha"
+    },
+    {
+      "id": "recognize",
+      "when_assessment": "OCR_REQUIRED",
+      "capability": "recognize_text",
+      "candidates": ["candidate_from_benchmark_83"]
+    },
+    {
+      "id": "extract",
+      "internal_rule_pack": "payable_document_rules/v1alpha"
+    },
+    {
+      "id": "validate",
+      "internal_rule_pack": "payable_document_validators/v1alpha"
+    },
+    {
+      "id": "route",
+      "internal_policy": "document_routing/v1alpha"
+    }
+  ],
+  "native_text_assessment": {
+    "outcomes": [
+      "USE_NATIVE",
+      "OCR_REQUIRED",
+      "REVIEW_REQUIRED",
+      "QUARANTINE"
+    ],
+    "thresholds": "candidate_from_spike_82"
+  },
+  "review_policy": {
+    "auto_accept": false,
+    "all_documents_require_review": true,
+    "allowed_actions": [
+      "ACCEPT",
+      "CORRECT_AND_ACCEPT",
+      "REJECT",
+      "REQUEST_REPROCESS",
+      "QUARANTINE"
+    ],
+    "authority": "development_reviewer_technical_acceptance_only"
+  },
+  "benchmark": {
+    "dataset_manifest": "datasets/payable_document_pt_br/v1alpha/manifest.json",
+    "acceptance_policy": "benchmarks/payable_document_pt_br/v1alpha/acceptance.json",
+    "experiment_manifest_template": "experiments/payable_document_pt_br/v1alpha/manifest.template.json",
+    "promotion_decision_ref": null
+  },
+  "security": {
+    "external_provider_allowed": false,
+    "runtime_egress_allowed": false,
+    "real_data_allowed": false
+  }
+}

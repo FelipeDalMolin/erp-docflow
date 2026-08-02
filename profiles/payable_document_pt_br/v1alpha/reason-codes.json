@@ -1,0 +1,24 @@
+{
+  "profile_id": "payable_document_pt_br",
+  "profile_version": "v1alpha",
+  "reason_codes": [
+    "NATIVE_TEXT_SUFFICIENT",
+    "NATIVE_TEXT_ABSENT",
+    "NATIVE_TEXT_PARTIAL",
+    "HYBRID_CONTENT",
+    "MIME_MISMATCH",
+    "ENCRYPTED_INPUT",
+    "CORRUPT_INPUT",
+    "UNSUPPORTED_FORMAT",
+    "RESOURCE_LIMIT_EXCEEDED",
+    "PROVIDER_TIMEOUT",
+    "PROVIDER_OUTPUT_INVALID",
+    "REQUIRED_FIELD_MISSING",
+    "VALIDATION_CONFLICT",
+    "INVALID_TAX_ID",
+    "INVALID_DATE",
+    "INVALID_AMOUNT",
+    "DUPLICATE_CONTENT",
+    "REVIEW_POLICY_TRIGGERED"
+  ]
+}

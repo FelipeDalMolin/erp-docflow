@@ -1,0 +1,130 @@
+{
+  "canonical_text": "ERP DOCFLOW - DADOS SINTETICOS\nTIPO: RECEIPT\nNUMERO: REC-2026-005\nEMISSOR: MOSAICO APOIO TESTE\nCNPJ: 67.890.123/0001-16\nEMISSAO: 23/07/2026\nVENCIMENTO: NAO APLICAVEL\nVALOR: R$ 630,40\nMOEDA: BRL\nSEM VALIDADE FISCAL OU FINANCEIRA",
+  "classification": {
+    "allowed_alternatives": [],
+    "label": "RECEIPT"
+  },
+  "expected_failure_stage": null,
+  "expected_output": {
+    "document_type": {
+      "applicability": "PRESENT",
+      "evidence_refs": [
+        {
+          "artifact_ref": "files/val-rec005-hybrid.pdf",
+          "bbox": null,
+          "coordinate_space": null,
+          "excerpt": "TIPO: RECEIPT",
+          "page": 2
+        }
+      ],
+      "normalized_value": "RECEIPT",
+      "raw_value": "RECEIPT"
+    },
+    "fields": {
+      "currency": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "MOEDA: BRL",
+            "page": 2
+          }
+        ],
+        "normalized_value": "BRL",
+        "raw_value": "BRL"
+      },
+      "document_number": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "NUMERO: REC-2026-005",
+            "page": 2
+          }
+        ],
+        "normalized_value": "REC-2026-005",
+        "raw_value": "REC-2026-005"
+      },
+      "due_on": {
+        "applicability": "NOT_APPLICABLE",
+        "evidence_refs": [],
+        "normalized_value": null,
+        "raw_value": null
+      },
+      "issued_on": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSAO: 23/07/2026",
+            "page": 2
+          }
+        ],
+        "normalized_value": "2026-07-23",
+        "raw_value": "23/07/2026"
+      },
+      "issuer_name": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "EMISSOR: MOSAICO APOIO TESTE",
+            "page": 2
+          }
+        ],
+        "normalized_value": "MOSAICO APOIO TESTE",
+        "raw_value": "MOSAICO APOIO TESTE"
+      },
+      "issuer_tax_id": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "CNPJ: 67.890.123/0001-16",
+            "page": 2
+          }
+        ],
+        "normalized_value": "67890123000116",
+        "raw_value": "67.890.123/0001-16"
+      },
+      "total_amount": {
+        "applicability": "PRESENT",
+        "evidence_refs": [
+          {
+            "artifact_ref": "files/val-rec005-hybrid.pdf",
+            "bbox": null,
+            "coordinate_space": null,
+            "excerpt": "VALOR: R$ 630,40",
+            "page": 2
+          }
+        ],
+        "normalized_value": "630.40",
+        "raw_value": "R$ 630,40"
+      }
+    },
+    "schema_id": "payable_document",
+    "schema_version": "v1alpha"
+  },
+  "expected_validations": [
+    {
+      "code": "PROFILE_FIELDS",
+      "status": "PASS"
+    }
+  ],
+  "fixture_id": "val-rec005-hybrid",
+  "ground_truth_version": "v1alpha",
+  "notes": [
+    "Synthetic fixture; no fiscal or financial validity."
+  ],
+  "page_count": 2
+}

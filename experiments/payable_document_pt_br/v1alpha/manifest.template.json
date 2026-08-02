@@ -1,0 +1,47 @@
+{
+  "experiment_manifest_version": "v1alpha",
+  "experiment_id": null,
+  "profile_ref": "profiles/payable_document_pt_br/v1alpha/profile.json",
+  "dataset_manifest_ref": "datasets/payable_document_pt_br/v1alpha/manifest.json",
+  "acceptance_policy_ref": "benchmarks/payable_document_pt_br/v1alpha/acceptance.json",
+  "purpose": null,
+  "capability": null,
+  "candidate": {
+    "adapter": null,
+    "engine": null,
+    "model": null,
+    "version": null,
+    "configuration_digest": null,
+    "artifact_digest": null,
+    "license_inventory_ref": null
+  },
+  "provenance": {
+    "git_commit": null,
+    "dependency_lock_digest": null,
+    "dataset_manifest_digest": null,
+    "runner_command": null,
+    "container_image_digest": null
+  },
+  "environment": {
+    "host_class": "small-cpu-lab",
+    "operating_system": null,
+    "cpu": null,
+    "memory_bytes": null,
+    "gpu": null,
+    "runtime_versions": {}
+  },
+  "controls": {
+    "runtime_egress_allowed": false,
+    "real_data_allowed": false,
+    "max_parallel_heavy_jobs": 1,
+    "timeout_seconds": null,
+    "random_seed": 20260731
+  },
+  "result": {
+    "benchmark_run_ref": null,
+    "metrics_ref": null,
+    "failure_samples_ref": null,
+    "recommendation": null,
+    "promotion_decision_ref": null
+  }
+}
