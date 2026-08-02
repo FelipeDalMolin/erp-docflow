@@ -9,7 +9,7 @@ worker, fila, dados reais, secrets ou volumes persistentes de produto.
 ## Pré-requisitos
 
 - Docker Engine com Docker Compose v2 e o plugin Buildx funcional;
-- portas locais `8000` e `5173` livres.
+- portas locais `8100` e `5180` livres.
 
 Os comandos abaixo partem da raiz do repositório.
 
@@ -27,12 +27,22 @@ Os dois serviços possuem healthchecks independentes e não usam
 As portas são publicadas somente no loopback `127.0.0.1`, sem exposição direta
 às outras interfaces de rede do host.
 
+No host compartilhado, as portas publicadas são intencionalmente diferentes
+das portas internas para não colidir com o Jubileu:
+
+| Serviço | Host | Container |
+| --- | --- | --- |
+| API | `127.0.0.1:8100` | `8000` |
+| web | `127.0.0.1:5180` | `5173` |
+
+Os healthchecks continuam usando as portas internas dos containers.
+
 Valide as portas publicadas:
 
 ```bash
 curl --fail --header 'Accept: application/json' \
-  http://127.0.0.1:8000/health
-curl --fail http://127.0.0.1:5173/
+  http://127.0.0.1:8100/health
+curl --fail http://127.0.0.1:5180/
 ```
 
 A resposta da API deve ser:
@@ -41,8 +51,8 @@ A resposta da API deve ser:
 {"status":"ok","service":"erp-docflow-api"}
 ```
 
-A interface abre em `http://127.0.0.1:5173`. O valor
-`VITE_API_BASE_URL=http://localhost:8000` é configuração pública de build e
+A interface abre em `http://127.0.0.1:5180`. O valor
+`VITE_API_BASE_URL=http://localhost:8100` é configuração pública de build e
 runtime do Vite; não é credencial.
 
 ## Hot reload
