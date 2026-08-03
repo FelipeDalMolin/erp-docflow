@@ -98,6 +98,9 @@ def test_unknown_candidate_cannot_escape_closed_registry(
         ("real_data_allowed", True, "REAL_DATA_NOT_ALLOWED"),
         ("max_parallel_jobs", 2, "CONCURRENCY_NOT_ALLOWED"),
         ("timeout_seconds", 0, "SCHEMA_INVALID"),
+        ("timeout_seconds", 86401, "SCHEMA_INVALID"),
+        ("random_seed", -1, "SCHEMA_INVALID"),
+        ("random_seed", 4294967296, "SCHEMA_INVALID"),
     ],
 )
 def test_execution_controls_are_fail_closed(
@@ -153,7 +156,7 @@ def test_missing_and_traversing_input_references_are_rejected(
     synthetic_repo.write_manifest(manifest)
     with pytest.raises(HarnessError) as caught:
         prepare_experiment(synthetic_repo.root, synthetic_repo.manifest_path)
-    assert _reason(caught) == "SCHEMA_INVALID"
+    assert _reason(caught) == "PATH_NOT_ALLOWED"
 
 
 def test_manifest_itself_must_be_inside_repository(
@@ -251,6 +254,67 @@ def test_fixture_selection_is_sorted_and_counted(
         prepare_experiment(synthetic_repo.root, synthetic_repo.manifest_path)
 
     assert _reason(caught) == "FIXTURE_COUNT_MISMATCH"
+
+
+@pytest.mark.parametrize(
+    ("field", "invalid_value"),
+    [
+        ("experiment_id", "INVALID ID"),
+        ("purpose", "x" * 1001),
+        ("capability", "x" * 129),
+    ],
+)
+def test_manifest_string_contract_limits_are_enforced(
+    synthetic_repo: SyntheticRepository,
+    field: str,
+    invalid_value: str,
+) -> None:
+    manifest = synthetic_repo.manifest_copy()
+    manifest[field] = invalid_value
+
+    with pytest.raises(HarnessError) as caught:
+        parse_manifest(manifest)
+
+    assert _reason(caught) == "SCHEMA_INVALID"
+
+
+def test_fixture_selector_split_and_id_contracts_are_enforced(
+    synthetic_repo: SyntheticRepository,
+) -> None:
+    manifest = synthetic_repo.manifest_copy()
+    selector = manifest["fixture_selector"]
+    assert isinstance(selector, dict)
+    selector["splits"] = ["unknown"]
+
+    with pytest.raises(HarnessError) as caught:
+        parse_manifest(manifest)
+    assert _reason(caught) == "SCHEMA_INVALID"
+
+    selector["splits"] = ["test"]
+    selector["fixture_ids"] = ["INVALID_ID"]
+    with pytest.raises(HarnessError) as caught:
+        parse_manifest(manifest)
+    assert _reason(caught) == "SCHEMA_INVALID"
+
+
+def test_hash_deadline_is_checked_during_incremental_read(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from erp_docflow_experiment.jsonio import sha256_file
+
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"synthetic bytes")
+    moments = iter((0.0, 2.0))
+    monkeypatch.setattr(
+        "erp_docflow_experiment.jsonio.time.monotonic",
+        lambda: next(moments),
+    )
+
+    with pytest.raises(HarnessError) as caught:
+        sha256_file(source, deadline=1.0)
+
+    assert _reason(caught) == "TIMEOUT_EXCEEDED"
 
 
 def test_output_is_confined_and_never_overwritten(

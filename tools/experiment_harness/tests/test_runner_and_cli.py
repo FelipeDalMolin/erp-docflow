@@ -167,6 +167,32 @@ def test_candidate_failure_persists_failed_bundle_without_empty_success(
     assert '"status":"SUCCEEDED"' not in events
 
 
+def test_real_integrity_failure_records_failed_fixture_and_reason(
+    synthetic_repo: SyntheticRepository,
+) -> None:
+    synthetic_repo.fixture_path.write_bytes(b"tampered synthetic bytes")
+    requested = Path(".artifacts/experiments/integrity-failure")
+
+    with pytest.raises(HarnessError) as caught:
+        run_experiment(synthetic_repo.root, synthetic_repo.manifest_path, requested)
+
+    assert caught.value.reason_code == "INTEGRITY_MISMATCH"
+    output = synthetic_repo.root / requested
+    record = _load(output / "benchmark-run.json")
+    assert record["status"] == "FAILED"
+    assert record["succeeded_fixture_count"] == 0
+    assert _load(output / "fixture-results.json") == {
+        "results": [
+            {
+                "fixture_id": "fixture-one",
+                "status": "FAILED",
+                "reason_code": "INTEGRITY_MISMATCH",
+            }
+        ]
+    }
+    assert verify_bundle(output)["status"] == "VERIFIED"
+
+
 def test_unexpected_candidate_failure_is_redacted_and_materialized(
     synthetic_repo: SyntheticRepository,
     monkeypatch: pytest.MonkeyPatch,

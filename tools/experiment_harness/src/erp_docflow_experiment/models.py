@@ -87,7 +87,7 @@ def _bounded_string(value: object, context: str, maximum: int) -> str:
 def _repository_reference(value: object, context: str) -> str:
     parsed = _bounded_string(value, context, 512)
     if REPOSITORY_PATH_PATTERN.fullmatch(parsed) is None or ".." in parsed.split("/"):
-        raise HarnessError("SCHEMA_INVALID", f"{context} is not a repository path")
+        raise HarnessError("PATH_NOT_ALLOWED", f"{context} is not a repository path")
     return parsed
 
 

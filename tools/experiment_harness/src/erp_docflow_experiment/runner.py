@@ -160,6 +160,9 @@ def _run_record(
     failure: HarnessError | None,
 ) -> dict[str, object]:
     manifest = prepared.manifest
+    succeeded_fixture_count = sum(
+        result.get("status") == "SUCCEEDED" for result in results
+    )
     return {
         "schema_version": "benchmark-run/v1alpha",
         "experiment_id": manifest.experiment_id,
@@ -172,7 +175,7 @@ def _run_record(
         "duration_seconds": round(duration_seconds, 9),
         "peak_rss_bytes": _peak_rss_bytes(),
         "selected_fixture_count": len(prepared.selected_fixtures),
-        "succeeded_fixture_count": len(results),
+        "succeeded_fixture_count": succeeded_fixture_count,
         "failure": (
             {"reason_code": failure.reason_code, "message": failure.message}
             if failure
@@ -269,7 +272,7 @@ def run_experiment(
         _event(
             "experiment_finished",
             status=record["status"],
-            succeeded_fixture_count=len(results),
+            succeeded_fixture_count=record["succeeded_fixture_count"],
         )
     )
     write_canonical_json(output / "fixture-results.json", {"results": results})

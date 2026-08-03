@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
 from pathlib import Path
 from typing import cast
 
@@ -106,14 +107,19 @@ def write_canonical_json(path: Path, value: object) -> None:
         ) from exc
 
 
-def sha256_file(path: Path) -> tuple[str, int]:
+def sha256_file(path: Path, deadline: float | None = None) -> tuple[str, int]:
     """Hash a file incrementally and return digest plus byte count."""
 
     digest = hashlib.sha256()
     size = 0
     try:
         with path.open("rb") as source:
-            while chunk := source.read(1024 * 1024):
+            while True:
+                if deadline is not None and time.monotonic() > deadline:
+                    raise HarnessError("TIMEOUT_EXCEEDED", "candidate exceeded its timeout")
+                chunk = source.read(1024 * 1024)
+                if not chunk:
+                    break
                 digest.update(chunk)
                 size += len(chunk)
     except OSError as exc:

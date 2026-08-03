@@ -12,8 +12,13 @@ from erp_docflow_experiment.manifest import PreparedExperiment
 from erp_docflow_experiment.repository import resolve_dataset_file
 
 
-def _verify_digest(path: Path, expected_sha256: str, expected_size: int) -> tuple[str, int]:
-    actual_sha256, actual_size = sha256_file(path)
+def _verify_digest(
+    path: Path,
+    expected_sha256: str,
+    expected_size: int,
+    deadline: float,
+) -> tuple[str, int]:
+    actual_sha256, actual_size = sha256_file(path, deadline)
     if actual_sha256 != expected_sha256 or actual_size != expected_size:
         raise HarnessError("INTEGRITY_MISMATCH", "an input digest or size does not match")
     return actual_sha256, actual_size
@@ -30,42 +35,55 @@ def run_integrity_probe(
     dataset_directory = prepared.dataset_manifest_path.parent
     results: list[dict[str, object]] = []
     for fixture in prepared.selected_fixtures:
-        if time.monotonic() > deadline:
-            raise HarnessError("TIMEOUT_EXCEEDED", "candidate exceeded its timeout")
-
         fixture_id = expect_string(fixture.get("id"), "fixture.id")
-        file_path = resolve_dataset_file(
-            repo_root,
-            dataset_directory,
-            expect_string(fixture.get("path"), "fixture.path"),
-            "fixture.path",
-        )
-        file_sha256, file_size = _verify_digest(
-            file_path,
-            expect_string(fixture.get("sha256"), "fixture.sha256"),
-            expect_int(fixture.get("size_bytes"), "fixture.size_bytes"),
-        )
+        try:
+            if time.monotonic() > deadline:
+                raise HarnessError("TIMEOUT_EXCEEDED", "candidate exceeded its timeout")
 
-        ground_truth_path = resolve_dataset_file(
-            repo_root,
-            dataset_directory,
-            expect_string(
-                fixture.get("ground_truth"),
+            file_path = resolve_dataset_file(
+                repo_root,
+                dataset_directory,
+                expect_string(fixture.get("path"), "fixture.path"),
+                "fixture.path",
+            )
+            file_sha256, file_size = _verify_digest(
+                file_path,
+                expect_string(fixture.get("sha256"), "fixture.sha256"),
+                expect_int(fixture.get("size_bytes"), "fixture.size_bytes"),
+                deadline,
+            )
+
+            ground_truth_path = resolve_dataset_file(
+                repo_root,
+                dataset_directory,
+                expect_string(
+                    fixture.get("ground_truth"),
+                    "fixture.ground_truth",
+                ),
                 "fixture.ground_truth",
-            ),
-            "fixture.ground_truth",
-        )
-        ground_truth_sha256, ground_truth_size = _verify_digest(
-            ground_truth_path,
-            expect_string(
-                fixture.get("ground_truth_sha256"),
-                "fixture.ground_truth_sha256",
-            ),
-            expect_int(
-                fixture.get("ground_truth_size_bytes"),
-                "fixture.ground_truth_size_bytes",
-            ),
-        )
+            )
+            ground_truth_sha256, ground_truth_size = _verify_digest(
+                ground_truth_path,
+                expect_string(
+                    fixture.get("ground_truth_sha256"),
+                    "fixture.ground_truth_sha256",
+                ),
+                expect_int(
+                    fixture.get("ground_truth_size_bytes"),
+                    "fixture.ground_truth_size_bytes",
+                ),
+                deadline,
+            )
+        except HarnessError as exc:
+            failed_result: dict[str, object] = {
+                "fixture_id": fixture_id,
+                "status": "FAILED",
+                "reason_code": exc.reason_code,
+            }
+            results.append(failed_result)
+            if on_result is not None:
+                on_result(failed_result)
+            raise
 
         result: dict[str, object] = {
             "fixture_id": fixture_id,
