@@ -2,7 +2,7 @@
 
 - **Classe:** planejamento canônico de Phases, releases e gates
 - **Estado:** vigente
-- **Status corrente:** [Phase 1 em execução controlada; R1 em descoberta](PROJECT_STATUS.md)
+- **Status corrente:** [Phase 1/R0 encerrada; intake PDF-first no próximo gate; R1 em descoberta](PROJECT_STATUS.md)
 - **Atualizar quando:** escopo, dependência, resultado ou gate de Phase/release mudar
 
 Este roadmap organiza a evolução do `erp-docflow` por duas dimensões complementares:
@@ -79,7 +79,7 @@ Resultado preservado:
 
 Objetivo: criar a aplicação mínima reproduzível sem antecipar GED, processamento ou domínio gerencial.
 
-Estado: **Epic #26 autorizada para execução controlada**. A #33 aguarda review/merge no PR #72.
+Estado: **encerrada**. A Epic #26 e as slices #33–#37 foram integradas; o runtime R0 foi reproduzido e o snapshot pós-merge foi reconciliado pelo PR #100.
 
 Inclui:
 
@@ -136,7 +136,7 @@ Direção ratificada documentalmente pela #38 para o protótipo local sintético
 - tenant e ator/reviewer fixos de desenvolvimento serão injetados pelo servidor, sem constituir autenticação ou autorização;
 - persistência após restart será comprovada no protótipo; restore conjunto de banco e objetos continua obrigatório antes de `onprem-lab` ou dado real.
 
-O [contrato de persistência e storage do intake](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) registra os limites e o ownership. Essa ratificação **não declara banco, storage, schema, migrations, upload, volumes ou acesso implementados**. A #39 só pode materializar o domínio e a persistência relacional após merge humano da #38, conclusão de #36/#37, encerramento da #26 e refinamento próprio; a #40 depende também do merge da #39 para implementar a fronteira MinIO, integridade, reconciliação e restart. Autenticação, exposição externa e dado real permanecem bloqueados pela ADR-0015.
+O [contrato de persistência e storage do intake](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) registra os limites e o ownership. Essa ratificação **não declara banco, storage, schema, migrations, upload, volumes ou acesso implementados**. As dependências de Phase 1 da #39 estão satisfeitas; a slice ainda deve registrar `Condições Verificadas` próprias antes de materializar domínio e persistência relacional. A #40 depende também do merge humano da #39 para implementar a fronteira MinIO, integridade, reconciliação e restart. Autenticação, exposição externa e dado real permanecem bloqueados pela ADR-0015.
 
 ## 7. Phase 3 — Processamento documental
 
@@ -145,7 +145,7 @@ Objetivo: implementar um task graph observável por perfil, com decisões basead
 ### 7.1 Descoberta e decisão antes de implementação
 
 1. #43 define profile, dataset manifest, ground truth, splits, sensibilidade, hardware e métricas.
-2. #88 materializa o harness reproduzível de experimento: notebook fino, pacote/CLI, manifest, testes e artifact bundle imutável.
+2. #88 materializou pelo PR #99 o harness reproduzível de experimento; hardening pós-merge deve ser concluído antes das spikes dependentes.
 3. #82 valida Tika isolado para probe/texto nativo.
 4. #83 compara candidatos somente para `recognize_text`, enquanto #89 avalia Docling CPU sem OCR para `extract_layout` e `extract_table_structure`; as trilhas podem executar em paralelo após profile/harness, e #83 usa a evidência Tika da #82 quando aplicável.
 5. O perfil Docling composto com OCR, se testado, registra também engine, modelo e configuração subjacentes.

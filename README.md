@@ -2,7 +2,7 @@
 
 Plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, para transformar fontes heterogêneas em informação gerencial auditável, preservando evidências, revisão, aceite, fechamento e operação documental.
 
-Status atual: **Phase 0 encerrada; fundação técnica R0 da Phase 1 integrada e reproduzida**. O encerramento formal da Epic #26 está em reconciliação no draft PR #100; depois do merge humano, o próximo gate de produto será verificar a primeira slice PDF-first da Phase 2.
+Status atual: **Phases 0 e 1/R0 encerradas; fundação técnica integrada e reproduzida**. O próximo gate de produto é verificar a #39, primeira slice implementável da jornada PDF-first da Phase 2.
 
 Essa fundação **não é um ERP funcional**. Ela ainda não implementa upload, intake, interpretação, revisão ou persistência de PDFs e outros documentos. Essas capacidades dependem de slices de produto posteriores e de seus próprios critérios de aceite.
 

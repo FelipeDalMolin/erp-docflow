@@ -1,6 +1,6 @@
 # Entity Map
 
-Mapa de conceitos planejados. Ainda não há entidades, tabelas, schemas ou state machines implementados. Os conceitos gerenciais e de entrega incluídos pela Issue #73 permanecem baselines sujeitos ao ADR e ao refinamento aplicáveis.
+Mapa de conceitos planejados. Ainda não há entidades de runtime de produto, tabelas ou state machines implementadas. Os schemas e o harness de experimentos da #88 são infraestrutura de engenharia e não materializam domínio, provider ou promoção. Os conceitos gerenciais e de entrega incluídos pela Issue #73 permanecem baselines sujeitos ao ADR e ao refinamento aplicáveis.
 
 | Conceito | Responsabilidade | Boundary | Estado/UML | ADRs | Implementação |
 | --- | --- | --- | --- | --- | --- |
@@ -13,7 +13,7 @@ Mapa de conceitos planejados. Ainda não há entidades, tabelas, schemas ou stat
 | `ProcessingAttempt` | tentativa imutável de job | processing | job state | ADR-0016 (proposto) | não implementado |
 | `ProviderInvocation` | chamada física, componentes, configuração, recursos, raw envelope e unidade de retry | providers | process sequence | #45; ADR-0016 (proposto) | não implementado |
 | `ProviderExecution` | uma capability normalizada por invocation e referência à decisão de promoção | providers | process sequence | #45; ADR-0016 (proposto) | não implementado |
-| `ExperimentManifest` / `BenchmarkRun` / `PromotionDecision` | reproduzir, comparar e autorizar componente para profile/ambiente | evaluation | data science lifecycle | #88; ADR-0007, 0009; 0016 (proposto quando provider) | não implementado |
+| `ExperimentManifest` / `BenchmarkRun` / `PromotionDecision` | reproduzir, comparar e autorizar componente para profile/ambiente | evaluation | data science lifecycle | #88; ADR-0007, 0009; 0016 (proposto quando provider) | schemas e harness integrados; nenhuma `PromotionDecision` criada |
 | `RecognitionArtifact` | texto observado com origem `NATIVE`, `OCR`, `FUSED` ou `OCR_DERIVED_TEXT_LAYER` | processing | domain UML | ADR-0012, 0016 (proposto) | não implementado |
 | `DocumentStructureArtifact` | blocos, hierarchy, reading order e tabelas/células com proveniência | processing | pipeline/profile | #89; ADR-0012, 0016 (proposto) | não implementado |
 | `EvidenceRef` | referência versionada a campo, linha, trecho, página, região ou artefato | lineage | pipeline/domain UML | ADR-0012, 0013; #78 | não implementado |

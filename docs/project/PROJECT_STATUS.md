@@ -12,13 +12,13 @@ Este documento responde apenas **onde o projeto está agora, qual é o próximo 
 
 ```text
 Phase 0: encerrada e integrada à main
-Phase 1 / R0: entrega integrada e reproduzida; encerramento formal em review no draft PR #100
+Phase 1 / R0: encerrada; entrega integrada e reproduzida
 #33–#37: integradas pelos PRs #72, #90, #91, #94 e #98
 #96: correção de portas integrada pelo PR #97 no commit 11342db
-#37: entrega integrada pelo PR #98 no commit 7a39bac; reconciliação pós-merge no draft PR #100
+#37: entrega integrada pelo PR #98 no commit 7a39bac; snapshot pós-merge integrado pelo PR #100 no commit c08d10c
 R0 reproduzido no app-host: API/web healthy em 8100/5180, com Jubileu preservado em 8000/5173/8080
-Próximo gate: review e squash merge humanos do PR #100; depois, revalidar as Condições Verificadas da #39
-Protótipo PDF-first: envelope #92 aprovado; harness no draft PR #99; runtime de produto ainda não existe
+Próximo gate: revalidar e registrar as Condições Verificadas da #39 antes de implementar domínio e persistência
+Protótipo PDF-first: envelope #92, profile/dataset e harness integrados; hardening pós-merge do harness pendente; runtime de produto ainda não existe
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
 Realinhamento documental/backlog: Issue #73 e PR #87 integrados; continua sendo documentação planejada
 ```
@@ -30,17 +30,17 @@ interromper o Jubileu. Isso não constitui ERP, GED, intake, interpretação
 PDF-first, review ou fluxo de produto funcional. O envelope PDF-first #92 foi
 aprovado separadamente, mas cada slice de código continua sujeita às suas
 próprias condições verificadas e dependências; a release R1 permanece não
-autorizada. O fechamento formal da #37/#26 ainda depende do review e squash
-merge humanos da reconciliação documental no PR #100.
+autorizada. A Phase 1/R0 está encerrada; isso torna elegível somente a
+revalidação da #39, não a implementação automática de toda a Phase 2.
 
 ## Estado por frente
 
 | Frente | Referência | Estado | Condição atual |
 | --- | --- | --- | --- |
 | Phase 0 — sistema do projeto | [#1](https://github.com/FelipeDalMolin/erp-docflow/issues/1) | concluída | baseline, hardening e organização documental integrados |
-| Phase 1 / R0 — bootstrap técnico | [#26](https://github.com/FelipeDalMolin/erp-docflow/issues/26) | reconciliação em review | #33–#37 integradas e runtime/CI reproduzidos; PR #100 ainda precisa de review e merge para registrar `STOP` |
-| Phase 2 — GED e intake | [#27](https://github.com/FelipeDalMolin/erp-docflow/issues/27) / [#92](https://github.com/FelipeDalMolin/erp-docflow/issues/92) | backlog com envelope PDF-first específico aprovado | contrato de persistência/storage ratificado; #39 está especificada, mas aguarda o fechamento da #26; não há schema, storage, endpoint ou intake implementado |
-| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | descoberta em paralelo | profile/dataset sintético integrado; harness no draft PR #99; não há processamento, interpretação ou provider funcional |
+| Phase 1 / R0 — bootstrap técnico | [#26](https://github.com/FelipeDalMolin/erp-docflow/issues/26) | concluída | #33–#37 integradas, snapshot reconciliado e runtime/CI reproduzidos; outcome `STOP` |
+| Phase 2 — GED e intake | [#27](https://github.com/FelipeDalMolin/erp-docflow/issues/27) / [#92](https://github.com/FelipeDalMolin/erp-docflow/issues/92) | próximo gate PDF-first aprovado | contrato de persistência/storage ratificado; #39 está especificada e deve registrar `Condições Verificadas`; não há schema, storage, endpoint ou intake implementado |
+| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | descoberta em paralelo | profile/dataset sintético e harness integrados; hardening pós-merge da #88 bloqueia #82/#83; não há processamento, interpretação ou provider funcional |
 | Phase 4 — review e acceptance | [#29](https://github.com/FelipeDalMolin/erp-docflow/issues/29) | backlog | deve cobrir documento, importação, vínculos e fatos propostos |
 | Phase 5 — domínio gerencial | [#30](https://github.com/FelipeDalMolin/erp-docflow/issues/30) | backlog a refinar | #54–#57 serão reorientadas para fatos multiorigem e reconciliação |
 | Phase 6 — geração documental | [#31](https://github.com/FelipeDalMolin/erp-docflow/issues/31) | backlog | `GeneratedDocument` não é pacote contábil nem release do produto |
@@ -68,14 +68,16 @@ As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma wate
 | Compose de desenvolvimento API/web | #36 | PR #94 |
 | reserva de portas no `app-host` | #96 | PR #97, commit `11342db` |
 | CI de aplicação e runbooks reproduzíveis | #37 | PR #98, commit `7a39bac` |
+| snapshot pós-merge da Phase 1 | #37 | PR #100, commit `c08d10c` |
+| profile e dataset sintético PDF-first | #43 | PR #93, commit `26fef2f` |
+| harness reproduzível de experimentos | #88 | PR #99, commit `1dbba5b` |
 
 #65, #67 e #69 estão encerradas. Seus relatórios permanecem evidência histórica; não representam trabalho corrente.
 
 ## Reconciliação final da Phase 1
 
 O gate Phase 0 → Phase 1 foi satisfeito e a entrega técnica do envelope da Epic
-#26 foi integrada e reproduzida. O encerramento formal ainda depende da
-integração humana deste snapshot:
+#26 foi integrada, reproduzida e encerrada. A reconciliação final registra:
 
 - [x] #33 integrada pelo PR #72;
 - [x] #34 integrada pelo PR #90;
@@ -90,9 +92,11 @@ integração humana deste snapshot:
 - [x] web respondeu HTTP `200` em `/` e `/system`;
 - [x] Jubileu permaneceu respondendo HTTP `200` em `5173`, `8000` e `8080`;
 - [x] backend e frontend passaram lint, testes, typecheck e build locais;
-- [ ] review e squash merge humanos do PR #100, fechando #37/#26 e registrando `STOP`.
+- [x] snapshot pós-merge revisado e squash-mergeado pelo PR #100 no commit `c08d10c`;
+- [x] fatos protegidos de `AGENTS.md` e `ROADMAP.md` reconciliados sob aprovação humana;
+- [x] #37/#26 encerradas com outcome `STOP`.
 
-## Fila autorizada da Phase 1
+## Encadeamento concluído da Phase 1
 
 ```text
 #33 workspace -- integrado pelo PR #72
@@ -101,8 +105,8 @@ integração humana deste snapshot:
   -> #36 Compose -- integrado pelo PR #94
   -> #96 portas -- integrado pelo PR #97 / 11342db
   -> #37 CI, runbook, status e rastreabilidade -- integrado pelo PR #98 / 7a39bac
-  -> reprodução concluída; reconciliação no draft PR #100
-  -> review + squash merge humanos
+  -> reprodução concluída; snapshot integrado pelo PR #100 / c08d10c
+  -> reconciliação factual final
   -> fechamento de #37/#26 e registro de STOP
 ```
 
@@ -112,12 +116,12 @@ integração humana deste snapshot:
 | #34 | fechada | integrada | nenhum |
 | #35 | fechada | integrada | nenhum |
 | #36 | fechada | integrada | nenhum |
-| #37 | fechada | entrega integrada; reconciliação em review | review e squash merge humanos do PR #100 |
+| #37 | fechada | entrega e reconciliação integradas | nenhum |
 
-O merge do PR #100 encerrará a Phase 1 somente com o R0 técnico previsto na Epic #26.
+Com esta reconciliação, a Phase 1 encerra somente com o R0 técnico previsto na Epic #26.
 O envelope #92 autoriza a direção PDF-first, mas não elimina o refinamento e os
-gates de cada slice. A implementação de produto começa apenas quando #39 tiver
-especificação executável, `Condições Verificadas` e a dependência #26 encerrada.
+gates de cada slice. O próximo passo é registrar na #39 que suas dependências
+foram verificadas; só então sua implementação de produto pode começar.
 
 ## Release R1 em descoberta
 
@@ -143,7 +147,7 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - Os modelos em `docs/templates/` continuam referências, não templates nativos do GitHub.
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
-- O harness reproduzível da #88 está no draft PR #99 e bloqueia #82/#83 até review e merge humanos; a avaliação Docling permanece na #89. Nenhum provider foi promovido.
+- O harness reproduzível da #88 foi integrado pelo PR #99, mas dois P2 pós-merge exigem hardening de proveniência sob cgroups e serialização segura do comando; #82/#83 permanecem bloqueadas, e a avaliação Docling continua na #89. Nenhum provider foi promovido.
 - Dados reais, secrets, deploy de produção, automerge e branch protection continuam fora dos envelopes atuais.
 
 ## Regra de atualização

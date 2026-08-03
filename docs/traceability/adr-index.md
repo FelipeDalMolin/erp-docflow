@@ -27,7 +27,7 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 
 | ADR | Evidência observada | Avaliação | Resultado |
 | --- | --- | --- | --- |
-| ADR-0007 | Structural CI integrado pelo PR #21; CI de aplicação pertence à slice corrente #37 | a ordem CI antes de branch protection foi preservada; a #37 não autoriza nem configura branch protection | decisão mantida; review obrigatório antes de futura proteção |
+| ADR-0007 | Structural CI integrado pelo PR #21; CI de aplicação integrada pela #37/PR #98 | a ordem CI antes de branch protection foi preservada; a #37 não autorizou nem configurou branch protection | decisão mantida; review obrigatório antes de futura proteção |
 | ADR-0008 | primeiro Compose funcional de desenvolvimento integrado por #36/PR #94, com portas do `app-host` corrigidas por #96/PR #97 (`11342db`) | API/web stateless foram reproduzidos localmente; onprem-lab, persistência e produção não foram validados | decisão mantida para desenvolvimento local; revisão de onprem-lab continua pendente |
 | ADR-0009 | workspace, API de healthcheck, shell web e Compose formam o bootstrap técnico da Phase 1 | não existem módulos de produto, domínio ou processamento; não há evidência que contrarie o modular monolith | decisão mantida; gatilho completo permanece para os primeiros módulos de produto |
 

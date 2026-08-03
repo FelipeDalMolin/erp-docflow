@@ -9,7 +9,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/project/README.md`](../project/README.md) | índice de projeto e governança | vigente | status, roadmap e modelo operacional |
 | [`docs/architecture/README.md`](../architecture/README.md) | índice de arquitetura e domínio | vigente | arquitetura, pipeline, dados, providers e glossário |
 | [`docs/operations/README.md`](../operations/README.md) | índice de operação e execução | vigente | ambientes, Git, Project e runbook |
-| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73, #88 e #96; R0 integrado/reproduzido e encerramento em review no PR #100 |
+| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #39, #73, #88 e #96; Phase 1/R0 encerrada e #39 no próximo gate |
 | [`AGENTS.md`](../../AGENTS.md) | guardrails executáveis do Codex | vigente | ADR-0003, 0005, 0017 e 0018 |
 | [`.codex/config.toml`](../../.codex/config.toml) | capacidade técnica local do Codex | vigente | ADR-0005; não concede escopo |
 | [`docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`](../project/MODELO_OPERACIONAL_DO_PROJETO.md) | princípios de governança | vigente | ADR-0001–0018 conforme tema |
@@ -35,6 +35,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/architecture/GLOSSARIO_DOCUMENTAL.md`](../architecture/GLOSSARIO_DOCUMENTAL.md) | vocabulário canônico | vigente | arquitetura, pipeline e dados |
 | [`docs/architecture/PROCESSING_PROFILE_CONTRACT.md`](../architecture/PROCESSING_PROFILE_CONTRACT.md) | contrato de perfil, algoritmos, métricas e routing | planejado/não implementado | Tika/OCR/rules/assessment/routing #82–#86; harness/estrutura #88–#89; ADR-0016 proposto |
 | [`docs/architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md`](../architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | contrato de notebook/experimento até componente promovido | planejado/não implementado | profile/dataset #43, harness #88, spikes #83/#89 e regressão #48 |
+| [`docs/architecture/EXPERIMENT_HARNESS.md`](../architecture/EXPERIMENT_HARNESS.md) | execução reproduzível de experimentos sintéticos | implementado como infraestrutura de engenharia | #88/PR #99; não é provider nem runtime de produto |
 | [`docs/architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md`](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) | contrato do intake local sintético | planejado e ratificado; não implementado | #38/#92 e PR #95; não cria schema, storage, endpoint ou serviço |
 | [`docs/architecture/profiles/payable_document_pt_br-v1alpha.md`](../architecture/profiles/payable_document_pt_br-v1alpha.md) | profile candidato e fixtures PDF-first | candidato; não promovido | #43/#92 e PR #93; artefato de preparação/avaliação, não fluxo funcional |
 | [`docs/architecture/STRUCTURED_IMPORT_PIPELINE.md`](../architecture/STRUCTURED_IMPORT_PIPELINE.md) | pipeline local de XLSX/CSV e mapeamentos | planejado/não implementado | piloto #75/#77 e proveniência por lote/linha |
