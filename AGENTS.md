@@ -4,7 +4,7 @@ Instrucoes operacionais para uso do Codex neste repositorio.
 
 ## Contexto do projeto
 
-O baseline da Phase 0 esta concluido. A Epic #26 autorizou a execucao controlada da Phase 1 em 2026-07-17; a #33 foi preparada no PR #72 e aguarda review/merge humano. Essa autorizacao nao se estende automaticamente a outra slice, Phase ou release.
+Os baselines da Phase 0 e da Phase 1/R0 estao concluidos. A Epic #26 autorizou a execucao controlada da Phase 1 em 2026-07-17; as slices #33-#37 foram integradas, o runtime foi reproduzido e a reconciliacao factual final foi aprovada em 2026-08-02. Essa autorizacao nao se estende automaticamente a outra slice, Phase ou release.
 
 Antes de executar, consultar:
 

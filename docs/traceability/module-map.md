@@ -20,6 +20,12 @@ reais ou módulo de domínio. O profile, schemas e dataset sintético PDF-first 
 PR #93 são artefatos candidatos de preparação/avaliação; não constituem um
 módulo de intake, interpretação ou processamento funcional.
 
+## Infraestrutura de engenharia integrada
+
+| Componente | Responsabilidade implementada | Evidência | Estado |
+| --- | --- | --- | --- |
+| `tools/experiment_harness` | executar e verificar experimentos sintéticos reproduzíveis sem promover provider | #88, PR #99 (`1dbba5b`) | integrado na trilha Phase 3, com hardening pós-merge pendente; não é provider nem runtime de produto |
+
 ## Boundaries de produto planejados
 
 Esta seção orienta arquitetura e decomposição futura. Ela não autoriza banco,
@@ -33,7 +39,7 @@ storage, workers, integrações ou qualquer capacidade de produto.
 | `files` | binários, derivados, integridade e retenção | FileObject | ADR-0011, 0012, 0014 | não implementado |
 | `processing` | jobs, attempts, assessment, task graph e routing | ProcessingJob, NativeTextAssessment, RoutingDecision | #82/#85/#86; ADR-0012, 0016 (proposto) | não implementado |
 | `providers` | invocation física e executions por capability; Tika, OCR e estrutura permanecem explícitos | ProviderInvocation, ProviderExecution, RecognitionArtifact, DocumentStructureArtifact | #82/#83/#89; ADR-0016 (proposto) | não implementado |
-| `evaluation` | manifests, runners, datasets, benchmark e promoção de componentes de dados | ExperimentManifest, BenchmarkRun, PromotionDecision | #43/#48/#83/#88/#89; ADR-0016 (proposto quando provider) | não implementado |
+| `evaluation` | manifests, runners, datasets, benchmark e promoção de componentes de dados | ExperimentManifest, BenchmarkRun, PromotionDecision | #43/#48/#83/#88/#89; ADR-0016 (proposto quando provider) | parcial: harness de engenharia integrado; nenhum provider promovido |
 | `validation` | parsers, validators, regras determinísticas e conflitos | ValidationResult, rule packs | #47/#84; ADR-0013, 0016 (proposto) | não implementado |
 | `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013; 0015 (proposto/gate) | não implementado |
 | `audit` | fatos duráveis e decisões humanas/técnicas | AuditEvent | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | não implementado |
