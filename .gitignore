@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local experiment evidence; bundles are regenerated and verified by the harness.
+/.artifacts/experiments/
