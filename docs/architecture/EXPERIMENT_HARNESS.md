@@ -49,7 +49,9 @@ uv sync --locked --project tools/experiment_harness
 ```
 
 O package não possui dependência de runtime externa. Pytest, Ruff e mypy pertencem apenas ao
-grupo de desenvolvimento do lock próprio.
+grupo de desenvolvimento. O backend Hatchling `1.29.0` está fixado no build-system e no grupo
+`build`; ambos os grupos padrão são resolvidos no `uv.lock`, sem faixa flutuante. O próprio
+`pyproject.toml` recusa versões de uv diferentes de `0.11.16`.
 
 ## Validar o manifest
 
