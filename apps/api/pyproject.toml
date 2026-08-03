@@ -5,8 +5,11 @@ description = "Backend mínimo do ERP DocFlow"
 readme = "README.md"
 requires-python = ">=3.13.14,<3.14"
 dependencies = [
+  "alembic>=1.18.5,<1.19",
   "fastapi>=0.139.2,<0.140",
   "pydantic>=2.13.4,<3",
+  "psycopg[binary]>=3.3.4,<3.4",
+  "sqlalchemy>=2.0.51,<2.1",
   "uvicorn>=0.51.0,<0.52",
 ]
 
@@ -22,6 +25,9 @@ package = false
 
 [tool.pytest.ini_options]
 addopts = ["--strict-config", "--strict-markers"]
+markers = [
+  "postgres: requires a disposable PostgreSQL database",
+]
 pythonpath = ["src"]
 testpaths = ["tests"]
 

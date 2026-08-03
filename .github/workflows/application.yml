@@ -45,7 +45,71 @@ jobs:
         run: uv run ruff check .
 
       - name: Test
-        run: uv run pytest
+        run: uv run pytest -m "not postgres"
+
+  postgresql:
+    name: PostgreSQL / migrations and integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      COMPOSE_PROJECT_NAME: erp_docflow_ci_${{ github.run_id }}_${{ github.run_attempt }}
+      ERP_DOCFLOW_DATABASE_NAME: erp_docflow_ci
+      ERP_DOCFLOW_DATABASE_USER: erp_docflow_ci
+      ERP_DOCFLOW_DATABASE_PASSWORD: ci-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate Compose model
+        run: docker compose config --quiet
+
+      - name: Build API image
+        run: docker compose build api
+
+      - name: Start disposable PostgreSQL
+        run: docker compose up --detach --wait postgres
+
+      - name: Validate one Alembic head
+        run: >-
+          docker compose run -T --rm --no-deps api uv run python -c
+          'from alembic.config import Config; from alembic.script import ScriptDirectory;
+          heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads();
+          assert len(heads) == 1, f"expected exactly one Alembic head, got {heads}"'
+
+      - name: Validate migrations
+        run: |
+          docker compose run -T --rm --no-deps api uv run alembic upgrade head
+          docker compose run -T --rm --no-deps api uv run alembic current --check-heads
+          docker compose run -T --rm --no-deps api uv run alembic check
+
+      - name: Validate disposable database migration cycle
+        run: |
+          docker compose run -T --rm --no-deps api uv run alembic downgrade base
+          docker compose run -T --rm --no-deps api uv run alembic upgrade head
+          docker compose run -T --rm --no-deps api uv run alembic current --check-heads
+          docker compose run -T --rm --no-deps api uv run alembic check
+
+      - name: Test with PostgreSQL
+        run: docker compose run -T --rm --no-deps api uv run pytest -m postgres
+
+      - name: Seed synthetic relational restart probe
+        run: >-
+          docker compose run -T --rm --no-deps api
+          sh -c 'PYTHONPATH=src uv run python
+          tests/integration/postgresql/restart_probe.py seed'
+
+      - name: Verify materialization after PostgreSQL restart
+        run: |
+          docker compose restart postgres
+          docker compose up --detach --wait postgres
+          docker compose run -T --rm --no-deps api uv run alembic current --check-heads
+          docker compose run -T --rm --no-deps api sh -c 'PYTHONPATH=src uv run python tests/integration/postgresql/restart_probe.py verify'
+
+      - name: Remove disposable PostgreSQL state
+        if: always()
+        run: docker compose down --volumes --remove-orphans
 
   frontend:
     name: Frontend / quality and build
@@ -88,6 +152,11 @@ jobs:
     name: Compose / configuration
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    env:
+      ERP_DOCFLOW_DATABASE_NAME: erp_docflow_compose_ci
+      ERP_DOCFLOW_DATABASE_USER: erp_docflow_compose_ci
+      ERP_DOCFLOW_DATABASE_PASSWORD: compose-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout repository

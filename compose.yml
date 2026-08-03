@@ -7,6 +7,15 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "127.0.0.1:8100:8000"
+    environment:
+      ERP_DOCFLOW_DATABASE_HOST: postgres
+      ERP_DOCFLOW_DATABASE_PORT: "5432"
+      ERP_DOCFLOW_DATABASE_NAME: ${ERP_DOCFLOW_DATABASE_NAME:?define ERP_DOCFLOW_DATABASE_NAME in a gitignored .env file}
+      ERP_DOCFLOW_DATABASE_USER: ${ERP_DOCFLOW_DATABASE_USER:?define ERP_DOCFLOW_DATABASE_USER in a gitignored .env file}
+      ERP_DOCFLOW_DATABASE_PASSWORD: ${ERP_DOCFLOW_DATABASE_PASSWORD:?define ERP_DOCFLOW_DATABASE_PASSWORD in a gitignored .env file}
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - ./apps/api/src:/app/src
     healthcheck:
@@ -18,6 +27,23 @@ services:
           import urllib.request;
           response = urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2);
           raise SystemExit(0 if response.status == 200 else 1)
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  postgres:
+    image: postgres:18.4-bookworm@sha256:1961f96e6029a02c3812d7cb329a3b03a3ac2bb067058dec17b0f5596aca9296
+    environment:
+      POSTGRES_DB: ${ERP_DOCFLOW_DATABASE_NAME:?define ERP_DOCFLOW_DATABASE_NAME in a gitignored .env file}
+      POSTGRES_USER: ${ERP_DOCFLOW_DATABASE_USER:?define ERP_DOCFLOW_DATABASE_USER in a gitignored .env file}
+      POSTGRES_PASSWORD: ${ERP_DOCFLOW_DATABASE_PASSWORD:?define ERP_DOCFLOW_DATABASE_PASSWORD in a gitignored .env file}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
       interval: 5s
       timeout: 3s
       retries: 12
@@ -47,3 +73,6 @@ services:
       timeout: 3s
       retries: 12
       start_period: 10s
+
+volumes:
+  postgres_data:

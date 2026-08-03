@@ -1,7 +1,7 @@
 # Contrato de persistência e storage do intake PDF-first
 
-Status documental: contrato planejado e ratificado para o protótipo local sintético, não implementado
-Atualizado em: 2026-07-31
+Status documental: contrato ratificado; recorte relacional da #39 implementado nesta revisão, storage e intake ponta a ponta ainda planejados
+Atualizado em: 2026-08-02
 Issue de origem: [#38](https://github.com/FelipeDalMolin/erp-docflow/issues/38)
 Envelope de execução: [#92](https://github.com/FelipeDalMolin/erp-docflow/issues/92)
 ADRs relacionados: ADR-0010, ADR-0011, ADR-0012, ADR-0014 e ADR-0015 (proposto)
@@ -10,7 +10,7 @@ ADRs relacionados: ADR-0010, ADR-0011, ADR-0012, ADR-0014 e ADR-0015 (proposto)
 
 Este documento fecha os gates mínimos de persistência, object storage, integridade, idempotência e acesso provisório antes do primeiro intake PDF-first. Ele especializa, para o protótipo local com fixtures sintéticas, o [baseline de dados](DATA_MODEL_BASELINE.md) e o [pipeline documental](DOCUMENT_PIPELINE.md).
 
-O contrato ratifica uma direção de implementação futura; não prova nem cria schema, migrations, repositórios, endpoint de upload, serviços PostgreSQL/MinIO, volumes, credenciais ou dados persistidos. Código e testes das Issues #39 e #40 serão a evidência de implementação quando seus próprios gates forem satisfeitos.
+O contrato foi ratificado pela #38. A #39 materializa nesta revisão a parte relacional com domínio, schema, migrations, repositórios e PostgreSQL interno, sustentada por testes unitários e de integração. Esse recorte não cria endpoint de upload, adapter/bucket MinIO, bytes persistidos ou original recuperável; a #40 continua responsável por essas evidências após o merge humano da #39.
 
 As revisões previstas nas ADR-0010, ADR-0011 e ADR-0012 ficam atendidas para esse recorte local e sintético, sem alterar essas ADRs. Mudança de banco, interface de storage, modelo GED, acesso, exposição ou classe de dado exige novo checkpoint e, quando aplicável, ADR sucessor.
 
@@ -143,7 +143,7 @@ Nomes de bucket, endpoint e demais opções não sensíveis usam ambiente/placeh
 
 ## 9. Restart, backup e restore
 
-Persistência após restart é requisito de aceite do protótipo: reiniciar processo ou container da API, PostgreSQL ou MinIO não pode apagar uma ocorrência concluída nem tornar o original irrecuperável. A #40 deverá comprovar recuperação do original, SHA-256, tamanho, MIME, estado e idempotência depois do restart, usando armazenamento persistente autorizado pela slice de infraestrutura aplicável.
+Persistência após restart é requisito de aceite do protótipo: reiniciar processo ou container da API, PostgreSQL ou MinIO não pode apagar uma ocorrência concluída nem tornar o original irrecuperável. A validação da #39 semeia uma materialização determinística de metadados sintéticos e relê ocorrência, envelope, referência e evento depois do restart do PostgreSQL. A #40 ainda deverá comprovar a recuperação conjunta do original, SHA-256, tamanho, MIME, estado e idempotência depois do restart, usando armazenamento persistente autorizado pela slice de infraestrutura aplicável.
 
 Remover deliberadamente dados/volumes não é restart. Nenhum runbook pode apresentar recriação destrutiva como teste de persistência.
 
@@ -159,21 +159,22 @@ Backup/restore, scripts, jobs, volumes e operação de ambiente não são implem
 
 ## 10. Ownership e desbloqueio das próximas slices
 
-Esta #38 possui apenas este contrato, seu registro no índice de arquitetura e a direção correspondente no Roadmap. Ela não autoriza implementação física.
+Esta #38 possui o contrato e a direção arquitetural. A autorização física de cada slice continua vindo de suas próprias `Condições Verificadas`; a atualização deste documento apenas registra a evidência produzida pela #39.
 
-| Slice | Ownership planejado | Condições cumulativas para execução |
+| Slice | Ownership | Estado e gate corrente |
 | --- | --- | --- |
-| #39 — modelo mínimo | `DocumentEnvelope`, `DocumentVersion`, `FileObject`, ocorrência/idempotência, `AuditEvent`, migrations PostgreSQL e repositórios mínimos | merge humano da #38; conclusão e integração das #36 e #37; encerramento da #26; refinamento da #39 com paths, schema mínimo, fixtures e comandos; novo estado `Condições Verificadas` |
-| #40 — original íntegro | adapter S3-compatible/MinIO, streaming, SHA-256/tamanho, MIME preliminar, round-trip, coordenação banco/storage, reconciliação, replay e testes de restart | todas as condições acima; merge humano da #39; refinamento da #40 com paths, limites, falhas, configuração e comandos; novo estado `Condições Verificadas` |
+| #39 — modelo mínimo | `DocumentEnvelope`, `DocumentVersion`, `FileObject`, ocorrência/idempotência, `AuditEvent`, migrations PostgreSQL e repositórios mínimos | `Condições Verificadas`; implementação e evidências nesta revisão; aguarda review e squash merge humanos |
+| #40 — original íntegro | adapter S3-compatible/MinIO, streaming, SHA-256/tamanho, MIME preliminar, round-trip, coordenação banco/storage, reconciliação, replay e testes de restart | aguarda merge humano da #39, refinamento com paths/limites/falhas/configuração/comandos e suas próprias `Condições Verificadas` |
 
 A #39 define a representação relacional mínima e suas constraints; a #40 usa esses contratos para orquestrar a fronteira com storage. A #40 não redefine entidades em paralelo, e a #39 não implementa adapter MinIO. Os paths exatos de código pertencem ao refinamento de cada Issue; não podem ser inferidos deste documento.
 
 Branches empilhadas não estão autorizadas. Cada slice futura parte da `main` depois dos merges humanos exigidos e permanece dentro do envelope aprovado.
 
-## 11. Fora de escopo desta decisão
+## 11. Fora de escopo da implementação #39
 
-- schema, migrations, ORM, models, repositórios ou upload HTTP;
-- PostgreSQL, MinIO, buckets, volumes ou Compose;
+- upload HTTP, streaming ou leitura do original;
+- adapter MinIO/S3-compatible, buckets e persistência de bytes;
+- reconciliação banco/storage e verificação de integridade do objeto;
 - Tika, OCR, providers, filas, workers, Redis ou processamento;
 - preview, extração, classificação, revisão ou UI;
 - autenticação real, autorização, dado real, exposição externa ou deploy;
@@ -193,4 +194,4 @@ Uma implementação só poderá declarar conformidade quando testes reproduzíve
 - tenant e ator/reviewer provisórios injetados pelo servidor;
 - nenhuma credencial, dado real ou exposição externa.
 
-Até essa evidência existir, PostgreSQL, MinIO, intake e persistência permanecem **planejados e não implementados**.
+Até a evidência ponta a ponta da #40 existir, somente o estado relacional PostgreSQL da #39 pode ser declarado implementado. MinIO, bytes do original, upload e intake funcional permanecem **planejados e não implementados**.

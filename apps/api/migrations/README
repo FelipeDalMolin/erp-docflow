@@ -1,0 +1,5 @@
+Single-database Alembic configuration for the ERP DocFlow PostgreSQL schema.
+
+Migrations require the explicit ``ERP_DOCFLOW_DATABASE_HOST``, ``_PORT``,
+``_NAME``, ``_USER`` and ``_PASSWORD`` components. The application builds the
+``postgresql+psycopg`` URL safely; runtime imports never upgrade the database.

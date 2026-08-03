@@ -2,9 +2,9 @@
 
 Plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, para transformar fontes heterogêneas em informação gerencial auditável, preservando evidências, revisão, aceite, fechamento e operação documental.
 
-Status atual: **Phases 0 e 1/R0 encerradas; fundação técnica integrada e reproduzida**. O próximo gate de produto é verificar a #39, primeira slice implementável da jornada PDF-first da Phase 2.
+Status atual: **Phases 0 e 1/R0 encerradas; primeira persistência PDF-first materializada pela #39**. A revisão atual acrescenta domínio puro, PostgreSQL, migrations, idempotência e auditoria transacional; storage de bytes, upload HTTP e telas continuam nas slices #40–#42.
 
-Essa fundação **não é um ERP funcional**. Ela ainda não implementa upload, intake, interpretação, revisão ou persistência de PDFs e outros documentos. Essas capacidades dependem de slices de produto posteriores e de seus próprios critérios de aceite.
+Esse avanço **ainda não é o ERP funcional no navegador**. Os repositórios da #39 persistem somente metadados sintéticos fornecidos por um `VerifiedOriginalDescriptor`, mas ainda não são acionados por uma rota HTTP. A slice não armazena nem recupera o PDF, não expõe upload e não interpreta documentos. Essas provas dependem das slices posteriores e de seus próprios critérios de aceite.
 
 Consulte o [status do projeto](docs/project/PROJECT_STATUS.md) para o gate ativo e o [portal da documentação](docs/README.md) para escolher a fonte correta.
 
@@ -32,12 +32,12 @@ fonte documental, estruturada, manual ou integrada
 | [ADRs](docs/adr/README.md) | decisões arquiteturais e seus status |
 | [Rastreabilidade](docs/traceability/README.md) | relações derivadas entre decisões e artefatos |
 
-## Executar e validar a fundação R0
+## Executar e validar o ambiente local
 
 - [Validação local equivalente ao Application CI](docs/operations/VALIDACAO_LOCAL_CI.md): instala dependências travadas e executa os mesmos checks de backend, frontend e Compose usados pela CI.
-- [Compose de desenvolvimento](docs/operations/DEVELOPMENT_COMPOSE.md): inicia a API em `127.0.0.1:8100` e o shell web em `127.0.0.1:5180`.
+- [Compose de desenvolvimento](docs/operations/DEVELOPMENT_COMPOSE.md): inicia PostgreSQL interno, API em `127.0.0.1:8100` e shell web em `127.0.0.1:5180`, sem publicar a porta `5432`.
 
-O shell web demonstra apenas que a fundação técnica executa. Ele não contém as telas e os fluxos de um ERP e não processa PDFs.
+O shell web ainda demonstra apenas que a fundação técnica executa. Ele não contém as telas e os fluxos de um ERP e não processa PDFs; a evidência desta revisão está na camada de domínio/persistência e nos testes PostgreSQL da #39, ainda sem integração com o runtime HTTP.
 
 ## Guardrails
 

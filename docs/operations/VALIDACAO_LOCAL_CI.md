@@ -1,7 +1,7 @@
 # Validação local equivalente ao Application CI
 
 - **Classe:** runbook operacional
-- **Estado:** vigente para a fundação técnica R0 da Phase 1
+- **Estado:** vigente para a fundação R0 e a persistência relacional da S2.02
 - **Atualizar quando:** versões pinadas ou comandos do Application CI mudarem
 
 Este runbook reproduz localmente, na mesma ordem, os comandos `run` executados
@@ -12,10 +12,11 @@ representadas localmente pelas versões requeridas abaixo.
 
 ## Escopo comprovado
 
-Os checks comprovam somente a fundação técnica R0: API mínima, shell web e
-configuração do Compose de desenvolvimento. Eles não comprovam um ERP funcional
-e não implementam nem validam upload, intake, interpretação, revisão ou
-persistência de PDFs e outros documentos.
+Os checks comprovam a fundação técnica R0 e o contrato relacional da S2.02 em
+PostgreSQL real: migrations, constraints, repositórios e metadados documentais
+sintéticos. Eles não comprovam preservação dos bytes do original, upload HTTP,
+interpretação, revisão ou aceite. Essas capacidades permanecem nas slices
+posteriores.
 
 O Structural CI permanece separado e continua responsável pela estrutura do
 repositório, links e catálogos documentais.
@@ -40,7 +41,7 @@ Os pins de Python e Node também estão registrados, respectivamente, em
 cd apps/api
 uv sync --locked
 uv run ruff check .
-uv run pytest
+uv run pytest -m "not postgres"
 cd ../..
 ```
 
@@ -62,17 +63,66 @@ pnpm --filter @erp-docflow/web build
 
 ## Configuração do Compose
 
+Crie `.env` conforme o [runbook do Compose](DEVELOPMENT_COMPOSE.md) antes da
+validação. O arquivo é ignorado pelo Git, a senha deve ser apenas local e
+sintética e o Compose falha se qualquer componente
+`ERP_DOCFLOW_DATABASE_*` obrigatório estiver vazio.
+
 ```bash
 docker compose version
 docker compose config --quiet
 ```
 
 Esse comando valida a configuração sem construir imagens, iniciar containers ou
-ocupar as portas do host. Para executar a fundação R0 em `5180` e `8100`, siga o
-[Compose de desenvolvimento](DEVELOPMENT_COMPOSE.md).
+ocupar as portas do host. Use `--quiet`: a representação expandida pode conter a
+configuração sensível local. Para executar API/web em `8100/5180` e o PostgreSQL
+sem porta publicada, siga o [Compose de desenvolvimento](DEVELOPMENT_COMPOSE.md).
+
+## Migrations e integração PostgreSQL
+
+Os comandos abaixo usam somente o banco local sintético e não gravam bytes de
+documentos no PostgreSQL. O Docker pode baixar as imagens pinadas quando elas
+ainda não estiverem presentes no host; a suíte da aplicação não chama serviços
+externos:
+
+```bash
+docker compose build api
+docker compose up --detach --wait postgres
+docker compose run -T --rm --no-deps api uv run alembic upgrade head
+docker compose run -T --rm --no-deps api uv run alembic current --check-heads
+docker compose run -T --rm --no-deps api uv run alembic check
+docker compose run -T --rm --no-deps api uv run pytest -m postgres
+docker compose run -T --rm --no-deps api sh -c \
+  'PYTHONPATH=src uv run python tests/integration/postgresql/restart_probe.py seed'
+docker compose restart postgres
+docker compose up --detach --wait postgres
+docker compose run -T --rm --no-deps api uv run alembic current --check-heads
+docker compose run -T --rm --no-deps api sh -c \
+  'PYTHONPATH=src uv run python tests/integration/postgresql/restart_probe.py verify'
+docker compose down --remove-orphans
+```
+
+O probe grava e relê uma materialização determinística composta exclusivamente
+por referências e metadados sintéticos. Assim, o restart verifica o schema e a
+ocorrência concluída, mas não cria nem recupera o arquivo original.
+`docker compose down` preserva o volume. Não execute downgrade nem remoção de
+volumes em banco que não esteja comprovadamente descartável.
+
+Na CI, o job `PostgreSQL / migrations and integration` usa este mesmo Compose,
+um project name exclusivo da execução e componentes de credencial
+explicitamente sintéticos. O PostgreSQL continua sem porta publicada. O job
+confirma que existe exatamente um head, executa upgrade/check, faz `downgrade
+base` seguido de novo `upgrade head`, roda os testes marcados com `postgres` e
+semeia/relê o probe relacional depois de um restart.
+
+O cleanup `docker compose down --volumes --remove-orphans` existe somente nesse
+job efêmero e usa `if: always()`. O ciclo destrutivo e a remoção do volume são
+exclusivos daquele banco comprovadamente descartável; não integram o
+procedimento local normal.
 
 ## Resultado esperado
 
-Todos os comandos devem encerrar com código `0` e não modificar lockfiles. Uma
-falha local deve ser corrigida e reproduzida antes do push; não se deve relaxar
-um check da CI apenas para obter resultado verde.
+Todos os comandos devem encerrar com código `0`, migrations devem terminar no
+único head e lockfiles não podem ser modificados. Uma falha local deve ser
+corrigida e reproduzida antes do push; não se deve relaxar um check da CI apenas
+para obter resultado verde.
