@@ -9,7 +9,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/project/README.md`](../project/README.md) | índice de projeto e governança | vigente | status, roadmap e modelo operacional |
 | [`docs/architecture/README.md`](../architecture/README.md) | índice de arquitetura e domínio | vigente | arquitetura, pipeline, dados, providers e glossário |
 | [`docs/operations/README.md`](../operations/README.md) | índice de operação e execução | vigente | ambientes, Git, Project e runbook |
-| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73 e #96; Phase 1 encerrada após PR #98 e reprodução do R0 |
+| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73, #88 e #96; R0 integrado/reproduzido e encerramento em review no PR #100 |
 | [`AGENTS.md`](../../AGENTS.md) | guardrails executáveis do Codex | vigente | ADR-0003, 0005, 0017 e 0018 |
 | [`.codex/config.toml`](../../.codex/config.toml) | capacidade técnica local do Codex | vigente | ADR-0005; não concede escopo |
 | [`docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`](../project/MODELO_OPERACIONAL_DO_PROJETO.md) | princípios de governança | vigente | ADR-0001–0018 conforme tema |
