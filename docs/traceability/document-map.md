@@ -9,7 +9,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/project/README.md`](../project/README.md) | índice de projeto e governança | vigente | status, roadmap e modelo operacional |
 | [`docs/architecture/README.md`](../architecture/README.md) | índice de arquitetura e domínio | vigente | arquitetura, pipeline, dados, providers e glossário |
 | [`docs/operations/README.md`](../operations/README.md) | índice de operação e execução | vigente | ambientes, Git, Project e runbook |
-| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73 e #96; PRs #72, #87, #90, #91, #94, #97 e #98; #37 em draft com checks verdes |
+| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73 e #96; Phase 1 encerrada após PR #98 e reprodução do R0 |
 | [`AGENTS.md`](../../AGENTS.md) | guardrails executáveis do Codex | vigente | ADR-0003, 0005, 0017 e 0018 |
 | [`.codex/config.toml`](../../.codex/config.toml) | capacidade técnica local do Codex | vigente | ADR-0005; não concede escopo |
 | [`docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`](../project/MODELO_OPERACIONAL_DO_PROJETO.md) | princípios de governança | vigente | ADR-0001–0018 conforme tema |
@@ -19,7 +19,7 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/operations/AMBIENTES.md`](../operations/AMBIENTES.md) | ambientes atuais e planejados | vigente/planejado | ADR-0001, 0004, 0007, 0008 e 0014 |
 | [`docs/operations/WSL_MULTI_PROJETOS.md`](../operations/WSL_MULTI_PROJETOS.md) | runbook WSL detalhado | vigente | ADR-0004 e ambientes |
 | [`docs/operations/DEVELOPMENT_COMPOSE.md`](../operations/DEVELOPMENT_COMPOSE.md) | runbook do Compose de desenvolvimento R0 | implementado para desenvolvimento | #36/PR #94 e #96/PR #97; API/web stateless, sem produto ou persistência |
-| [`docs/operations/VALIDACAO_LOCAL_CI.md`](../operations/VALIDACAO_LOCAL_CI.md) | runbook equivalente ao Application CI | preparado na #37/PR #98; aguarda integração | reproduz checks técnicos sem comprovar produto funcional |
+| [`docs/operations/VALIDACAO_LOCAL_CI.md`](../operations/VALIDACAO_LOCAL_CI.md) | runbook equivalente ao Application CI | integrado na #37/PR #98 | reproduz checks técnicos sem comprovar produto funcional |
 | [`apps/api/README.md`](../../apps/api/README.md) | execução e validação do bootstrap FastAPI | implementado | #34/PR #90; somente `GET /health` |
 | [`apps/web/README.md`](../../apps/web/README.md) | execução e validação do shell React/Vite | implementado | #35/PR #91; rotas técnicas, sem integração funcional com a API |
 | [`docs/project/ROADMAP.md`](../project/ROADMAP.md) | releases, capabilities, dependências, resultados e gates | vigente | Epics #1, #26–#32 e #75; Issues #74–#86 e #88–#89 |
