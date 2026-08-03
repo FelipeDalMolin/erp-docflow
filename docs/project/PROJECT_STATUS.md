@@ -12,32 +12,35 @@ Este documento responde apenas **onde o projeto está agora, qual é o próximo 
 
 ```text
 Phase 0: encerrada e integrada à main
-Phase 1 / R0: execução controlada autorizada pela Epic #26
-#33–#36: integradas pelos PRs #72, #90, #91 e #94
+Phase 1 / R0: entrega integrada e reproduzida; encerramento formal em review no draft PR #100
+#33–#37: integradas pelos PRs #72, #90, #91, #94 e #98
 #96: correção de portas integrada pelo PR #97 no commit 11342db
-#37: entrega técnica no draft PR #98; Application CI e Structural CI verdes
-Próximo gate: review e squash merge humanos do PR #98, reprodução e reconciliação da Epic #26
-Protótipo PDF-first: envelope específico #92 aprovado; artefatos de preparação existem, runtime de produto não
+#37: entrega integrada pelo PR #98 no commit 7a39bac; reconciliação pós-merge no draft PR #100
+R0 reproduzido no app-host: API/web healthy em 8100/5180, com Jubileu preservado em 8000/5173/8080
+Próximo gate: review e squash merge humanos do PR #100; depois, revalidar as Condições Verificadas da #39
+Protótipo PDF-first: envelope #92 aprovado; harness no draft PR #99; runtime de produto ainda não existe
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
 Realinhamento documental/backlog: Issue #73 e PR #87 integrados; continua sendo documentação planejada
 ```
 
-A `main` contém a fundação técnica R0: workspace, API limitada a healthcheck,
-shell web e Compose de desenvolvimento para API/web. Isso não constitui ERP,
-GED, intake, interpretação PDF-first, review ou fluxo de produto funcional. A
-conclusão técnica da Phase 1 ainda depende da #37, de review e merge humanos e
-da reconciliação da Epic #26. O envelope PDF-first #92 foi aprovado
-separadamente, mas cada slice de código continua sujeita às suas próprias
-condições verificadas e dependências; a release R1 permanece não autorizada.
+A `main` contém a fundação técnica R0 integrada: workspace, API limitada a
+healthcheck, shell web, Compose de desenvolvimento para API/web e CI de
+aplicação. O runtime foi reproduzido no `app-host` nas portas reservadas sem
+interromper o Jubileu. Isso não constitui ERP, GED, intake, interpretação
+PDF-first, review ou fluxo de produto funcional. O envelope PDF-first #92 foi
+aprovado separadamente, mas cada slice de código continua sujeita às suas
+próprias condições verificadas e dependências; a release R1 permanece não
+autorizada. O fechamento formal da #37/#26 ainda depende do review e squash
+merge humanos da reconciliação documental no PR #100.
 
 ## Estado por frente
 
 | Frente | Referência | Estado | Condição atual |
 | --- | --- | --- | --- |
 | Phase 0 — sistema do projeto | [#1](https://github.com/FelipeDalMolin/erp-docflow/issues/1) | concluída | baseline, hardening e organização documental integrados |
-| Phase 1 / R0 — bootstrap técnico | [#26](https://github.com/FelipeDalMolin/erp-docflow/issues/26) | conclusão técnica em execução | #33–#36 integradas; #37 é a slice corrente e ainda requer CI, review, merge e reconciliação |
-| Phase 2 — GED e intake | [#27](https://github.com/FelipeDalMolin/erp-docflow/issues/27) / [#92](https://github.com/FelipeDalMolin/erp-docflow/issues/92) | backlog com envelope PDF-first específico aprovado | contrato de persistência/storage ratificado; #39 ainda precisa de especificação executável e do fechamento da Phase 1; não há schema, storage, endpoint ou intake implementado |
-| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | backlog/descoberta | profile/dataset sintético PDF-first existe como candidato; não há processamento, interpretação ou provider funcional |
+| Phase 1 / R0 — bootstrap técnico | [#26](https://github.com/FelipeDalMolin/erp-docflow/issues/26) | reconciliação em review | #33–#37 integradas e runtime/CI reproduzidos; PR #100 ainda precisa de review e merge para registrar `STOP` |
+| Phase 2 — GED e intake | [#27](https://github.com/FelipeDalMolin/erp-docflow/issues/27) / [#92](https://github.com/FelipeDalMolin/erp-docflow/issues/92) | backlog com envelope PDF-first específico aprovado | contrato de persistência/storage ratificado; #39 está especificada, mas aguarda o fechamento da #26; não há schema, storage, endpoint ou intake implementado |
+| Phase 3 — processamento | [#28](https://github.com/FelipeDalMolin/erp-docflow/issues/28) | descoberta em paralelo | profile/dataset sintético integrado; harness no draft PR #99; não há processamento, interpretação ou provider funcional |
 | Phase 4 — review e acceptance | [#29](https://github.com/FelipeDalMolin/erp-docflow/issues/29) | backlog | deve cobrir documento, importação, vínculos e fatos propostos |
 | Phase 5 — domínio gerencial | [#30](https://github.com/FelipeDalMolin/erp-docflow/issues/30) | backlog a refinar | #54–#57 serão reorientadas para fatos multiorigem e reconciliação |
 | Phase 6 — geração documental | [#31](https://github.com/FelipeDalMolin/erp-docflow/issues/31) | backlog | `GeneratedDocument` não é pacote contábil nem release do produto |
@@ -64,25 +67,30 @@ As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma wate
 | shell React/Vite com rotas técnicas | #35 | PR #91 |
 | Compose de desenvolvimento API/web | #36 | PR #94 |
 | reserva de portas no `app-host` | #96 | PR #97, commit `11342db` |
+| CI de aplicação e runbooks reproduzíveis | #37 | PR #98, commit `7a39bac` |
 
 #65, #67 e #69 estão encerradas. Seus relatórios permanecem evidência histórica; não representam trabalho corrente.
 
-## Gate corrente da Phase 1
+## Reconciliação final da Phase 1
 
-O gate Phase 0 → Phase 1 foi satisfeito e o envelope da Epic #26 está
-**Aprovado**. Os pré-requisitos da #37 estão integrados, mas a Phase 1 ainda não
-está concluída:
+O gate Phase 0 → Phase 1 foi satisfeito e a entrega técnica do envelope da Epic
+#26 foi integrada e reproduzida. O encerramento formal ainda depende da
+integração humana deste snapshot:
 
 - [x] #33 integrada pelo PR #72;
 - [x] #34 integrada pelo PR #90;
 - [x] #35 integrada pelo PR #91;
 - [x] #36 integrada pelo PR #94;
 - [x] correção de portas #96 integrada pelo PR #97 no commit `11342db`;
-- [x] #37 com `Condições Verificadas` e branch baseada em `11342db`;
-- [x] CI de aplicação, runbook, status e rastreabilidade da #37 validados localmente;
-- [x] entrega da #37 publicada no draft PR #98 com Application CI e Structural CI verdes;
-- [ ] review humano e squash merge da #37;
-- [ ] ambiente reproduzido e Issue #37/Epic #26 reconciliadas após o merge.
+- [x] #37 integrada pelo squash merge do PR #98 no commit `7a39bac`;
+- [x] Application CI e Structural CI verdes na entrega integrada;
+- [x] imagens reconstruídas a partir da `main` com locks e pins vigentes;
+- [x] API e web reproduzidas `healthy` em `127.0.0.1:8100` e `127.0.0.1:5180`;
+- [x] API respondeu `{"status":"ok","service":"erp-docflow-api"}`;
+- [x] web respondeu HTTP `200` em `/` e `/system`;
+- [x] Jubileu permaneceu respondendo HTTP `200` em `5173`, `8000` e `8080`;
+- [x] backend e frontend passaram lint, testes, typecheck e build locais;
+- [ ] review e squash merge humanos do PR #100, fechando #37/#26 e registrando `STOP`.
 
 ## Fila autorizada da Phase 1
 
@@ -92,9 +100,10 @@ está concluída:
   -> #35 frontend -- integrado pelo PR #91
   -> #36 Compose -- integrado pelo PR #94
   -> #96 portas -- integrado pelo PR #97 / 11342db
-  -> #37 CI, runbook, status e rastreabilidade -- em execução
+  -> #37 CI, runbook, status e rastreabilidade -- integrado pelo PR #98 / 7a39bac
+  -> reprodução concluída; reconciliação no draft PR #100
   -> review + squash merge humanos
-  -> reprodução, reconciliação e encerramento da #26 com STOP
+  -> fechamento de #37/#26 e registro de STOP
 ```
 
 | Issue | Especificação | Condição atual | Gate restante |
@@ -103,12 +112,12 @@ está concluída:
 | #34 | fechada | integrada | nenhum |
 | #35 | fechada | integrada | nenhum |
 | #36 | fechada | integrada | nenhum |
-| #37 | fechada | em execução | CI, PR, review, merge e reconciliação |
+| #37 | fechada | entrega integrada; reconciliação em review | review e squash merge humanos do PR #100 |
 
-O encerramento da Phase 1 entrega somente o R0 técnico previsto na Epic #26.
+O merge do PR #100 encerrará a Phase 1 somente com o R0 técnico previsto na Epic #26.
 O envelope #92 autoriza a direção PDF-first, mas não elimina o refinamento e os
 gates de cada slice. A implementação de produto começa apenas quando #39 tiver
-especificação executável e as dependências da Phase 1 estiverem satisfeitas.
+especificação executável, `Condições Verificadas` e a dependência #26 encerrada.
 
 ## Release R1 em descoberta
 
@@ -134,7 +143,7 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - Os modelos em `docs/templates/` continuam referências, não templates nativos do GitHub.
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
-- Tika/OCR exigem #82/#83; o lifecycle reproduzível e a avaliação Docling estão em #88/#89. Nenhum provider foi promovido.
+- O harness reproduzível da #88 está no draft PR #99 e bloqueia #82/#83 até review e merge humanos; a avaliação Docling permanece na #89. Nenhum provider foi promovido.
 - Dados reais, secrets, deploy de produção, automerge e branch protection continuam fora dos envelopes atuais.
 
 ## Regra de atualização

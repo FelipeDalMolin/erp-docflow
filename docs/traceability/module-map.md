@@ -13,7 +13,7 @@ código, schema ou deploy.
 | `apps/api` | processo FastAPI limitado ao contrato `GET /health` | #34, PR #90 | integrado |
 | `apps/web` | shell React/Vite com `/`, `/system` e not found | #35, PR #91 | integrado |
 | `compose.yml` | orquestração local stateless de API/web com healthchecks | #36/PR #94 e #96/PR #97 (`11342db`) | integrado |
-| CI de aplicação | reproduzir checks de backend, frontend e Compose | #37, PR #98 | checks verdes; ainda requer review e merge |
+| CI de aplicação | reproduzir checks de backend, frontend e Compose | #37, PR #98 (`7a39bac`) | integrado e reproduzido |
 
 Essa fundação não contém banco, object storage, worker, autenticação, dados
 reais ou módulo de domínio. O profile, schemas e dataset sintético PDF-first do
@@ -58,7 +58,6 @@ Workers podem executar jobs de `processing` em processos/containers separados, m
 
 ## Quando atualizar
 
-- quando a #37 for integrada e mudar o estado do CI de aplicação;
 - quando uma Phase posterior criar estrutura real de produto;
 - quando boundary virar módulo de código;
 - quando ADR mudar responsabilidade;
