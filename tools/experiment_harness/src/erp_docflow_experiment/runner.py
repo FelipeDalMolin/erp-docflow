@@ -76,6 +76,26 @@ def _memory_bytes() -> tuple[int | None, int | None]:
     return values.get("MemTotal:"), values.get("MemAvailable:")
 
 
+def _cpu_model() -> str:
+    """Capture one allowlisted CPU model fact with a portable architecture fallback."""
+
+    try:
+        lines = Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeError):
+        lines = []
+    for line in lines:
+        key, separator, value = line.partition(":")
+        if separator and key.strip() in {"model name", "Hardware", "Processor"}:
+            model = value.strip()
+            if model:
+                return model[:512]
+    processor = platform.processor().strip()
+    if processor:
+        return processor[:512]
+    architecture = platform.machine().strip() or "unavailable"
+    return f"architecture:{architecture}"[:512]
+
+
 def _peak_rss_bytes() -> int:
     peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     if sys.platform == "darwin":
@@ -89,7 +109,7 @@ def _environment() -> dict[str, object]:
         "host_class": "small-cpu-lab",
         "operating_system": platform.platform(),
         "architecture": platform.machine(),
-        "cpu": platform.processor() or "unknown",
+        "cpu": _cpu_model(),
         "logical_cpu_count": os.cpu_count(),
         "memory_total_bytes": memory_total,
         "memory_available_bytes": memory_available,

@@ -66,6 +66,7 @@ def test_successful_run_materializes_verifiable_factual_evidence(
     ).hexdigest()
     environment = record["environment"]
     assert isinstance(environment, dict)
+    assert environment["cpu"] != "unknown"
     assert "memory_total_bytes" in environment
     assert "memory_available_bytes" in environment
 

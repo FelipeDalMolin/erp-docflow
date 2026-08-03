@@ -139,9 +139,10 @@ Tika e candidatos OCR não devem ser adicionados por configuração local. Cada 
 6. executar sobre o mesmo manifest/splits e registrar recursos do processo completo;
 7. produzir evidência para revisão humana.
 
-Um resultado do harness registra somente `SUCCEEDED`, `FAILED` ou `INCONCLUSIVE`; ele não
-recomenda promoção ou rejeição. Somente uma `PromotionDecision` humana posterior e separada
-autoriza candidate/capability/profile/host. O harness não escreve nem referencia essa decisão,
+O `BenchmarkRun` de `integrity_probe/v1` nesta slice registra somente fatos com status
+`SUCCEEDED`, `FAILED` ou `INCONCLUSIVE`; ele não recomenda promoção ou rejeição. Candidates
+futuros seguem a policy da #43, mas somente uma `PromotionDecision` humana posterior e separada
+autoriza candidate/capability/profile/host. Este runner não escreve nem referencia essa decisão,
 e o ADR-0016 permanece sujeito ao checkpoint previsto no envelope.
 
 ## Limitações atuais
