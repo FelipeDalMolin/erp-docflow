@@ -15,8 +15,8 @@ Phase 0: encerrada e integrada à main
 Phase 1 / R0: execução controlada autorizada pela Epic #26
 #33–#36: integradas pelos PRs #72, #90, #91 e #94
 #96: correção de portas integrada pelo PR #97 no commit 11342db
-#37: entrega técnica preparada na branch; validações locais concluídas, sem PR integrado
-Próximo gate: publicar o PR da #37, obter CI verde, review e squash merge humanos e reconciliar a Epic #26
+#37: entrega técnica no draft PR #98; Application CI e Structural CI verdes
+Próximo gate: review e squash merge humanos do PR #98, reprodução e reconciliação da Epic #26
 Protótipo PDF-first: envelope específico #92 aprovado; artefatos de preparação existem, runtime de produto não
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
 Realinhamento documental/backlog: Issue #73 e PR #87 integrados; continua sendo documentação planejada
@@ -80,7 +80,7 @@ está concluída:
 - [x] correção de portas #96 integrada pelo PR #97 no commit `11342db`;
 - [x] #37 com `Condições Verificadas` e branch baseada em `11342db`;
 - [x] CI de aplicação, runbook, status e rastreabilidade da #37 validados localmente;
-- [ ] entrega da #37 publicada em PR com checks verdes;
+- [x] entrega da #37 publicada no draft PR #98 com Application CI e Structural CI verdes;
 - [ ] review humano e squash merge da #37;
 - [ ] ambiente reproduzido e Issue #37/Epic #26 reconciliadas após o merge.
 
