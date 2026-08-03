@@ -5,6 +5,8 @@ Este diretório reúne regras e runbooks operacionais. As fontes se complementam
 | Documento | Responsabilidade exclusiva |
 | --- | --- |
 | [Ambientes](AMBIENTES.md) | tipos de ambiente e responsabilidades gerais |
+| [Validação local equivalente ao CI](VALIDACAO_LOCAL_CI.md) | versões e comandos idênticos aos checks do Application CI |
+| [Compose de desenvolvimento](DEVELOPMENT_COMPOSE.md) | runtime local da fundação R0, portas, healthchecks, logs e encerramento |
 | [WSL multi-projetos](WSL_MULTI_PROJETOS.md) | isolamento e preparação detalhada da WSL |
 | [Estratégia Git](ESTRATEGIA_GIT.md) | regras de branch, commit, PR e merge |
 | [Fluxo do GitHub Project](FLUXO_GITHUB_PROJECT.md) | lifecycle, campos, prontidão e continuidade |
@@ -22,3 +24,5 @@ Não manter dois checkouts como se ambos fossem a fonte corrente da mesma máqui
 - O runbook referencia a Estratégia Git em vez de redefinir políticas.
 - O fluxo do Project define estados e prontidão; o modelo operacional explica a governança mais ampla.
 - Ambientes resume responsabilidades; WSL contém o procedimento detalhado.
+- A validação local possui os comandos de checks compartilhados com o Application CI; o Compose possui os comandos de runtime.
+- Os runbooks da fundação R0 não apresentam o shell técnico como ERP funcional nem como pipeline PDF implementado.

@@ -4,12 +4,12 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 
 | Documento | Classe / autoridade | Estado | Relações principais |
 | --- | --- | --- | --- |
-| [`README.md`](../../README.md) | entrada curta do repositório | vigente | portal e status |
+| [`README.md`](../../README.md) | entrada curta do repositório | vigente | portal, status e execução da fundação técnica R0 |
 | [`docs/README.md`](../README.md) | portal e matriz de autoridade | vigente | todos os grupos documentais |
 | [`docs/project/README.md`](../project/README.md) | índice de projeto e governança | vigente | status, roadmap e modelo operacional |
 | [`docs/architecture/README.md`](../architecture/README.md) | índice de arquitetura e domínio | vigente | arquitetura, pipeline, dados, providers e glossário |
 | [`docs/operations/README.md`](../operations/README.md) | índice de operação e execução | vigente | ambientes, Git, Project e runbook |
-| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37 e #73; PR #72 |
+| [`docs/project/PROJECT_STATUS.md`](../project/PROJECT_STATUS.md) | snapshot de fase, gate e fila | vigente | Issues #1, #26, #33–#37, #73 e #96; PRs #72, #87, #90, #91, #94 e #97; #37 em execução |
 | [`AGENTS.md`](../../AGENTS.md) | guardrails executáveis do Codex | vigente | ADR-0003, 0005, 0017 e 0018 |
 | [`.codex/config.toml`](../../.codex/config.toml) | capacidade técnica local do Codex | vigente | ADR-0005; não concede escopo |
 | [`docs/project/MODELO_OPERACIONAL_DO_PROJETO.md`](../project/MODELO_OPERACIONAL_DO_PROJETO.md) | princípios de governança | vigente | ADR-0001–0018 conforme tema |
@@ -18,6 +18,10 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md`](../operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md) | runbook local/CLI | vigente | estratégia Git e ADR-0004 |
 | [`docs/operations/AMBIENTES.md`](../operations/AMBIENTES.md) | ambientes atuais e planejados | vigente/planejado | ADR-0001, 0004, 0007, 0008 e 0014 |
 | [`docs/operations/WSL_MULTI_PROJETOS.md`](../operations/WSL_MULTI_PROJETOS.md) | runbook WSL detalhado | vigente | ADR-0004 e ambientes |
+| [`docs/operations/DEVELOPMENT_COMPOSE.md`](../operations/DEVELOPMENT_COMPOSE.md) | runbook do Compose de desenvolvimento R0 | implementado para desenvolvimento | #36/PR #94 e #96/PR #97; API/web stateless, sem produto ou persistência |
+| [`docs/operations/VALIDACAO_LOCAL_CI.md`](../operations/VALIDACAO_LOCAL_CI.md) | runbook equivalente ao Application CI | preparado na #37; aguarda integração | reproduz checks técnicos sem comprovar produto funcional |
+| [`apps/api/README.md`](../../apps/api/README.md) | execução e validação do bootstrap FastAPI | implementado | #34/PR #90; somente `GET /health` |
+| [`apps/web/README.md`](../../apps/web/README.md) | execução e validação do shell React/Vite | implementado | #35/PR #91; rotas técnicas, sem integração funcional com a API |
 | [`docs/project/ROADMAP.md`](../project/ROADMAP.md) | releases, capabilities, dependências, resultados e gates | vigente | Epics #1, #26–#32 e #75; Issues #74–#86 e #88–#89 |
 | [`docs/product/README.md`](../product/README.md) | índice canônico de produto | planejado/não implementado | north star, piloto R1, UX e entrega |
 | [`docs/product/PRODUCT_NORTH_STAR.md`](../product/PRODUCT_NORTH_STAR.md) | direção de produto e invariantes de valor | planejado/não implementado | fato gerencial sustentado por evidência; #73/#74 |
@@ -31,6 +35,8 @@ Mapa derivado entre fontes documentais, autoridade, status e artefatos relaciona
 | [`docs/architecture/GLOSSARIO_DOCUMENTAL.md`](../architecture/GLOSSARIO_DOCUMENTAL.md) | vocabulário canônico | vigente | arquitetura, pipeline e dados |
 | [`docs/architecture/PROCESSING_PROFILE_CONTRACT.md`](../architecture/PROCESSING_PROFILE_CONTRACT.md) | contrato de perfil, algoritmos, métricas e routing | planejado/não implementado | Tika/OCR/rules/assessment/routing #82–#86; harness/estrutura #88–#89; ADR-0016 proposto |
 | [`docs/architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md`](../architecture/DATA_SCIENCE_ENGINEERING_LIFECYCLE.md) | contrato de notebook/experimento até componente promovido | planejado/não implementado | profile/dataset #43, harness #88, spikes #83/#89 e regressão #48 |
+| [`docs/architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md`](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) | contrato do intake local sintético | planejado e ratificado; não implementado | #38/#92 e PR #95; não cria schema, storage, endpoint ou serviço |
+| [`docs/architecture/profiles/payable_document_pt_br-v1alpha.md`](../architecture/profiles/payable_document_pt_br-v1alpha.md) | profile candidato e fixtures PDF-first | candidato; não promovido | #43/#92 e PR #93; artefato de preparação/avaliação, não fluxo funcional |
 | [`docs/architecture/STRUCTURED_IMPORT_PIPELINE.md`](../architecture/STRUCTURED_IMPORT_PIPELINE.md) | pipeline local de XLSX/CSV e mapeamentos | planejado/não implementado | piloto #75/#77 e proveniência por lote/linha |
 | [`docs/architecture/MANAGERIAL_FINANCIAL_DOMAIN.md`](../architecture/MANAGERIAL_FINANCIAL_DOMAIN.md) | domínio gerencial e financeiro | planejado/não implementado | decisão #74; fatos, obrigações, liquidações, conciliação e rateios |
 | [`docs/architecture/EVIDENCE_TO_REPORT_LINEAGE.md`](../architecture/EVIDENCE_TO_REPORT_LINEAGE.md) | linhagem evidência → fato → relatório | planejado/não implementado | drill-through e read models #78; autoridade #80 |

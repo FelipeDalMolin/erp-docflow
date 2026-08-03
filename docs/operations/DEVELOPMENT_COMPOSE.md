@@ -6,12 +6,20 @@ Este Compose executa somente a API e a interface web em desenvolvimento. Ele
 não é um bundle de piloto ou produção e não contém PostgreSQL, object storage,
 worker, fila, dados reais, secrets ou volumes persistentes de produto.
 
+A página entregue pelo serviço web é um shell técnico R0, não um ERP funcional.
+Este runtime ainda não implementa upload, intake, interpretação, revisão ou
+persistência de PDFs e outros documentos.
+
 ## Pré-requisitos
 
 - Docker Engine com Docker Compose v2 e o plugin Buildx funcional;
 - portas locais `8100` e `5180` livres.
 
 Os comandos abaixo partem da raiz do repositório.
+
+Para executar exatamente o check de configuração usado pelo Application CI,
+consulte a [validação local equivalente ao CI](VALIDACAO_LOCAL_CI.md). Esse check
+não inicia os serviços nem ocupa portas; os comandos abaixo executam o runtime.
 
 ## Validar e iniciar
 
