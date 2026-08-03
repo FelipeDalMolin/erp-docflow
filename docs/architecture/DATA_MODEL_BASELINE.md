@@ -1,13 +1,13 @@
 # Baseline conceitual do modelo documental
 
-Status documental: modelo planejado, não implementado  
-Atualizado em: 2026-07-21
+Status documental: baseline conceitual; recorte relacional mínimo do intake materializado pela #39, demais conceitos planejados
+Atualizado em: 2026-08-02
 Issues de origem: #22 e #73
 ADRs relacionados: ADR-0010, ADR-0011, ADR-0012, ADR-0013, ADR-0015 e ADR-0016 (proposto)
 
 ## 1. Escopo
 
-Este documento define identidades, responsabilidades e invariantes conceituais. Não define tabelas, colunas, ORM, migrations, endpoints ou payloads públicos.
+Este documento define identidades, responsabilidades e invariantes conceituais; ele não é a especificação física de tabelas, colunas, ORM, migrations, endpoints ou payloads públicos. A migration inicial e os modelos mínimos da #39 especializam apenas `DocumentEnvelope`, `DocumentVersion`, `FileObject`, ocorrência de intake e `AuditEvent` conforme o [contrato de persistência e storage](INTAKE_PERSISTENCE_STORAGE_CONTRACT.md).
 
 ## 2. Separações obrigatórias
 
@@ -460,7 +460,7 @@ Definições finais dependem do ADR sucessor do ADR-0015.
 - qual representação mínima de `EvidenceRef` atende documento e linha estruturada?
 - quais scores exigem calibração e como a versão é registrada?
 
-Nenhuma migration deve ser criada antes de responder ao mínimo necessário para o primeiro slice da Phase 2.
+O mínimo necessário para o primeiro slice da Phase 2 foi respondido pela #39 e materializado em sua migration inicial. As perguntas ainda abertas continuam sendo gates para ampliar o schema além desse recorte relacional do intake.
 
 Domínio gerencial, importação, lineage e fechamento possuem baselines especializados:
 

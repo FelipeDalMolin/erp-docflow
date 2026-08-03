@@ -1,12 +1,13 @@
 # Entity Map
 
-Mapa de conceitos planejados. Ainda não há entidades de runtime de produto, tabelas ou state machines implementadas. Os schemas e o harness de experimentos da #88 são infraestrutura de engenharia e não materializam domínio, provider ou promoção. Os conceitos gerenciais e de entrega incluídos pela Issue #73 permanecem baselines sujeitos ao ADR e ao refinamento aplicáveis.
+Mapa de conceitos planejados e do recorte relacional já materializado pela #39. Existem entidades puras, tabelas, constraints e transições mínimas apenas para intake, documents, files e audit; não existem bytes armazenados, endpoint de upload, interpretação ou telas de produto. Os schemas e o harness de experimentos da #88 são infraestrutura de engenharia e não materializam provider ou promoção. Os conceitos gerenciais e de entrega incluídos pela Issue #73 permanecem baselines sujeitos ao ADR e ao refinamento aplicáveis.
 
 | Conceito | Responsabilidade | Boundary | Estado/UML | ADRs | Implementação |
 | --- | --- | --- | --- | --- | --- |
-| `DocumentEnvelope` | identidade e ciclo documental | documents | envelope state | ADR-0012 | não implementado |
-| `DocumentVersion` | versão material original/derivada/gerada | documents/files | domain UML | ADR-0011, 0012 | não implementado |
-| `FileObject` | referência binária, SHA-256, `advertised_mime`, `intake_detected_mime` e integridade | files | domain UML | ADR-0011, 0012, 0014 | não implementado |
+| `IntakeOccurrence` / `IntakeReason` | reserva idempotente, fingerprint, transições, falhas e correlação da materialização | intake | contrato #38 e state machine relacional | ADR-0012, 0014 | mínimo #39 implementado; sem orquestração de storage |
+| `DocumentEnvelope` | identidade e ciclo documental | documents | envelope state | ADR-0012 | mínimo #39 implementado até `INSPECTION_PENDING` |
+| `DocumentVersion` | versão material original/derivada/gerada | documents/files | domain UML | ADR-0011, 0012 | versão original mínima #39 implementada |
+| `FileObject` | referência binária, SHA-256, `advertised_mime`, `intake_detected_mime` e integridade | files | domain UML | ADR-0011, 0012, 0014 | metadados e referência mínima #39 implementados; nenhum byte armazenado |
 | `DocumentProbe` | `probe_detected_mime`, páginas, proteção, parser e warnings, sem decisão de suficiência | processing | pipeline | ADR-0016 (proposto) | não implementado |
 | `NativeTextAssessment` | decidir uso do texto nativo, OCR, review ou quarentena por policy | processing | activity UML | ADR-0016 (proposto); #85 | não implementado |
 | `ProcessingJob` | objetivo/task graph de processamento | processing | job state | ADR-0012, 0016 (proposto) | não implementado |
@@ -25,7 +26,7 @@ Mapa de conceitos planejados. Ainda não há entidades de runtime de produto, ta
 | `ReviewDecision` | ação humana imutável | review | domain UML | ADR-0013; 0015 (proposto/gate) | não implementado |
 | `AcceptedSnapshot` | interpretação aceita/versionada | documents/review | envelope state | ADR-0012, 0013 | não implementado |
 | `EntityLink` | relação sugerida/confirmada | linking | pipeline | ADR-0012, 0013 | não implementado |
-| `AuditEvent` | fato/decisão durável | audit | domain UML | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | não implementado |
+| `AuditEvent` | fato/decisão durável | audit | domain UML | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | evento mínimo e imutável de materialização #39 implementado |
 | `ImportBatch` | execução idempotente de importação com mapping/schema versionados | imports | structured import pipeline | #77 | não implementado |
 | `ImportMappingVersion` | contrato imutável de abas, colunas, tipos, transforms e validators | imports | structured import pipeline | #77 | não implementado |
 | `RawRow` / `RawCell` | valor observado, fórmula não executada, coordenada e warnings | imports | structured import pipeline | #77 | não implementado |

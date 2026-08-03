@@ -2,7 +2,7 @@
 
 - **Classe:** planejamento canônico de Phases, releases e gates
 - **Estado:** vigente
-- **Status corrente:** [Phase 1/R0 encerrada; intake PDF-first no próximo gate; R1 em descoberta](PROJECT_STATUS.md)
+- **Status corrente:** [Phase 1/R0 encerrada; persistência relacional PDF-first da #39 em revisão; R1 em descoberta](PROJECT_STATUS.md)
 - **Atualizar quando:** escopo, dependência, resultado ou gate de Phase/release mudar
 
 Este roadmap organiza a evolução do `erp-docflow` por duas dimensões complementares:
@@ -79,7 +79,7 @@ Resultado preservado:
 
 Objetivo: criar a aplicação mínima reproduzível sem antecipar GED, processamento ou domínio gerencial.
 
-Estado: **encerrada**. A Epic #26 e as slices #33–#37 foram integradas; o runtime R0 foi reproduzido e o snapshot pós-merge foi reconciliado pelo PR #100.
+Estado: **encerrada**. A Epic #26 e as slices #33–#37 foram integradas; o runtime R0 foi reproduzido e a reconciliação factual final foi integrada pelo PR #102 no commit `0691aa5`.
 
 Inclui:
 
@@ -134,9 +134,9 @@ Direção ratificada documentalmente pela #38 para o protótipo local sintético
 - MinIO por interface S3-compatible armazenará originais e futuros derivados, sem blobs no PostgreSQL;
 - SHA-256/tamanho, observações de MIME separadas, idempotência por tenant e reconciliação banco/storage são invariantes obrigatórias;
 - tenant e ator/reviewer fixos de desenvolvimento serão injetados pelo servidor, sem constituir autenticação ou autorização;
-- persistência após restart será comprovada no protótipo; restore conjunto de banco e objetos continua obrigatório antes de `onprem-lab` ou dado real.
+- a #39 comprova após restart somente a materialização relacional sintética; a #40 deverá comprovar a recuperação conjunta do original e dos metadados, enquanto restore do conjunto continua obrigatório antes de `onprem-lab` ou dado real.
 
-O [contrato de persistência e storage do intake](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) registra os limites e o ownership. Essa ratificação **não declara banco, storage, schema, migrations, upload, volumes ou acesso implementados**. As dependências de Phase 1 da #39 estão satisfeitas; a slice ainda deve registrar `Condições Verificadas` próprias antes de materializar domínio e persistência relacional. A #40 depende também do merge humano da #39 para implementar a fronteira MinIO, integridade, reconciliação e restart. Autenticação, exposição externa e dado real permanecem bloqueados pela ADR-0015.
+O [contrato de persistência e storage do intake](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md) registra os limites e o ownership. A #39, com `Condições Verificadas`, materializa nesta revisão somente o recorte relacional: domínio puro, schema/migrations PostgreSQL, repositórios transacionais, constraints de idempotência/auditoria e serviço PostgreSQL interno no Compose. Isso **não** armazena bytes, não cria endpoint de upload e não comprova um original recuperável. A #40 depende do review e squash merge humanos da #39 para implementar a fronteira MinIO, streaming, integridade do objeto, reconciliação e restart ponta a ponta; #41 e #42 continuam responsáveis por upload/API e telas. Autenticação, exposição externa e dado real permanecem bloqueados pela ADR-0015.
 
 ## 7. Phase 3 — Processamento documental
 
@@ -145,7 +145,7 @@ Objetivo: implementar um task graph observável por perfil, com decisões basead
 ### 7.1 Descoberta e decisão antes de implementação
 
 1. #43 define profile, dataset manifest, ground truth, splits, sensibilidade, hardware e métricas.
-2. #88 materializou pelo PR #99 o harness reproduzível de experimento; hardening pós-merge deve ser concluído antes das spikes dependentes.
+2. #88 materializou pelo PR #99 o harness reproduzível de experimento, endurecido pelo PR #101 no commit `a9a0b247`; spikes dependentes ainda exigem refinamento e gates próprios.
 3. #82 valida Tika isolado para probe/texto nativo.
 4. #83 compara candidatos somente para `recognize_text`, enquanto #89 avalia Docling CPU sem OCR para `extract_layout` e `extract_table_structure`; as trilhas podem executar em paralelo após profile/harness, e #83 usa a evidência Tika da #82 quando aplicável.
 5. O perfil Docling composto com OCR, se testado, registra também engine, modelo e configuração subjacentes.

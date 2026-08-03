@@ -1,48 +1,51 @@
 # Module Map
 
 Mapa dos componentes técnicos existentes e dos boundaries de produto
-planejados. Ainda não há módulos de produto implementados. A ampliação abaixo
-registra o destino aprovado para documentação pela Issue #73; não autoriza
-código, schema ou deploy.
+planejados. A #39 materializa o primeiro recorte de domínio e persistência em
+`intake`, `documents`, `files` e `audit`; storage de bytes, upload,
+interpretação e telas continuam ausentes. A ampliação abaixo registra o destino
+aprovado pela Issue #73 e não autoriza outras capacidades, schema ou deploy.
 
 ## Fundação técnica R0
 
 | Componente | Responsabilidade implementada | Evidência | Estado |
 | --- | --- | --- | --- |
 | workspace | pins, manifests e workspace pnpm mínimo | #33, PR #72 | integrado |
-| `apps/api` | processo FastAPI limitado ao contrato `GET /health` | #34, PR #90 | integrado |
+| `apps/api` | processo FastAPI ainda limitado a `GET /health`; domínio e persistência relacional sem rota pública | #34/PR #90 e #39 | parcial de produto |
 | `apps/web` | shell React/Vite com `/`, `/system` e not found | #35, PR #91 | integrado |
-| `compose.yml` | orquestração local stateless de API/web com healthchecks | #36/PR #94 e #96/PR #97 (`11342db`) | integrado |
-| CI de aplicação | reproduzir checks de backend, frontend e Compose | #37, PR #98 (`7a39bac`) | integrado e reproduzido |
+| `compose.yml` | API/web nas portas reservadas e PostgreSQL interno sem publicar `5432` | #36/PR #94, #96/PR #97 (`11342db`) e #39 | integrado e ampliado nesta revisão |
+| CI de aplicação | reproduzir checks de backend/frontend/Compose, migrations e testes PostgreSQL isolados | #37/PR #98 (`7a39bac`) e #39 | integrado e ampliado nesta revisão |
 
-Essa fundação não contém banco, object storage, worker, autenticação, dados
-reais ou módulo de domínio. O profile, schemas e dataset sintético PDF-first do
-PR #93 são artefatos candidatos de preparação/avaliação; não constituem um
-módulo de intake, interpretação ou processamento funcional.
+O PostgreSQL e os módulos relacionais desta revisão não constituem intake
+funcional: não há object storage, worker, autenticação, dados reais, upload ou
+interface de produto. O profile, schemas e dataset sintético PDF-first do PR
+#93 são artefatos candidatos de preparação/avaliação; não constituem
+interpretação ou processamento funcional.
 
 ## Infraestrutura de engenharia integrada
 
 | Componente | Responsabilidade implementada | Evidência | Estado |
 | --- | --- | --- | --- |
-| `tools/experiment_harness` | executar e verificar experimentos sintéticos reproduzíveis sem promover provider | #88, PR #99 (`1dbba5b`) | integrado na trilha Phase 3, com hardening pós-merge pendente; não é provider nem runtime de produto |
+| `tools/experiment_harness` | executar e verificar experimentos sintéticos reproduzíveis sem promover provider | #88, PR #99 (`1dbba5b`) e PR #101 (`a9a0b247`) | integrado e endurecido; não é provider nem runtime de produto |
 
-## Boundaries de produto planejados
+## Boundaries de produto planejados ou parcialmente implementados
 
-Esta seção orienta arquitetura e decomposição futura. Ela não autoriza banco,
-storage, workers, integrações ou qualquer capacidade de produto.
+Esta seção orienta arquitetura e decomposição. Somente os recortes explicitados
+como implementados pela #39 possuem código/schema; isso não autoriza storage,
+workers, integrações ou capacidades adicionais.
 
 | Boundary planejado | Responsabilidade | Conceitos principais | Fonte/ADRs | Implementação |
 | --- | --- | --- | --- | --- |
-| `intake` | canais documentais, idempotência e materialização inicial | ingestion, hash, origem | ADR-0012 | não implementado |
+| `intake` | canais documentais, idempotência e materialização inicial | ingestion, hash, origem | ADR-0012 | parcial #39: fingerprint, ocorrência, transições e repositório; sem canal/upload/storage |
 | `imports` | XLSX/CSV com mapeamento versionado e erros por lote/linha; formatos bancários usam adapters próprios | ImportBatch, ImportMappingVersion, RawRow/RawCell, NormalizedRow | #77; #63 para formato bancário | não implementado |
-| `documents` | ciclo do envelope, versões e snapshots | DocumentEnvelope, DocumentVersion, AcceptedSnapshot | ADR-0012, 0013 | não implementado |
-| `files` | binários, derivados, integridade e retenção | FileObject | ADR-0011, 0012, 0014 | não implementado |
+| `documents` | ciclo do envelope, versões e snapshots | DocumentEnvelope, DocumentVersion, AcceptedSnapshot | ADR-0012, 0013 | parcial #39: envelope e versão original mínimos; snapshots não implementados |
+| `files` | binários, derivados, integridade e retenção | FileObject | ADR-0011, 0012, 0014 | parcial #39: referência/metadados verificados; bytes, derivados e retenção não implementados |
 | `processing` | jobs, attempts, assessment, task graph e routing | ProcessingJob, NativeTextAssessment, RoutingDecision | #82/#85/#86; ADR-0012, 0016 (proposto) | não implementado |
 | `providers` | invocation física e executions por capability; Tika, OCR e estrutura permanecem explícitos | ProviderInvocation, ProviderExecution, RecognitionArtifact, DocumentStructureArtifact | #82/#83/#89; ADR-0016 (proposto) | não implementado |
 | `evaluation` | manifests, runners, datasets, benchmark e promoção de componentes de dados | ExperimentManifest, BenchmarkRun, PromotionDecision | #43/#48/#83/#88/#89; ADR-0016 (proposto quando provider) | parcial: harness de engenharia integrado; nenhum provider promovido |
 | `validation` | parsers, validators, regras determinísticas e conflitos | ValidationResult, rule packs | #47/#84; ADR-0013, 0016 (proposto) | não implementado |
 | `review` | review, correção, aceite, override e rejeição | ReviewCase, ReviewDecision | ADR-0013; 0015 (proposto/gate) | não implementado |
-| `audit` | fatos duráveis e decisões humanas/técnicas | AuditEvent | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | não implementado |
+| `audit` | fatos duráveis e decisões humanas/técnicas | AuditEvent | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | parcial #39: evento imutável da materialização; decisões humanas não implementadas |
 | `lineage` | cadeia evidência → fato → célula/relatório → fechamento | EvidenceRef, DerivationStep | #78; ADR-0012/0013 | não implementado |
 | `linking` | sugestão e confirmação de relações tipadas | EntityLink | ADR-0012, 0013 | não implementado |
 | `assets` | dimensões patrimoniais e respectivos dossiês | Asset | #75; ADR futuro se necessário | não implementado |
