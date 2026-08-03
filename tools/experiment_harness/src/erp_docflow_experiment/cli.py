@@ -40,6 +40,18 @@ def _path_from_cwd(value: Path) -> Path:
     return value.resolve() if value.is_absolute() else (Path.cwd() / value).resolve()
 
 
+def _emit_failure(reason_code: str, message: str) -> int:
+    print(
+        json.dumps(
+            {"status": "FAILED", "reason_code": reason_code, "message": message},
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        file=sys.stderr,
+    )
+    return 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Execute the CLI and emit one machine-readable JSON result."""
 
@@ -54,15 +66,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = verify_bundle(resolve_existing_bundle(repo_root, args.bundle))
         else:
             raise HarnessError("COMMAND_INVALID", "unsupported command")
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     except HarnessError as exc:
-        print(
-            json.dumps(
-                {"status": "FAILED", "reason_code": exc.reason_code, "message": exc.message},
-                ensure_ascii=False,
-                sort_keys=True,
-            ),
-            file=sys.stderr,
+        return _emit_failure(exc.reason_code, exc.message)
+    except Exception:
+        return _emit_failure(
+            "HARNESS_INTERNAL_ERROR",
+            "experiment harness failed unexpectedly",
         )
-        return 1
-    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     return 0

@@ -13,8 +13,8 @@ from erp_docflow_experiment.jsonio import (
     expect_list,
     expect_object,
     expect_string,
-    load_json_object,
-    sha256_file,
+    load_json_object_with_bytes,
+    read_file_bytes,
 )
 from erp_docflow_experiment.models import ExperimentManifest, parse_manifest
 from erp_docflow_experiment.repository import resolve_repo_file
@@ -87,7 +87,11 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
     if not resolved_manifest.is_file():
         raise HarnessError("INPUT_NOT_FOUND", "experiment manifest does not exist")
 
-    manifest_value = load_json_object(resolved_manifest, "experiment manifest")
+    manifest_value, manifest_bytes = load_json_object_with_bytes(
+        resolved_manifest,
+        "experiment manifest",
+        confinement_root=repo_root,
+    )
     manifest = parse_manifest(manifest_value)
     if manifest.candidate.candidate_id not in KNOWN_CANDIDATES:
         raise HarnessError("CANDIDATE_NOT_REGISTERED", "candidate is not in the closed registry")
@@ -127,7 +131,11 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
     )
     lock_path = resolve_repo_file(repo_root, manifest.dependency_lock_ref, "dependency_lock_ref")
 
-    profile_value = load_json_object(profile_path, "profile")
+    profile_value, profile_bytes = load_json_object_with_bytes(
+        profile_path,
+        "profile",
+        confinement_root=repo_root,
+    )
     if expect_string(profile_value.get("data_classification"), "profile.data_classification") != (
         manifest.dataset_classification
     ):
@@ -147,7 +155,11 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
     ):
         raise HarnessError("INPUT_REFERENCE_MISMATCH", "profile references another benchmark")
 
-    dataset_value = load_json_object(dataset_path, "dataset manifest")
+    dataset_value, dataset_bytes = load_json_object_with_bytes(
+        dataset_path,
+        "dataset manifest",
+        confinement_root=repo_root,
+    )
     if expect_string(dataset_value.get("classification"), "dataset.classification") != (
         manifest.dataset_classification
     ):
@@ -157,7 +169,11 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
     ):
         raise HarnessError("INPUT_REFERENCE_MISMATCH", "dataset references another profile")
 
-    acceptance_value = load_json_object(acceptance_path, "acceptance policy")
+    acceptance_value, acceptance_bytes = load_json_object_with_bytes(
+        acceptance_path,
+        "acceptance policy",
+        confinement_root=repo_root,
+    )
     policy_dataset = expect_string(
         acceptance_value.get("dataset_manifest"),
         "acceptance_policy.dataset_manifest",
@@ -169,14 +185,22 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
         )
 
     selected_fixtures = _select_fixtures(manifest, dataset_value)
-    input_paths = {
-        "experiment_manifest": resolved_manifest,
-        "profile": profile_path,
-        "dataset_manifest": dataset_path,
-        "acceptance_policy": acceptance_path,
-        "dependency_lock": lock_path,
+    lock_bytes = read_file_bytes(
+        lock_path,
+        "dependency lock",
+        confinement_root=repo_root,
+    )
+    input_bytes = {
+        "experiment_manifest": manifest_bytes,
+        "profile": profile_bytes,
+        "dataset_manifest": dataset_bytes,
+        "acceptance_policy": acceptance_bytes,
+        "dependency_lock": lock_bytes,
     }
-    digests = {name: sha256_file(path)[0] for name, path in sorted(input_paths.items())}
+    digests = {
+        name: hashlib.sha256(value).hexdigest()
+        for name, value in sorted(input_bytes.items())
+    }
     digests["candidate_configuration"] = hashlib.sha256(
         canonical_json_bytes(manifest.candidate.configuration)
     ).hexdigest()

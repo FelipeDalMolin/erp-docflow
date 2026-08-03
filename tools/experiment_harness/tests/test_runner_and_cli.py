@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,7 @@ from erp_docflow_experiment.cli import main
 from erp_docflow_experiment.errors import HarnessError
 from erp_docflow_experiment.jsonio import canonical_json_bytes
 from erp_docflow_experiment.repository import find_repo_root
-from erp_docflow_experiment.runner import _host_class, run_experiment
+from erp_docflow_experiment.runner import _git, _host_class, run_experiment
 
 REPO_ROOT = find_repo_root(Path(__file__))
 
@@ -145,6 +146,67 @@ def test_existing_output_is_not_overwritten(synthetic_repo: SyntheticRepository)
         run_experiment(synthetic_repo.root, synthetic_repo.manifest_path, requested)
 
     assert caught.value.reason_code == "OUTPUT_ALREADY_EXISTS"
+
+
+def test_empty_candidate_result_is_materialized_as_failure_not_success(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def empty_candidate(*_args: object, **_kwargs: object) -> list[dict[str, object]]:
+        return []
+
+    monkeypatch.setattr("erp_docflow_experiment.runner.run_candidate", empty_candidate)
+    requested = Path(".artifacts/experiments/empty-result")
+
+    with pytest.raises(HarnessError) as caught:
+        run_experiment(synthetic_repo.root, synthetic_repo.manifest_path, requested)
+
+    assert caught.value.reason_code == "CANDIDATE_RESULT_INVALID"
+    output = synthetic_repo.root / requested
+    record = _load(output / "benchmark-run.json")
+    assert record["status"] == "FAILED"
+    assert record["succeeded_fixture_count"] == 0
+    assert _load(output / "fixture-results.json") == {"results": []}
+    assert verify_bundle(output)["status"] == "VERIFIED"
+
+
+def test_unsafe_candidate_result_is_discarded_without_leaking_content(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    secret = "candidate-secret-that-must-not-be-materialized"
+    unsafe = {
+        "fixture_id": "fixture-one",
+        "status": "SUCCEEDED",
+        "reason_code": "INTEGRITY_OK",
+        "content": secret,
+    }
+
+    def unsafe_candidate(
+        _repo_root: Path,
+        _prepared: object,
+        _deadline: float,
+        on_result: object,
+    ) -> list[dict[str, object]]:
+        assert callable(on_result)
+        on_result(unsafe)
+        return [unsafe]
+
+    monkeypatch.setattr("erp_docflow_experiment.runner.run_candidate", unsafe_candidate)
+    requested = Path(".artifacts/experiments/unsafe-result")
+
+    with pytest.raises(HarnessError) as caught:
+        run_experiment(synthetic_repo.root, synthetic_repo.manifest_path, requested)
+
+    assert caught.value.reason_code == "CANDIDATE_RESULT_INVALID"
+    output = synthetic_repo.root / requested
+    materialized = "".join(
+        path.read_text(encoding="utf-8")
+        for path in output.iterdir()
+        if path.is_file()
+    )
+    assert secret not in materialized
+    assert _load(output / "fixture-results.json") == {"results": []}
 
 
 def test_candidate_failure_persists_failed_bundle_without_empty_success(
@@ -285,14 +347,50 @@ def test_provenance_failure_does_not_create_an_empty_output(
     assert not (synthetic_repo.root / requested).exists()
 
 
+def test_artifact_finalization_failure_never_publishes_requested_output(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_bundle(*_args: object, **_kwargs: object) -> dict[str, object]:
+        raise HarnessError("ARTIFACT_WRITE_FAILED", "cannot write an evidence artifact")
+
+    monkeypatch.setattr("erp_docflow_experiment.runner.create_bundle", fail_bundle)
+    requested = Path(".artifacts/experiments/finalization-failed")
+
+    with pytest.raises(HarnessError) as caught:
+        run_experiment(synthetic_repo.root, synthetic_repo.manifest_path, requested)
+
+    assert caught.value.reason_code == "ARTIFACT_WRITE_FAILED"
+    assert not (synthetic_repo.root / requested).exists()
+    staging = list(
+        (synthetic_repo.root / ".artifacts" / "experiments").glob(
+            ".erp-docflow-staging-*"
+        )
+    )
+    assert len(staging) == 1
+    assert not (staging[0] / "artifact-bundle.json").exists()
+
+
 def test_partial_candidate_results_remain_factual_on_failure(
     synthetic_repo: SyntheticRepository,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    fixtures = synthetic_repo.dataset["fixtures"]
+    assert isinstance(fixtures, list)
+    fixture = fixtures[0]
+    assert isinstance(fixture, dict)
     partial = {
         "fixture_id": "fixture-one",
         "status": "SUCCEEDED",
         "reason_code": "INTEGRITY_OK",
+        "file": {
+            "sha256": fixture["sha256"],
+            "size_bytes": fixture["size_bytes"],
+        },
+        "ground_truth": {
+            "sha256": fixture["ground_truth_sha256"],
+            "size_bytes": fixture["ground_truth_size_bytes"],
+        },
     }
 
     def fail_after_result(
@@ -363,6 +461,38 @@ def test_provenance_and_structured_logs_do_not_copy_secrets_content_or_absolute_
     assert "synthetic fixture bytes" not in log_and_provenance
 
 
+def test_git_provenance_disables_repository_hooks_and_fsmonitor(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed_command: list[str] = []
+    observed_environment: dict[str, str] = {}
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        observed_command.extend(command)
+        environment = kwargs["env"]
+        assert isinstance(environment, dict)
+        observed_environment.update(environment)
+        return subprocess.CompletedProcess(command, 0, stdout="a" * 40 + "\n", stderr="")
+
+    monkeypatch.setattr(
+        "erp_docflow_experiment.runner.shutil.which",
+        lambda *_args, **_kwargs: "/usr/bin/git",
+    )
+    monkeypatch.setattr("erp_docflow_experiment.runner.subprocess.run", fake_run)
+
+    assert _git(synthetic_repo.root, "status", "--porcelain") == "a" * 40
+    assert observed_command[:5] == [
+        "/usr/bin/git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.hooksPath=/dev/null",
+    ]
+    assert observed_environment["GIT_CONFIG_GLOBAL"] == "/dev/null"
+    assert observed_environment["GIT_CONFIG_NOSYSTEM"] == "1"
+
+
 def test_cli_returns_one_machine_readable_success(
     synthetic_repo: SyntheticRepository,
     monkeypatch: pytest.MonkeyPatch,
@@ -410,3 +540,36 @@ def test_cli_returns_typed_nonzero_failure_without_success_output(
     error = json.loads(captured.err)
     assert error["status"] == "FAILED"
     assert error["reason_code"] == "CANDIDATE_NOT_REGISTERED"
+
+
+def test_cli_redacts_unexpected_failure_without_traceback_or_secret(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    secret = "unexpected-secret-that-must-not-leak"
+
+    def fail_validation(*_args: object, **_kwargs: object) -> dict[str, object]:
+        raise RuntimeError(secret)
+
+    monkeypatch.setattr("erp_docflow_experiment.cli.validate_experiment", fail_validation)
+    monkeypatch.chdir(synthetic_repo.root)
+
+    exit_code = main(
+        [
+            "validate-manifest",
+            "--manifest",
+            "experiments/synthetic/v1alpha/smoke.json",
+        ]
+    )
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert captured.out == ""
+    assert secret not in captured.err
+    assert "Traceback" not in captured.err
+    assert json.loads(captured.err) == {
+        "status": "FAILED",
+        "reason_code": "HARNESS_INTERNAL_ERROR",
+        "message": "experiment harness failed unexpectedly",
+    }

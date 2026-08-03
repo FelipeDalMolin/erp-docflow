@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import platform
+import re
 import resource
 import shutil
 import subprocess
@@ -18,11 +19,25 @@ from erp_docflow_experiment.candidates import run_candidate
 from erp_docflow_experiment.errors import HarnessError
 from erp_docflow_experiment.jsonio import (
     canonical_json_bytes,
-    sha256_file,
-    write_canonical_json,
+    expect_int,
+    expect_object,
+    expect_string,
+    reject_unknown_keys,
+    require_keys,
+    write_new_canonical_json,
+    write_new_file_bytes,
 )
 from erp_docflow_experiment.manifest import PreparedExperiment, prepare_experiment
-from erp_docflow_experiment.repository import repo_relative, resolve_output_directory
+from erp_docflow_experiment.repository import (
+    assert_directory_identity,
+    create_staging_directory,
+    publish_staging_directory,
+    repo_relative,
+    resolve_output_directory,
+)
+
+_REASON_CODE_PATTERN = re.compile(r"[A-Z][A-Z0-9_]{0,127}")
+_DIGEST_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 
 def _utc_now() -> str:
@@ -35,7 +50,14 @@ def _git(repo_root: Path, *arguments: str) -> str:
         raise HarnessError("PROVENANCE_UNAVAILABLE", "cannot capture Git provenance")
     try:
         completed = subprocess.run(
-            [executable, *arguments],
+            [
+                executable,
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+                "core.hooksPath=/dev/null",
+                *arguments,
+            ],
             cwd=repo_root,
             check=False,
             capture_output=True,
@@ -159,14 +181,17 @@ def _event(event: str, **fields: object) -> dict[str, object]:
     return {"timestamp": _utc_now(), "event": event, **fields}
 
 
-def _write_events(path: Path, events: list[dict[str, object]]) -> None:
-    try:
-        path.write_bytes(b"".join(canonical_json_bytes(event) for event in events))
-    except OSError as exc:
-        raise HarnessError(
-            "ARTIFACT_WRITE_FAILED",
-            "cannot write an evidence artifact",
-        ) from exc
+def _write_events(
+    path: Path,
+    events: list[dict[str, object]],
+    *,
+    confinement_root: Path,
+) -> None:
+    write_new_file_bytes(
+        path,
+        b"".join(canonical_json_bytes(event) for event in events),
+        confinement_root=confinement_root,
+    )
 
 
 def validate_experiment(repo_root: Path, manifest_path: Path) -> dict[str, object]:
@@ -181,6 +206,86 @@ def validate_experiment(repo_root: Path, manifest_path: Path) -> dict[str, objec
         "selected_fixture_count": len(prepared.selected_fixtures),
         "dataset_classification": prepared.manifest.dataset_classification,
     }
+
+
+def _validate_digest_fact(value: object, context: str) -> tuple[str, int]:
+    fact = expect_object(value, context)
+    keys = {"sha256", "size_bytes"}
+    require_keys(fact, keys, context)
+    reject_unknown_keys(fact, keys, context)
+    digest = expect_string(fact.get("sha256"), f"{context}.sha256")
+    size = expect_int(fact.get("size_bytes"), f"{context}.size_bytes")
+    if _DIGEST_PATTERN.fullmatch(digest) is None or size < 0:
+        raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate emitted invalid facts")
+    return digest, size
+
+
+def _validate_candidate_results(
+    prepared: PreparedExperiment,
+    results: list[dict[str, object]],
+    *,
+    require_complete_success: bool,
+) -> None:
+    """Accept only an ordered, allowlisted result prefix for the registered probe."""
+
+    expected_ids = [
+        expect_string(fixture.get("id"), "selected fixture ID")
+        for fixture in prepared.selected_fixtures
+    ]
+    if len(results) > len(expected_ids):
+        raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate emitted too many results")
+
+    for index, raw_result in enumerate(results):
+        selected_fixture = prepared.selected_fixtures[index]
+        result = expect_object(raw_result, "candidate result")
+        common_keys = {"fixture_id", "status", "reason_code"}
+        require_keys(result, common_keys, "candidate result")
+        fixture_id = expect_string(result.get("fixture_id"), "candidate result fixture ID")
+        status = expect_string(result.get("status"), "candidate result status")
+        reason_code = expect_string(result.get("reason_code"), "candidate result reason code")
+        if fixture_id != expected_ids[index] or _REASON_CODE_PATTERN.fullmatch(reason_code) is None:
+            raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate emitted invalid facts")
+
+        if status == "SUCCEEDED":
+            success_keys = common_keys | {"file", "ground_truth"}
+            require_keys(result, success_keys, "candidate result")
+            reject_unknown_keys(result, success_keys, "candidate result")
+            file_digest, file_size = _validate_digest_fact(
+                result.get("file"),
+                "candidate result file",
+            )
+            ground_truth_digest, ground_truth_size = _validate_digest_fact(
+                result.get("ground_truth"),
+                "candidate result ground truth",
+            )
+            expected_file = (
+                expect_string(selected_fixture.get("sha256"), "selected fixture digest"),
+                expect_int(selected_fixture.get("size_bytes"), "selected fixture size"),
+            )
+            expected_ground_truth = (
+                expect_string(
+                    selected_fixture.get("ground_truth_sha256"),
+                    "selected ground truth digest",
+                ),
+                expect_int(
+                    selected_fixture.get("ground_truth_size_bytes"),
+                    "selected ground truth size",
+                ),
+            )
+            if reason_code != "INTEGRITY_OK":
+                raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate emitted invalid facts")
+            if (file_digest, file_size) != expected_file or (
+                ground_truth_digest,
+                ground_truth_size,
+            ) != expected_ground_truth:
+                raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate emitted invalid facts")
+        elif status == "FAILED" and not require_complete_success:
+            reject_unknown_keys(result, common_keys, "candidate result")
+        else:
+            raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate did not fully succeed")
+
+    if require_complete_success and len(results) != len(expected_ids):
+        raise HarnessError("CANDIDATE_RESULT_INVALID", "candidate returned incomplete results")
 
 
 def _run_record(
@@ -243,13 +348,7 @@ def run_experiment(
     output = resolve_output_directory(repo_root, requested_output)
     provenance = _provenance(repo_root, prepared, output)
     environment = _environment()
-    try:
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.mkdir()
-    except FileExistsError as exc:
-        raise HarnessError("OUTPUT_ALREADY_EXISTS", "output bundle already exists") from exc
-    except OSError as exc:
-        raise HarnessError("OUTPUT_CREATE_FAILED", "cannot create output bundle") from exc
+    staging, staging_identity = create_staging_directory(repo_root, output)
 
     started_at = _utc_now()
     started = time.monotonic()
@@ -263,7 +362,11 @@ def run_experiment(
     ]
     results: list[dict[str, object]] = []
     failure: HarnessError | None = None
-    write_canonical_json(output / "experiment-manifest.json", prepared.manifest_value)
+    write_new_canonical_json(
+        staging / "experiment-manifest.json",
+        prepared.manifest_value,
+        confinement_root=staging,
+    )
 
     try:
         deadline = started + prepared.manifest.controls.timeout_seconds
@@ -273,6 +376,11 @@ def run_experiment(
                 "CANDIDATE_RESULT_INVALID",
                 "candidate result callback diverged from returned results",
             )
+        _validate_candidate_results(
+            prepared,
+            results,
+            require_complete_success=True,
+        )
         events.append(
             _event(
                 "candidate_succeeded",
@@ -296,6 +404,21 @@ def run_experiment(
         )
         events.append(_event("candidate_failed", reason_code=failure.reason_code))
 
+    try:
+        _validate_candidate_results(
+            prepared,
+            results,
+            require_complete_success=False,
+        )
+    except HarnessError:
+        results.clear()
+        if failure is None or failure.reason_code != "CANDIDATE_RESULT_INVALID":
+            failure = HarnessError(
+                "CANDIDATE_RESULT_INVALID",
+                "candidate emitted invalid or unsafe results",
+            )
+            events.append(_event("candidate_failed", reason_code=failure.reason_code))
+
     finished_at = _utc_now()
     duration = time.monotonic() - started
     record = _run_record(
@@ -315,16 +438,33 @@ def run_experiment(
             succeeded_fixture_count=record["succeeded_fixture_count"],
         )
     )
-    write_canonical_json(output / "fixture-results.json", {"results": results})
-    write_canonical_json(output / "benchmark-run.json", record)
-    _write_events(output / "events.jsonl", events)
-    bundle = create_bundle(output, prepared.manifest.experiment_id, finished_at)
+    write_new_canonical_json(
+        staging / "fixture-results.json",
+        {"results": results},
+        confinement_root=staging,
+    )
+    write_new_canonical_json(
+        staging / "benchmark-run.json",
+        record,
+        confinement_root=staging,
+    )
+    _write_events(
+        staging / "events.jsonl",
+        events,
+        confinement_root=staging,
+    )
+    bundle, bundle_sha256 = create_bundle(
+        staging,
+        prepared.manifest.experiment_id,
+        finished_at,
+    )
+    assert_directory_identity(staging, staging_identity)
+    publish_staging_directory(staging, staging_identity, output)
 
     if failure is not None:
         raise failure
     files = bundle.get("files")
     artifact_count = len(files) if isinstance(files, list) else 0
-    bundle_sha256, _ = sha256_file(output / "artifact-bundle.json")
     return {
         "status": "SUCCEEDED",
         "experiment_id": prepared.manifest.experiment_id,

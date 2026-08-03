@@ -17,8 +17,13 @@ def _verify_digest(
     expected_sha256: str,
     expected_size: int,
     deadline: float,
+    confinement_root: Path,
 ) -> tuple[str, int]:
-    actual_sha256, actual_size = sha256_file(path, deadline)
+    actual_sha256, actual_size = sha256_file(
+        path,
+        deadline,
+        confinement_root=confinement_root,
+    )
     if actual_sha256 != expected_sha256 or actual_size != expected_size:
         raise HarnessError("INTEGRITY_MISMATCH", "an input digest or size does not match")
     return actual_sha256, actual_size
@@ -51,6 +56,7 @@ def run_integrity_probe(
                 expect_string(fixture.get("sha256"), "fixture.sha256"),
                 expect_int(fixture.get("size_bytes"), "fixture.size_bytes"),
                 deadline,
+                dataset_directory,
             )
 
             ground_truth_path = resolve_dataset_file(
@@ -73,6 +79,7 @@ def run_integrity_probe(
                     "fixture.ground_truth_size_bytes",
                 ),
                 deadline,
+                dataset_directory,
             )
         except HarnessError as exc:
             failed_result: dict[str, object] = {

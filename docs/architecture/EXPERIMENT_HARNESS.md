@@ -38,6 +38,7 @@ Requisitos:
 
 - Python `3.13.14`;
 - uv `0.11.16`;
+- Linux com `renameat2(RENAME_NOREPLACE)` para publicação atômica do bundle;
 - Git disponível para capturar commit e estado do worktree;
 - execução a partir da raiz de um worktree Git do repositório;
 - nenhum acesso de rede durante validação, smoke ou verificação.
@@ -90,6 +91,10 @@ texto, identificadores ou conteúdo em artifacts/log. Os eventos têm campos all
 `BenchmarkRun` registra se o worktree estava limpo; executar com alterações locais é permitido
 para diagnóstico, mas essa condição fica explícita na evidência.
 
+Os JSONs governantes são parseados e digeridos a partir da mesma captura estável de bytes. As
+aberturas percorrem componentes com `O_NOFOLLOW`; o subprocesso Git usa argumentos fixos,
+ambiente mínimo e desativa `core.fsmonitor` e hooks do checkout.
+
 `host_class` é derivado dos limites observados de CPU/RAM/GPU declarada. Uma execução arbitrária
 não recebe o rótulo-alvo `small-cpu-lab`: por exemplo,
 `observed-cpu-3-memory-5gib-gpu-not-declared`. O target permanece na acceptance policy e só pode
@@ -98,6 +103,12 @@ ser associado a uma classe elegível por decisão humana posterior.
 O output nunca é sobrescrito. Para repetir, use outro ID/diretório ou mova o bundle anterior por
 um procedimento consciente e rastreável. O harness não possui comando de limpeza.
 
+Durante a execução, os artifacts ficam em um diretório privado
+`.erp-docflow-staging-*`, irmão do destino. Somente depois de criar e verificar o descriptor esse
+diretório é publicado atomicamente, sem substituir um destino concorrente. Uma falha de
+filesystem/finalização não expõe o path final solicitado; o staging pode permanecer para
+diagnóstico consciente.
+
 ## Verificar o bundle
 
 ```bash
@@ -105,15 +116,17 @@ uv run --project tools/experiment_harness erp-docflow-experiment verify-artifact
   --bundle .artifacts/experiments/harness-smoke
 ```
 
-A verificação recalcula SHA-256 e tamanho e compara o conjunto completo de arquivos. Artifact
-ausente, modificado, extra, duplicado, symlink ou path inseguro encerra com código diferente de
-zero. O comando também retorna o SHA-256 do próprio `artifact-bundle.json`; preserve esse digest
-junto da evidência externa que referencia o bundle. O descriptor é lido como contrato; ele não
-inventaria evidência ausente.
+A verificação exige nominalmente os quatro artifacts canônicos, recalcula SHA-256 e tamanho e
+compara o conjunto completo de arquivos. Artifact obrigatório ausente, modificado, extra,
+duplicado, symlink ou path inseguro encerra com código diferente de zero. O comando também
+retorna o SHA-256 do próprio `artifact-bundle.json`; preserve esse digest junto da evidência
+externa que referencia o bundle. O descriptor é lido como contrato; ele não inventaria evidência
+ausente.
 
-Quando uma execução falha depois de criar o diretório, o harness persiste `BenchmarkRun` com
-`FAILED` e reason code, inventaria os artifacts produzidos e retorna código diferente de zero.
-Uma falha nunca aparece como sucesso vazio.
+Quando o candidate falha depois de criar o staging, o harness persiste `BenchmarkRun` com
+`FAILED` e reason code, inventaria os artifacts produzidos, publica o bundle factual e retorna
+código diferente de zero. Retorno vazio, incompleto, duplicado, fora de ordem ou com facts não
+allowlisted também vira falha; nunca aparece como sucesso vazio.
 
 ## Checks da slice
 
