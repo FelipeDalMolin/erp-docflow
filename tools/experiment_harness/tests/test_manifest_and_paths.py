@@ -142,6 +142,19 @@ def test_candidate_configuration_and_capability_are_owned_by_registry(
     assert _reason(caught) == "CANDIDATE_CONFIGURATION_INVALID"
 
 
+def test_candidate_must_use_the_dependency_lock_that_governs_execution(
+    synthetic_repo: SyntheticRepository,
+) -> None:
+    manifest = synthetic_repo.manifest_copy()
+    manifest["dependency_lock_ref"] = ".gitignore"
+    synthetic_repo.write_manifest(manifest)
+
+    with pytest.raises(HarnessError) as caught:
+        prepare_experiment(synthetic_repo.root, synthetic_repo.manifest_path)
+
+    assert _reason(caught) == "DEPENDENCY_LOCK_MISMATCH"
+
+
 def test_missing_and_traversing_input_references_are_rejected(
     synthetic_repo: SyntheticRepository,
 ) -> None:

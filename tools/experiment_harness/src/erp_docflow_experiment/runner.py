@@ -96,6 +96,19 @@ def _cpu_model() -> str:
     return f"architecture:{architecture}"[:512]
 
 
+def _host_class(logical_cpu_count: int | None, memory_total_bytes: int | None) -> str:
+    """Derive a comparison-safe observed resource class without claiming target eligibility."""
+
+    cpu = str(logical_cpu_count) if logical_cpu_count and logical_cpu_count > 0 else "unknown"
+    if memory_total_bytes and memory_total_bytes > 0:
+        gibibyte = 1024**3
+        rounded_gib = max(1, (memory_total_bytes + gibibyte // 2) // gibibyte)
+        memory = f"{rounded_gib}gib"
+    else:
+        memory = "unknown"
+    return f"observed-cpu-{cpu}-memory-{memory}-gpu-not-declared"
+
+
 def _peak_rss_bytes() -> int:
     peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     if sys.platform == "darwin":
@@ -105,12 +118,13 @@ def _peak_rss_bytes() -> int:
 
 def _environment() -> dict[str, object]:
     memory_total, memory_available = _memory_bytes()
+    logical_cpu_count = os.cpu_count()
     return {
-        "host_class": "small-cpu-lab",
+        "host_class": _host_class(logical_cpu_count, memory_total),
         "operating_system": platform.platform(),
         "architecture": platform.machine(),
         "cpu": _cpu_model(),
-        "logical_cpu_count": os.cpu_count(),
+        "logical_cpu_count": logical_cpu_count,
         "memory_total_bytes": memory_total,
         "memory_available_bytes": memory_available,
         "gpu": "not_declared",
@@ -269,6 +283,12 @@ def run_experiment(
     except HarnessError as exc:
         failure = exc
         events.append(_event("candidate_failed", reason_code=exc.reason_code))
+    except KeyboardInterrupt:
+        failure = HarnessError(
+            "OPERATOR_INTERRUPTED",
+            "experiment interrupted by operator",
+        )
+        events.append(_event("candidate_failed", reason_code=failure.reason_code))
     except Exception:
         failure = HarnessError(
             "CANDIDATE_EXECUTION_FAILED",

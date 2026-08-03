@@ -61,9 +61,9 @@ uv run --project tools/experiment_harness erp-docflow-experiment validate-manife
 ```
 
 A validação resolve apenas paths confinados ao repositório, confirma profile/dataset/policy,
-classificação sintética, candidate, controles, lock e contagem das fixtures. Manifest ausente,
-campo desconhecido, path traversal, dado real, egress, concorrência diferente de um ou
-candidate desconhecido falham fechados.
+classificação sintética, candidate, controles, o lock registrado para o candidate e a contagem
+das fixtures. Manifest ausente, campo desconhecido, path traversal, dado real, egress,
+concorrência diferente de um ou candidate desconhecido falham fechados.
 
 ## Executar o smoke real
 
@@ -89,6 +89,11 @@ O runner lê cada arquivo e ground truth incrementalmente. Ele não grava cópia
 texto, identificadores ou conteúdo em artifacts/log. Os eventos têm campos allowlisted. O
 `BenchmarkRun` registra se o worktree estava limpo; executar com alterações locais é permitido
 para diagnóstico, mas essa condição fica explícita na evidência.
+
+`host_class` é derivado dos limites observados de CPU/RAM/GPU declarada. Uma execução arbitrária
+não recebe o rótulo-alvo `small-cpu-lab`: por exemplo,
+`observed-cpu-3-memory-5gib-gpu-not-declared`. O target permanece na acceptance policy e só pode
+ser associado a uma classe elegível por decisão humana posterior.
 
 O output nunca é sobrescrito. Para repetir, use outro ID/diretório ou mova o bundle anterior por
 um procedimento consciente e rastreável. O harness não possui comando de limpeza.

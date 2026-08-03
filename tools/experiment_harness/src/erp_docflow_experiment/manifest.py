@@ -19,7 +19,10 @@ from erp_docflow_experiment.jsonio import (
 from erp_docflow_experiment.models import ExperimentManifest, parse_manifest
 from erp_docflow_experiment.repository import resolve_repo_file
 
-KNOWN_CANDIDATES = frozenset({"integrity_probe/v1"})
+CANDIDATE_DEPENDENCY_LOCKS = {
+    "integrity_probe/v1": "tools/experiment_harness/uv.lock",
+}
+KNOWN_CANDIDATES = frozenset(CANDIDATE_DEPENDENCY_LOCKS)
 
 
 @dataclass(frozen=True)
@@ -88,6 +91,13 @@ def prepare_experiment(repo_root: Path, manifest_path: Path) -> PreparedExperime
     manifest = parse_manifest(manifest_value)
     if manifest.candidate.candidate_id not in KNOWN_CANDIDATES:
         raise HarnessError("CANDIDATE_NOT_REGISTERED", "candidate is not in the closed registry")
+    if manifest.dependency_lock_ref != CANDIDATE_DEPENDENCY_LOCKS[
+        manifest.candidate.candidate_id
+    ]:
+        raise HarnessError(
+            "DEPENDENCY_LOCK_MISMATCH",
+            "candidate must use its registered dependency lock",
+        )
     if manifest.candidate.candidate_id == "integrity_probe/v1":
         if manifest.capability != "harness_integrity":
             raise HarnessError(

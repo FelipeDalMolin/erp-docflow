@@ -14,7 +14,7 @@ from erp_docflow_experiment.cli import main
 from erp_docflow_experiment.errors import HarnessError
 from erp_docflow_experiment.jsonio import canonical_json_bytes
 from erp_docflow_experiment.repository import find_repo_root
-from erp_docflow_experiment.runner import run_experiment
+from erp_docflow_experiment.runner import _host_class, run_experiment
 
 REPO_ROOT = find_repo_root(Path(__file__))
 
@@ -23,6 +23,15 @@ def _load(path: Path) -> dict[str, object]:
     value = json.loads(path.read_text(encoding="utf-8"))
     assert isinstance(value, dict)
     return value
+
+
+def test_host_class_is_derived_from_the_observed_resource_envelope() -> None:
+    assert _host_class(3, 5 * 1024**3) == (
+        "observed-cpu-3-memory-5gib-gpu-not-declared"
+    )
+    assert _host_class(None, None) == (
+        "observed-cpu-unknown-memory-unknown-gpu-not-declared"
+    )
 
 
 def test_successful_run_materializes_verifiable_factual_evidence(
@@ -66,6 +75,8 @@ def test_successful_run_materializes_verifiable_factual_evidence(
     ).hexdigest()
     environment = record["environment"]
     assert isinstance(environment, dict)
+    assert str(environment["host_class"]).startswith("observed-cpu-")
+    assert environment["host_class"] != "small-cpu-lab"
     assert environment["cpu"] != "unknown"
     assert "memory_total_bytes" in environment
     assert "memory_available_bytes" in environment
@@ -217,6 +228,42 @@ def test_unexpected_candidate_failure_is_redacted_and_materialized(
     assert _load(output / "benchmark-run.json")["failure"] == {
         "reason_code": "CANDIDATE_EXECUTION_FAILED",
         "message": "candidate execution failed",
+    }
+    assert verify_bundle(output)["status"] == "VERIFIED"
+
+
+def test_operator_interrupt_is_typed_and_materialized_before_returning_nonzero(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    def interrupt_candidate(*_args: object, **_kwargs: object) -> list[dict[str, object]]:
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr("erp_docflow_experiment.runner.run_candidate", interrupt_candidate)
+    monkeypatch.chdir(synthetic_repo.root)
+    requested = ".artifacts/experiments/operator-interrupt"
+
+    exit_code = main(
+        [
+            "run",
+            "--manifest",
+            "experiments/synthetic/v1alpha/smoke.json",
+            "--output",
+            requested,
+        ]
+    )
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert captured.out == ""
+    assert json.loads(captured.err)["reason_code"] == "OPERATOR_INTERRUPTED"
+    output = synthetic_repo.root / requested
+    record = _load(output / "benchmark-run.json")
+    assert record["status"] == "FAILED"
+    assert record["failure"] == {
+        "reason_code": "OPERATOR_INTERRUPTED",
+        "message": "experiment interrupted by operator",
     }
     assert verify_bundle(output)["status"] == "VERIFIED"
 
