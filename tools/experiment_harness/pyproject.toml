@@ -1,0 +1,47 @@
+[project]
+name = "erp-docflow-experiment-harness"
+version = "0.1.0"
+description = "Reproducible, offline experiment harness for ERP DocFlow"
+readme = "README.md"
+requires-python = ">=3.13.14,<3.14"
+dependencies = []
+
+[project.scripts]
+erp-docflow-experiment = "erp_docflow_experiment.cli:main"
+
+[build-system]
+requires = ["hatchling==1.29.0"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+build = [
+  "hatchling==1.29.0",
+]
+dev = [
+  "mypy>=1.19.1,<2",
+  "pytest>=9.1.1,<10",
+  "ruff>=0.15.22,<0.16",
+]
+
+[tool.uv]
+default-groups = ["build", "dev"]
+required-version = "==0.11.16"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/erp_docflow_experiment"]
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_unused_configs = true

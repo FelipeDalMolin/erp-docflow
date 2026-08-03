@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:erp-docflow:schema:experiment-manifest:v1alpha",
+  "title": "ERP DocFlow ExperimentManifest v1alpha",
+  "description": "Immutable, offline input contract for one reproducible experiment run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "issue",
+    "purpose",
+    "capability",
+    "profile_ref",
+    "dataset_manifest_ref",
+    "acceptance_policy_ref",
+    "dependency_lock_ref",
+    "dataset_classification",
+    "candidate",
+    "controls",
+    "fixture_selector"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "experiment-manifest/v1alpha"
+    },
+    "experiment_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "issue": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "capability": {
+      "const": "harness_integrity"
+    },
+    "profile_ref": {
+      "$ref": "#/$defs/repository_path"
+    },
+    "dataset_manifest_ref": {
+      "$ref": "#/$defs/repository_path"
+    },
+    "acceptance_policy_ref": {
+      "$ref": "#/$defs/repository_path"
+    },
+    "dependency_lock_ref": {
+      "$ref": "#/$defs/repository_path"
+    },
+    "dataset_classification": {
+      "const": "synthetic"
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "configuration"
+      ],
+      "properties": {
+        "id": {
+          "const": "integrity_probe/v1"
+        },
+        "configuration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "verify_ground_truth"
+          ],
+          "properties": {
+            "verify_ground_truth": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "controls": {
+      "$ref": "#/$defs/controls"
+    },
+    "fixture_selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "splits",
+        "fixture_ids",
+        "expected_fixture_count"
+      ],
+      "properties": {
+        "splits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "development",
+              "validation",
+              "test"
+            ]
+          }
+        },
+        "fixture_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/fixture_id"
+          }
+        },
+        "expected_fixture_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "fixture_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "repository_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_egress_allowed",
+        "real_data_allowed",
+        "max_parallel_jobs",
+        "timeout_seconds",
+        "random_seed"
+      ],
+      "properties": {
+        "runtime_egress_allowed": {
+          "const": false
+        },
+        "real_data_allowed": {
+          "const": false
+        },
+        "max_parallel_jobs": {
+          "const": 1
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "random_seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    }
+  }
+}

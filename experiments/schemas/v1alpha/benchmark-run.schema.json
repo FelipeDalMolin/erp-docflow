@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:erp-docflow:schema:benchmark-run:v1alpha",
+  "title": "ERP DocFlow BenchmarkRun v1alpha",
+  "description": "Factual result and provenance for one experiment execution; it is not a promotion decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "issue",
+    "capability",
+    "candidate",
+    "status",
+    "started_at",
+    "finished_at",
+    "duration_seconds",
+    "peak_rss_bytes",
+    "selected_fixture_count",
+    "succeeded_fixture_count",
+    "failure",
+    "provenance",
+    "environment",
+    "controls",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "benchmark-run/v1alpha"
+    },
+    "experiment_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "issue": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "candidate": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._/-]*$"
+    },
+    "status": {
+      "enum": [
+        "SUCCEEDED",
+        "FAILED",
+        "INCONCLUSIVE"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "peak_rss_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "selected_fixture_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "succeeded_fixture_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/failure"
+        }
+      ]
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "controls": {
+      "$ref": "#/$defs/controls"
+    },
+    "artifacts": {
+      "$ref": "#/$defs/artifacts"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SUCCEEDED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "failure": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAILED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "failure": {
+            "$ref": "#/$defs/failure"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repository_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason_code",
+        "message"
+      ],
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "git_commit",
+        "workspace_clean",
+        "input_sha256",
+        "runner_version",
+        "runner_command"
+      ],
+      "properties": {
+        "git_commit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "workspace_clean": {
+          "type": "boolean"
+        },
+        "input_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "experiment_manifest",
+            "profile",
+            "dataset_manifest",
+            "acceptance_policy",
+            "dependency_lock",
+            "candidate_configuration"
+          ],
+          "properties": {
+            "experiment_manifest": {
+              "$ref": "#/$defs/sha256"
+            },
+            "profile": {
+              "$ref": "#/$defs/sha256"
+            },
+            "dataset_manifest": {
+              "$ref": "#/$defs/sha256"
+            },
+            "acceptance_policy": {
+              "$ref": "#/$defs/sha256"
+            },
+            "dependency_lock": {
+              "$ref": "#/$defs/sha256"
+            },
+            "candidate_configuration": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        },
+        "runner_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "runner_command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "host_class",
+        "operating_system",
+        "architecture",
+        "cpu",
+        "logical_cpu_count",
+        "memory_total_bytes",
+        "memory_available_bytes",
+        "gpu",
+        "runtime_versions"
+      ],
+      "properties": {
+        "host_class": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "operating_system": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "architecture": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "cpu": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "logical_cpu_count": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memory_total_bytes": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memory_available_bytes": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "gpu": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "runtime_versions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "python",
+            "harness"
+          ],
+          "properties": {
+            "python": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "harness": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_egress_allowed",
+        "real_data_allowed",
+        "max_parallel_jobs",
+        "timeout_seconds",
+        "random_seed"
+      ],
+      "properties": {
+        "runtime_egress_allowed": {
+          "const": false
+        },
+        "real_data_allowed": {
+          "const": false
+        },
+        "max_parallel_jobs": {
+          "const": 1
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "random_seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resolved_manifest",
+        "fixture_results",
+        "events"
+      ],
+      "properties": {
+        "resolved_manifest": {
+          "const": "experiment-manifest.json"
+        },
+        "fixture_results": {
+          "const": "fixture-results.json"
+        },
+        "events": {
+          "const": "events.jsonl"
+        }
+      }
+    }
+  }
+}
