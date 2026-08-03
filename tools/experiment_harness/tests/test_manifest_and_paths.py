@@ -2,17 +2,21 @@
 
 from __future__ import annotations
 
+import hashlib
 import time
 from pathlib import Path
 
 import pytest
 from conftest import SyntheticRepository
 
+import erp_docflow_experiment.manifest as manifest_module
 from erp_docflow_experiment.candidates import run_integrity_probe
 from erp_docflow_experiment.errors import HarnessError
 from erp_docflow_experiment.manifest import prepare_experiment
 from erp_docflow_experiment.models import parse_manifest
 from erp_docflow_experiment.repository import (
+    create_staging_directory,
+    publish_staging_directory,
     resolve_existing_bundle,
     resolve_output_directory,
     resolve_repo_file,
@@ -37,6 +41,49 @@ def test_valid_manifest_resolves_every_static_input(
         "selected_fixture_count": 1,
         "dataset_classification": "synthetic",
     }
+
+
+def test_input_digest_is_derived_from_the_exact_bytes_that_were_parsed(
+    synthetic_repo: SyntheticRepository,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_bytes = synthetic_repo.dataset_path.read_bytes()
+    original_loader = manifest_module.load_json_object_with_bytes
+    mutated = False
+
+    def load_then_mutate(
+        path: Path,
+        context: str,
+        *,
+        confinement_root: Path | None = None,
+    ) -> tuple[dict[str, object], bytes]:
+        nonlocal mutated
+        value, raw = original_loader(
+            path,
+            context,
+            confinement_root=confinement_root,
+        )
+        if path == synthetic_repo.dataset_path and not mutated:
+            changed = synthetic_repo.dataset_copy()
+            changed["concurrent_change"] = True
+            synthetic_repo.write_dataset(changed)
+            mutated = True
+        return value, raw
+
+    monkeypatch.setattr(
+        manifest_module,
+        "load_json_object_with_bytes",
+        load_then_mutate,
+    )
+
+    prepared = prepare_experiment(synthetic_repo.root, synthetic_repo.manifest_path)
+
+    assert prepared.input_digests["dataset_manifest"] == hashlib.sha256(
+        original_bytes
+    ).hexdigest()
+    assert prepared.input_digests["dataset_manifest"] != hashlib.sha256(
+        synthetic_repo.dataset_path.read_bytes()
+    ).hexdigest()
 
 
 @pytest.mark.parametrize(
@@ -342,6 +389,7 @@ def test_output_is_confined_and_never_overwritten(
 
     for disallowed in (
         Path(".artifacts/experiments"),
+        Path(".artifacts/experiments/unsafe;command"),
         Path("../escape"),
         tmp_path / "absolute-escape",
     ):
@@ -353,6 +401,45 @@ def test_output_is_confined_and_never_overwritten(
     with pytest.raises(HarnessError) as caught:
         resolve_output_directory(synthetic_repo.root, Path(".artifacts/experiments/new-bundle"))
     assert _reason(caught) == "OUTPUT_ALREADY_EXISTS"
+
+
+def test_symlink_inserted_after_resolution_cannot_redirect_staging(
+    synthetic_repo: SyntheticRepository,
+    tmp_path: Path,
+) -> None:
+    requested = Path(".artifacts/experiments/nested/new-bundle")
+    output = resolve_output_directory(synthetic_repo.root, requested)
+    outside = tmp_path / "outside-output"
+    outside.mkdir()
+    nested = synthetic_repo.root / ".artifacts" / "experiments" / "nested"
+    nested.parent.mkdir(parents=True)
+    nested.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(HarnessError) as caught:
+        create_staging_directory(synthetic_repo.root, output)
+
+    assert _reason(caught) == "OUTPUT_CREATE_FAILED"
+    assert list(outside.iterdir()) == []
+
+
+def test_atomic_publication_never_replaces_a_racing_destination(
+    synthetic_repo: SyntheticRepository,
+) -> None:
+    output = resolve_output_directory(
+        synthetic_repo.root,
+        Path(".artifacts/experiments/racing-output"),
+    )
+    staging, identity = create_staging_directory(synthetic_repo.root, output)
+    output.mkdir()
+    marker = output / "preexisting-marker.txt"
+    marker.write_text("preserve me", encoding="utf-8")
+
+    with pytest.raises(HarnessError) as caught:
+        publish_staging_directory(staging, identity, output)
+
+    assert _reason(caught) == "OUTPUT_ALREADY_EXISTS"
+    assert marker.read_text(encoding="utf-8") == "preserve me"
+    assert staging.is_dir()
 
 
 def test_repository_reference_rejects_noncanonical_path(

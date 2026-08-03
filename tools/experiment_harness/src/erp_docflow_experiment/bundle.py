@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import mimetypes
 import re
 from datetime import datetime
@@ -9,19 +10,28 @@ from pathlib import Path
 
 from erp_docflow_experiment.errors import HarnessError
 from erp_docflow_experiment.jsonio import (
+    canonical_json_bytes,
     expect_int,
     expect_list,
     expect_object,
     expect_string,
-    load_json_object,
+    load_json_object_with_bytes,
     reject_unknown_keys,
     require_keys,
     sha256_file,
-    write_canonical_json,
+    write_new_file_bytes,
 )
 from erp_docflow_experiment.repository import safe_bundle_member
 
 BUNDLE_FILENAME = "artifact-bundle.json"
+REQUIRED_EVIDENCE_FILES = frozenset(
+    {
+        "benchmark-run.json",
+        "events.jsonl",
+        "experiment-manifest.json",
+        "fixture-results.json",
+    }
+)
 BUNDLE_KEYS = {"schema_version", "experiment_id", "created_at", "files"}
 ENTRY_KEYS = {"path", "sha256", "size_bytes", "media_type"}
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
@@ -37,11 +47,20 @@ def _media_type(path: Path) -> str:
     return guessed or "application/octet-stream"
 
 
-def create_bundle(bundle_root: Path, experiment_id: str, created_at: str) -> dict[str, object]:
+def create_bundle(
+    bundle_root: Path,
+    experiment_id: str,
+    created_at: str,
+) -> tuple[dict[str, object], str]:
     """Inventory every regular evidence file and write the bundle descriptor last."""
 
     files: list[dict[str, object]] = []
     descriptor = bundle_root / BUNDLE_FILENAME
+    if descriptor.exists() or descriptor.is_symlink():
+        raise HarnessError(
+            "ARTIFACT_DESCRIPTOR_EXISTS",
+            "bundle descriptor already exists",
+        )
     for path in sorted(bundle_root.rglob("*")):
         if path == descriptor:
             continue
@@ -51,7 +70,7 @@ def create_bundle(bundle_root: Path, experiment_id: str, created_at: str) -> dic
             continue
         if not path.is_file():
             raise HarnessError("ARTIFACT_PATH_INVALID", "bundle contains a non-regular artifact")
-        digest, size = sha256_file(path)
+        digest, size = sha256_file(path, confinement_root=bundle_root)
         files.append(
             {
                 "path": path.relative_to(bundle_root).as_posix(),
@@ -60,7 +79,10 @@ def create_bundle(bundle_root: Path, experiment_id: str, created_at: str) -> dic
                 "media_type": _media_type(path),
             }
         )
-    if len(files) < 4:
+    inventoried_paths = {
+        entry["path"] for entry in files if isinstance(entry.get("path"), str)
+    }
+    if not REQUIRED_EVIDENCE_FILES.issubset(inventoried_paths):
         raise HarnessError(
             "ARTIFACT_BUNDLE_INCOMPLETE",
             "bundle must contain the required evidence files",
@@ -71,8 +93,13 @@ def create_bundle(bundle_root: Path, experiment_id: str, created_at: str) -> dic
         "created_at": created_at,
         "files": files,
     }
-    write_canonical_json(descriptor, value)
-    return value
+    descriptor_bytes = canonical_json_bytes(value)
+    write_new_file_bytes(
+        descriptor,
+        descriptor_bytes,
+        confinement_root=bundle_root,
+    )
+    return value, hashlib.sha256(descriptor_bytes).hexdigest()
 
 
 def verify_bundle(bundle_root: Path) -> dict[str, object]:
@@ -83,7 +110,11 @@ def verify_bundle(bundle_root: Path) -> dict[str, object]:
     descriptor = bundle_root / BUNDLE_FILENAME
     if descriptor.is_symlink() or not descriptor.is_file():
         raise HarnessError("BUNDLE_NOT_FOUND", "bundle descriptor does not exist")
-    value = load_json_object(descriptor, "artifact bundle")
+    value, descriptor_bytes = load_json_object_with_bytes(
+        descriptor,
+        "artifact bundle",
+        confinement_root=bundle_root,
+    )
     require_keys(value, BUNDLE_KEYS, "artifact bundle")
     reject_unknown_keys(value, BUNDLE_KEYS, "artifact bundle")
     if value.get("schema_version") != "artifact-bundle/v1alpha":
@@ -123,7 +154,10 @@ def verify_bundle(bundle_root: Path) -> dict[str, object]:
         path = safe_bundle_member(bundle_root, member)
         if path.is_symlink() or not path.is_file():
             raise HarnessError("ARTIFACT_MISSING", "an inventoried artifact is missing")
-        actual_sha256, actual_size = sha256_file(path)
+        actual_sha256, actual_size = sha256_file(
+            path,
+            confinement_root=bundle_root,
+        )
         expected_sha256 = expect_string(
             entry.get("sha256"),
             f"artifact_bundle.files[{index}].sha256",
@@ -145,6 +179,9 @@ def verify_bundle(bundle_root: Path) -> dict[str, object]:
         if actual_sha256 != expected_sha256 or actual_size != expected_size:
             raise HarnessError("ARTIFACT_INTEGRITY_MISMATCH", "an artifact was modified")
 
+    if not REQUIRED_EVIDENCE_FILES.issubset(expected_paths):
+        raise HarnessError("ARTIFACT_MISSING", "bundle is missing required evidence artifacts")
+
     actual_paths: set[str] = set()
     for path in bundle_root.rglob("*"):
         if path.is_symlink():
@@ -164,10 +201,9 @@ def verify_bundle(bundle_root: Path) -> dict[str, object]:
         raise HarnessError("ARTIFACT_MISSING", "bundle is missing inventoried artifacts")
     if extras:
         raise HarnessError("ARTIFACT_EXTRA", "bundle contains uninventoried artifacts")
-    bundle_sha256, _ = sha256_file(descriptor)
     return {
         "status": "VERIFIED",
         "experiment_id": experiment_id,
         "artifact_count": len(expected_paths),
-        "bundle_sha256": bundle_sha256,
+        "bundle_sha256": hashlib.sha256(descriptor_bytes).hexdigest(),
     }
