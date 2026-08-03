@@ -10,9 +10,9 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 | [ADR-0004](../adr/0004-local-dev-windows-wsl-vscode.md) | Desenvolvimento local com Windows, WSL e VS Code | Aceito | 2026-06-22 | Windows host + Ubuntu-20.04 WSL + VS Code em WSL. | ADR-0002, ADR-0005, ADR-0008 | Migração WSL ou onprem-lab próprio. |
 | [ADR-0005](../adr/0005-controlled-codex-usage.md) | Uso controlado do Codex | Aceito | 2026-06-22 | Codex controlado por Issue, branch, PR e revisão humana. | ADR-0003, ADR-0004, ADR-0006 | Mudança no uso/configuração Codex. |
 | [ADR-0006](../adr/0006-adr-and-traceability-governance.md) | Governança de ADRs e rastreabilidade | Aceito | 2026-06-22 | Decisões relevantes viram ADR; mapas mantêm rastreabilidade. | Todos os ADRs | Ao alterar mapas ou regra de ADR. |
-| [ADR-0007](../adr/0007-structural-ci-and-branch-protection.md) | CI estrutural antes de branch protection | Aceito com revisão | 2026-06-22 | CI estrutural vem antes de branch protection. | ADR-0002, ADR-0003 | Após CI estrutural e antes de branch protection. |
-| [ADR-0008](../adr/0008-docker-compose-for-local-and-onprem-lab.md) | Docker Compose para local e onprem-lab | Aceito com revisão | 2026-06-22 | Compose como direção futura para local/onprem-lab. | ADR-0004, ADR-0010, ADR-0011, ADR-0014 | Quando existir Compose inicial. |
-| [ADR-0009](../adr/0009-modular-monolith-initial-architecture.md) | Arquitetura inicial como modular monolith | Aceito com revisão | 2026-06-22 | Modular monolith como direção inicial. | ADR-0001, ADR-0012, ADR-0013, ADR-0016 | Após bootstrap app e primeiros módulos. |
+| [ADR-0007](../adr/0007-structural-ci-and-branch-protection.md) | CI estrutural antes de branch protection | Aceito com revisão | 2026-06-22 | CI estrutural vem antes de branch protection. | ADR-0002, ADR-0003 | Reavaliado na #37; revisar novamente antes de branch protection. |
+| [ADR-0008](../adr/0008-docker-compose-for-local-and-onprem-lab.md) | Docker Compose para local e onprem-lab | Aceito com revisão | 2026-06-22 | Compose como direção futura para local/onprem-lab. | ADR-0004, ADR-0010, ADR-0011, ADR-0014 | Compose local reavaliado na #36/#37; onprem-lab permanece pendente. |
+| [ADR-0009](../adr/0009-modular-monolith-initial-architecture.md) | Arquitetura inicial como modular monolith | Aceito com revisão | 2026-06-22 | Modular monolith como direção inicial. | ADR-0001, ADR-0012, ADR-0013, ADR-0016 | Bootstrap reavaliado na #37; revisar após os primeiros módulos de produto. |
 | [ADR-0010](../adr/0010-postgresql-primary-relational-database.md) | PostgreSQL como banco relacional principal | Aceito com revisão | 2026-06-22 | PostgreSQL como direção inicial de banco. | ADR-0001, ADR-0008, ADR-0012, ADR-0014 | Antes de schema/migrations. |
 | [ADR-0011](../adr/0011-s3-compatible-object-storage-minio.md) | Object storage S3-compatible | Aceito com revisão | 2026-06-22 | S3-compatible; MinIO candidato on-prem. | ADR-0001, ADR-0008, ADR-0012, ADR-0014 | Antes de storage real. |
 | [ADR-0012](../adr/0012-document-envelope-ged-core.md) | DocumentEnvelope como núcleo GED | Aceito com revisão | 2026-06-22 | Envelope como identidade/ciclo documental. | ADR-0009, ADR-0010, ADR-0011, ADR-0013, ADR-0016 | Antes das entidades do núcleo GED. |
@@ -22,6 +22,18 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 | [ADR-0016](../adr/0016-capability-based-document-processing-providers.md) | Processamento documental por capabilities e providers | Proposto | 2026-07-10 | Adapters por capability, task graph, routing policy, benchmark e HITL. | ADR-0001, ADR-0009, ADR-0012, ADR-0013, ADR-0015 | Após primeiro perfil/benchmark e antes da Phase 3. |
 | [ADR-0017](../adr/0017-codex-continuous-slice-loop.md) | Loop contínuo de slices pelo Codex | Aceito | 2026-07-10 | Plan aprova envelope; Codex puxa slices elegíveis e pede checkpoint em fronteiras reais. | ADR-0003, ADR-0005, ADR-0006, ADR-0007 | Se automação persistente, política de merge ou conflitos exigirem revisão. |
 | [ADR-0018](../adr/0018-codex-envelope-lifecycle-and-outcomes.md) | Lifecycle do envelope e outcomes do Codex | Aceito | 2026-07-17 | Envelope tem lifecycle explícito; outcomes são exclusivos e distinguem espera, decisão e encerramento. | ADR-0003, ADR-0005, ADR-0006, ADR-0007, ADR-0017 | Se automação, política de merge ou uso dos outcomes mudar. |
+
+## Avaliação dos gatilhos na Phase 1
+
+| ADR | Evidência observada | Avaliação | Resultado |
+| --- | --- | --- | --- |
+| ADR-0007 | Structural CI integrado pelo PR #21; CI de aplicação pertence à slice corrente #37 | a ordem CI antes de branch protection foi preservada; a #37 não autoriza nem configura branch protection | decisão mantida; review obrigatório antes de futura proteção |
+| ADR-0008 | primeiro Compose funcional de desenvolvimento integrado por #36/PR #94, com portas do `app-host` corrigidas por #96/PR #97 (`11342db`) | API/web stateless foram reproduzidos localmente; onprem-lab, persistência e produção não foram validados | decisão mantida para desenvolvimento local; revisão de onprem-lab continua pendente |
+| ADR-0009 | workspace, API de healthcheck, shell web e Compose formam o bootstrap técnico da Phase 1 | não existem módulos de produto, domínio ou processamento; não há evidência que contrarie o modular monolith | decisão mantida; gatilho completo permanece para os primeiros módulos de produto |
+
+Nenhuma dessas avaliações muda direção arquitetural, responsabilidade, fluxo
+de revisão ou implantação. Portanto, elas não exigem ADR novo nem alteração
+retroativa dos ADRs aceitos.
 
 ## Observações
 

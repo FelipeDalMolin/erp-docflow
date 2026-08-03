@@ -2,7 +2,9 @@
 
 Plataforma ERP/GED **on-prem first**, com arquitetura **cloud-like**, para transformar fontes heterogêneas em informação gerencial auditável, preservando evidências, revisão, aceite, fechamento e operação documental.
 
-Status atual: **Phase 0 encerrada; Phase 1 autorizada para execução controlada**. A #33 está preparada no [PR #72](https://github.com/FelipeDalMolin/erp-docflow/pull/72), aguardando review e squash merge humanos; ainda não há código de produto integrado à `main`.
+Status atual: **Phase 0 encerrada; fundação técnica R0 da Phase 1 em execução controlada**. O repositório já contém workspace, API mínima, shell web e Compose de desenvolvimento; a CI de aplicação e seus runbooks são o gate técnico corrente.
+
+Essa fundação **não é um ERP funcional**. Ela ainda não implementa upload, intake, interpretação, revisão ou persistência de PDFs e outros documentos. Essas capacidades dependem de slices de produto posteriores e de seus próprios critérios de aceite.
 
 Consulte o [status do projeto](docs/project/PROJECT_STATUS.md) para o gate ativo e o [portal da documentação](docs/README.md) para escolher a fonte correta.
 
@@ -29,6 +31,13 @@ fonte documental, estruturada, manual ou integrada
 | [Arquitetura](docs/architecture/ARCHITECTURE.md) | visão lógica planejada, boundaries e dados |
 | [ADRs](docs/adr/README.md) | decisões arquiteturais e seus status |
 | [Rastreabilidade](docs/traceability/README.md) | relações derivadas entre decisões e artefatos |
+
+## Executar e validar a fundação R0
+
+- [Validação local equivalente ao Application CI](docs/operations/VALIDACAO_LOCAL_CI.md): instala dependências travadas e executa os mesmos checks de backend, frontend e Compose usados pela CI.
+- [Compose de desenvolvimento](docs/operations/DEVELOPMENT_COMPOSE.md): inicia a API em `127.0.0.1:8100` e o shell web em `127.0.0.1:5180`.
+
+O shell web demonstra apenas que a fundação técnica executa. Ele não contém as telas e os fluxos de um ERP e não processa PDFs.
 
 ## Guardrails
 

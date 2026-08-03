@@ -1,8 +1,29 @@
 # Module Map
 
-Mapa de boundaries planejados. Ainda não há módulos de produto implementados. A ampliação abaixo registra o destino aprovado para documentação pela Issue #73; não autoriza código, schema ou deploy.
+Mapa dos componentes técnicos existentes e dos boundaries de produto
+planejados. Ainda não há módulos de produto implementados. A ampliação abaixo
+registra o destino aprovado para documentação pela Issue #73; não autoriza
+código, schema ou deploy.
 
-Este arquivo orienta arquitetura e decomposição futura; não autoriza backend, frontend, banco, Compose, workers ou integrações.
+## Fundação técnica R0
+
+| Componente | Responsabilidade implementada | Evidência | Estado |
+| --- | --- | --- | --- |
+| workspace | pins, manifests e workspace pnpm mínimo | #33, PR #72 | integrado |
+| `apps/api` | processo FastAPI limitado ao contrato `GET /health` | #34, PR #90 | integrado |
+| `apps/web` | shell React/Vite com `/`, `/system` e not found | #35, PR #91 | integrado |
+| `compose.yml` | orquestração local stateless de API/web com healthchecks | #36/PR #94 e #96/PR #97 (`11342db`) | integrado |
+| CI de aplicação | reproduzir checks de backend, frontend e Compose | #37, PR #98 | checks verdes; ainda requer review e merge |
+
+Essa fundação não contém banco, object storage, worker, autenticação, dados
+reais ou módulo de domínio. O profile, schemas e dataset sintético PDF-first do
+PR #93 são artefatos candidatos de preparação/avaliação; não constituem um
+módulo de intake, interpretação ou processamento funcional.
+
+## Boundaries de produto planejados
+
+Esta seção orienta arquitetura e decomposição futura. Ela não autoriza banco,
+storage, workers, integrações ou qualquer capacidade de produto.
 
 | Boundary planejado | Responsabilidade | Conceitos principais | Fonte/ADRs | Implementação |
 | --- | --- | --- | --- | --- |
@@ -28,7 +49,7 @@ Este arquivo orienta arquitetura e decomposição futura; não autoriza backend,
 | `search` | índice, recuperação e RAG | chunks/read models | ADR-0012; 0015 (proposto/gate); 0016 (proposto) | não implementado |
 | `integrations` | fontes e destinos externos sem bypass de gates | connectors/outbox | ADR-0001; 0015 (proposto/gate); 0016 (proposto) | não implementado |
 | `auth` | identidade, acesso e segregação | usuário, papel, política | ADR-0015 (proposto/gate) | não implementado |
-| `ux` | shell e jornadas de importação, review, gestão, relatórios e fechamento | estados de tela e navegação | #76; #35 cobre apenas bootstrap técnico | não implementado |
+| `ux` | shell e jornadas de importação, review, gestão, relatórios e fechamento | estados de tela e navegação | #76; #35 cobre apenas bootstrap técnico | parcial: somente shell técnico R0; jornadas de produto não implementadas |
 | `delivery` | bundle instalável, upgrade/rollback, diagnóstico e aceite on-prem | ProductReleaseBundle | ADR-0001, 0008, 0014; #81 | não implementado |
 
 ## Boundary técnico planejado
@@ -37,7 +58,8 @@ Workers podem executar jobs de `processing` em processos/containers separados, m
 
 ## Quando atualizar
 
-- quando a Phase 1 criar estrutura real;
+- quando a #37 for integrada e mudar o estado do CI de aplicação;
+- quando uma Phase posterior criar estrutura real de produto;
 - quando boundary virar módulo de código;
 - quando ADR mudar responsabilidade;
 - quando um slice provar que dois boundaries devem ser unidos ou separados.
