@@ -6,10 +6,10 @@ Guia de revisão de impacto. Não substitui ADRs.
 | --- | --- | --- | --- | --- |
 | estratégia on-prem/cloud-like | ADR-0001, 0014; 0016 (proposto) | arquitetura, ambientes, roadmap | decision/document/impact + deployment | sim, se mudar direção |
 | iniciar código antes da Phase 0 | ADR-0002 | roadmap, modelo operacional, AGENTS | decision/impact | sim |
-| Git/PR/revisão do projeto | ADR-0003, 0007, 0017, 0018 | estratégia Git, modelo operacional, fluxo Project | decision/document/impact + loop operacional | sim, se mudar regra |
+| Git/PR/revisão do projeto | ADR-0003, 0007, 0017, 0018, 0020 | estratégia Git, modelo operacional, fluxo Project | decision/document/impact + loop operacional | não para executar os Cutovers A/B previstos; sim se desviar da regra, método de merge ou política de aprovação |
 | ambiente WSL/local | ADR-0004, 0008 | ambientes, WSL | document/impact + deployment | sim, se mudar ambiente oficial |
-| Codex/configuração/continuidade | ADR-0005, 0017, 0018 | AGENTS, .codex, modelo operacional, fluxo Project, templates | decision/document/impact + loop operacional | sim, se mudar política, lifecycle, outcomes ou revisão humana |
-| CI/branch protection | ADR-0003, 0007 | estratégia Git, ambientes, roadmap | decision/impact | sim, se mudar ordem/regra |
+| Codex/configuração/continuidade | ADR-0005, 0017, 0018, 0020 | AGENTS, .codex, modelo operacional, fluxo Project, templates | decision/document/impact + loop operacional | sim, se mudar política, lifecycle, outcomes ou controles fora dos cutovers e da emergência já definidos |
+| CI/branch protection | ADR-0003, 0007, 0020 | estratégia Git, ambientes, roadmap | decision/impact | não para materializar os cutovers previstos; sim se mudar estratégia, controles ou ordem dos gates |
 | Docker Compose/processos | ADR-0008, 0009 | arquitetura, ambientes, roadmap | module/impact + deployment | sim, se mudar direção |
 | direção de produto/fato gerencial sustentado por evidência | ADR-0012, 0013; decisão complementar pendente | north star, piloto, arquitetura, domínio gerencial | document/module/entity/impact + contexto/atividade | sim antes de promover a contrato de implementação |
 | piloto R1 Golden Month | ADR-0001, 0008, 0014; demais conforme capability | piloto vertical, UX, entrega, roadmap | document/module/entity/impact + contexto/deployment | ADR apenas quando introduzir decisão estrutural ainda não coberta |

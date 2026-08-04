@@ -59,6 +59,9 @@ ADR-0016 não altera ADR aceito e não autoriza provider real enquanto estiver `
 ```text
 ADR-0003 — Fluxo Git/PR/revisão
 ├── ADR-0007 — CI antes de branch protection
+│   └── ADR-0020 — Ruleset da main em dois cutovers [ACEITO]
+│       ├── Cutover A — checks existentes; aprovações formais = 0
+│       └── Cutover B — Evaluation + Documentation; aprovação = 1 quando houver segundo Write+
 └── ADR-0017 — Loop contínuo de slices pelo Codex
     ├── complementa ADR-0005 — autonomia alta controlada
     └── ADR-0018 — Lifecycle do envelope e outcomes exclusivos
@@ -67,7 +70,15 @@ ADR-0013 — Review, acceptance e override
 └── ADR-0015 — Auth, autorização e segurança [PROPOSTO / GATE]
 ```
 
-ADR-0017 coordena seleção e continuidade do trabalho. ADR-0018 o complementa com estados, evidência, outcomes exclusivos e condições de retomada. Nenhum deles altera a revisão humana ou autoriza merge automático.
+ADR-0020 complementa a ordem definida pelo ADR-0007 com um ruleset
+`main-governance`, squash-only, checks estritos e conversas resolvidas. O
+Cutover A mantém zero aprovações formais enquanto só existe o autor; o Cutover B
+exige uma aprovação quando houver segundo colaborador Write+. Aceitar o ADR não
+aplica o ruleset.
+
+ADR-0017 coordena seleção e continuidade do trabalho. ADR-0018 o complementa
+com estados, evidência, outcomes exclusivos e condições de retomada. Nenhum
+deles autoriza merge automático.
 
 ## Regras de manutenção
 
