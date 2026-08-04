@@ -2,11 +2,18 @@
 
 - **Classe:** snapshot operacional canônico
 - **Estado:** vigente
-- **Data de referência:** 2026-08-02
-- **Issue de atualização:** [#39](https://github.com/FelipeDalMolin/erp-docflow/issues/39)
+- **Data de referência:** 2026-08-04
+- **Issue de atualização:** [#109](https://github.com/FelipeDalMolin/erp-docflow/issues/109), sob o checkpoint governante [#104](https://github.com/FelipeDalMolin/erp-docflow/issues/104)
 - **Atualizar quando:** uma fase, release, gate, Epic ou condição de execução mudar
 
 Este documento responde apenas **onde o projeto está agora, qual é o próximo gate e quais evidências sustentam esse estado**. O escopo permanente está no [Roadmap](ROADMAP.md); o estado diário continua no GitHub Project, nas Issues e nos Pull Requests.
+
+> **Reconciliação limitada — 2026-08-04:** esta atualização corrige o gate
+> canônico depois da integração da #39/PR #103 e registra o checkpoint #104.
+> O Roadmap, o contrato de persistência/storage, o mapa documental e o corpo da
+> #40 ainda contêm linguagem anterior ao merge da #103; a correção coordenada
+> permanece na etapa 4 da #104. Para o estado e o gate correntes deste
+> checkpoint, prevalecem este snapshot e a #104.
 
 ## Resumo executivo
 
@@ -17,17 +24,21 @@ Phase 1 / R0: encerrada; entrega integrada e reproduzida
 #96: correção de portas integrada pelo PR #97 no commit 11342db
 #37/#26: encerramento factual integrado pelo PR #102 no commit 0691aa5
 R0 reproduzido no app-host: API/web healthy em 8100/5180, com Jubileu preservado em 8000/5173/8080
-#39: domínio, schema, migrations, PostgreSQL interno e repositórios PDF-first implementados nesta revisão
-Próximo gate: review e squash merge humanos da #39; depois, refinar a preservação real do original na #40
+#39/PR #103: domínio, schema, migrations, PostgreSQL interno e repositórios PDF-first integrados à main no commit ec1b558
+ADR-0019/#107/PR #108: limites do storage S3-compatible local sintético integrados no commit 372a3a6, com status Aceito com revisão
+Checkpoint pré-S2.03 #104: aprovado e em execução; #109 corrige o snapshot canônico pós-merge
+Próximo gate após #109: aceitar o ADR-0020 e seguir a sequência vinculante da #104
+#40: aberta e bloqueada; branch e implementação permanecem proibidas até o gate final da #104
 Protótipo PDF-first: camada relacional implementada e testada, ainda não conectada ao runtime HTTP; storage, upload, telas e interpretação não existem
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
 Realinhamento documental/backlog: Issue #73 e PR #87 integrados; continua sendo documentação planejada
 ```
 
-A revisão preserva a fundação técnica R0 e acrescenta a primeira fatia de
-produto da Phase 2: domínio puro, PostgreSQL interno, migrations e persistência
-transacional da #39. A API HTTP continua expondo somente o R0 técnico e ainda
-não aciona esses repositórios; suas portas reservadas não interrompem o Jubileu.
+A `main` preserva a fundação técnica R0 e contém a primeira fatia de produto da
+Phase 2 integrada pela #39/PR #103: domínio puro, PostgreSQL interno, migrations
+e persistência transacional. A API HTTP continua expondo somente o R0 técnico e
+ainda não aciona esses repositórios; suas portas reservadas não interrompem o
+Jubileu.
 Ainda não há original recuperável, endpoint de upload, telas,
 interpretação ou review; `VerifiedOriginalDescriptor` contém somente metadados
 sintéticos e não prova que um objeto existe. Cada slice posterior continua
@@ -72,7 +83,8 @@ As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma wate
 | profile e dataset sintético PDF-first | #43 | PR #93, commit `26fef2f` |
 | harness reproduzível de experimentos | #88 | PR #99, commit `1dbba5b` |
 | hardening do harness | #88 | PR #101, commit `a9a0b247` |
-| materialização relacional PDF-first | #39 | domínio, migration inicial, repositórios e testes desta revisão |
+| materialização relacional PDF-first | #39 | PR #103, commit `ec1b558`: domínio, migration inicial, repositórios e testes |
+| limites do storage local sintético | #107 | ADR-0019 integrado pela PR #108 no commit `372a3a6`, com revisão futura obrigatória |
 
 #65, #67 e #69 estão encerradas. Seus relatórios permanecem evidência histórica; não representam trabalho corrente.
 
@@ -123,9 +135,9 @@ O gate Phase 0 → Phase 1 foi satisfeito e a entrega técnica do envelope da Ep
 
 Com esta reconciliação, a Phase 1 encerra somente com o R0 técnico previsto na Epic #26.
 O envelope #92 autoriza a direção PDF-first, mas não elimina o refinamento e os
-gates de cada slice. A #39 recebeu `Condições Verificadas` e materializa agora o
-modelo relacional mínimo; a #40 só pode iniciar após review e squash merge
-humanos desta slice.
+gates de cada slice. A #39 foi integrada pela PR #103 no commit `ec1b558`,
+satisfazendo somente o predecessor relacional. A #40 permanece bloqueada e sem
+branch autorizada até o gate final do checkpoint governante #104.
 
 ## Release R1 em descoberta
 
@@ -152,7 +164,7 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
 - O harness da #88 foi integrado pelo PR #99 e endurecido pelo PR #101. #82/#83 ainda exigem refinamento próprio, e a avaliação Docling continua na #89. Nenhum provider foi promovido.
-- Dados reais, secrets, deploy de produção, automerge e branch protection continuam fora dos envelopes atuais.
+- Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; a decisão e o cutover de ruleset/branch protection foram escopados pelo checkpoint #104, mas a mutação permanece não autorizada e não aplicada até a aceitação do ADR-0020 e a Issue operacional do Cutover A.
 
 ## Regra de atualização
 
