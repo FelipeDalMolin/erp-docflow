@@ -3,7 +3,7 @@
 - **Classe:** snapshot operacional canônico
 - **Estado:** vigente
 - **Data de referência:** 2026-08-04
-- **Issue de atualização:** [#109](https://github.com/FelipeDalMolin/erp-docflow/issues/109), sob o checkpoint governante [#104](https://github.com/FelipeDalMolin/erp-docflow/issues/104)
+- **Issue de atualização:** [#111](https://github.com/FelipeDalMolin/erp-docflow/issues/111), sob o checkpoint governante [#104](https://github.com/FelipeDalMolin/erp-docflow/issues/104)
 - **Atualizar quando:** uma fase, release, gate, Epic ou condição de execução mudar
 
 Este documento responde apenas **onde o projeto está agora, qual é o próximo gate e quais evidências sustentam esse estado**. O escopo permanente está no [Roadmap](ROADMAP.md); o estado diário continua no GitHub Project, nas Issues e nos Pull Requests.
@@ -26,8 +26,8 @@ Phase 1 / R0: encerrada; entrega integrada e reproduzida
 R0 reproduzido no app-host: API/web healthy em 8100/5180, com Jubileu preservado em 8000/5173/8080
 #39/PR #103: domínio, schema, migrations, PostgreSQL interno e repositórios PDF-first integrados à main no commit ec1b558
 ADR-0019/#107/PR #108: limites do storage S3-compatible local sintético integrados no commit 372a3a6, com status Aceito com revisão
-Checkpoint pré-S2.03 #104: aprovado e em execução; #109 corrige o snapshot canônico pós-merge
-Próximo gate após #109: aceitar o ADR-0020 e seguir a sequência vinculante da #104
+Checkpoint pré-S2.03 #104: aprovado e em execução; ADR-0020 aceito documentalmente pela #111, sem aplicar proteção
+Próximo gate após #111: aceitar o ADR-0021 em Issue, branch e PR próprias, seguindo a sequência vinculante da #104
 #40: aberta e bloqueada; branch e implementação permanecem proibidas até o gate final da #104
 Protótipo PDF-first: camada relacional implementada e testada, ainda não conectada ao runtime HTTP; storage, upload, telas e interpretação não existem
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
@@ -164,7 +164,7 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
 - O harness da #88 foi integrado pelo PR #99 e endurecido pelo PR #101. #82/#83 ainda exigem refinamento próprio, e a avaliação Docling continua na #89. Nenhum provider foi promovido.
-- Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; a decisão e o cutover de ruleset/branch protection foram escopados pelo checkpoint #104, mas a mutação permanece não autorizada e não aplicada até a aceitação do ADR-0020 e a Issue operacional do Cutover A.
+- Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; o ADR-0020 define o ruleset em dois cutovers, mas nenhuma mutação foi aplicada e o Cutover A permanece proibido até a aceitação dos ADRs 0019–0022, as referências de implementação e a Issue operacional própria previstas pela #104.
 
 ## Regra de atualização
 
