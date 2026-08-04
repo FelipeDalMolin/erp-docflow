@@ -32,7 +32,8 @@ runtime legado iniciado por outra worktree.
 Até `compose.check.yml`, `compose.rehearsal.yml` e `devctl` serem integrados:
 
 - nunca executar o bloco mutante de PostgreSQL em worktree; no `app-host`, ele
-  exige Issue operacional e execução somente na root proprietária validada;
+  exige Issue operacional, revisão humana e execução somente na root
+  proprietária validada;
 - usar os checks do GitHub Actions como evidência isolada ou abrir Issue
   operacional para uma execução local explicitamente controlada;
 - não inventar project name, porta ou volume alternativo sem que o modelo
@@ -48,7 +49,7 @@ autorização de execução no runtime compartilhado.
 | Plano | Blocos locais autorizados | Evidência da integração PostgreSQL |
 | --- | --- | --- |
 | `app-host` ou qualquer worktree, antes do tooling isolado | Backend e Frontend; Configuração do Compose somente quando um `.env` sintético ignorado já estiver autorizado, sem iniciar serviços | job verde `PostgreSQL / migrations and integration` da PR/commit avaliado |
-| execução local explicitamente controlada por Issue operacional | somente na root proprietária validada, nunca em worktree: Backend, Frontend, Configuração do Compose e bloco PostgreSQL depois de provar ausência de adoção do `shared-dev` e cleanup exato | saída local preservada mais o job correspondente da CI |
+| execução local explicitamente controlada por Issue operacional e revisão humana | somente na root proprietária validada, nunca em worktree: Backend, Frontend, Configuração do Compose e bloco PostgreSQL depois de provar ausência de adoção do `shared-dev` e cleanup exato | saída local preservada mais o job correspondente da CI |
 | GitHub Actions | jobs declarados nos workflows, com project name e recursos efêmeros da execução | próprio job verde, incluindo migration, testes e restart probe |
 
 Em qualquer worktree e no `app-host` fora do plano explicitamente controlado,
