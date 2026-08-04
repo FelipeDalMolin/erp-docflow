@@ -13,6 +13,32 @@ expõe somente `GET /health` e não aciona a materialização. Também não há 
 preservados, upload HTTP, interpretação, revisão ou aceite de PDFs e outros
 documentos. A preservação verificável do original pertence à S2.03/#40.
 
+## Guard transitório de ownership
+
+O ADR-0021 definiu o checkout canônico como único owner do futuro
+`shared-dev`, mas `devctl`, guards e cutover ainda não foram implementados. No
+`app-host`, o runtime saudável em `8100/5180` ainda foi iniciado pela worktree
+histórica `phase1-reproduction`, contém somente API/web e monta código daquela
+worktree. Ele não deve ser adotado, recriado ou encerrado por comandos Compose
+genéricos.
+
+Até a integração do tooling e o cutover controlado:
+
+- `docker compose config --quiet` continua permitido como inspeção local e não
+  mutante;
+- `build`, `up`, `run`, `restart`, `down` e migrations exigem Issue operacional
+  explícita e root proprietária validada;
+- nunca executar esses comandos a partir de
+  `/srv/apps/erp-docflow-worktrees/*` contra o project `erp_docflow_dev`;
+- não criar `.env`, remover volume/container ou trocar portas para contornar o
+  guard;
+- os comandos abaixo documentam a semântica do modelo integrado, mas não são
+  autorização para mutar o runtime legado.
+
+O futuro `./tools/devctl` separará `shared up`, `shared migrate`,
+`shared restart`, checks e rehearsals. Não presuma que esses comandos já
+existem.
+
 ## Pré-requisitos
 
 - Docker Engine com Docker Compose v2 e o plugin Buildx funcional;

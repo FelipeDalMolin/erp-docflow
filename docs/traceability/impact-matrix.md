@@ -7,10 +7,11 @@ Guia de revisão de impacto. Não substitui ADRs.
 | estratégia on-prem/cloud-like | ADR-0001, 0014; 0016 (proposto) | arquitetura, ambientes, roadmap | decision/document/impact + deployment | sim, se mudar direção |
 | iniciar código antes da Phase 0 | ADR-0002 | roadmap, modelo operacional, AGENTS | decision/impact | sim |
 | Git/PR/revisão do projeto | ADR-0003, 0007, 0017, 0018, 0020 | estratégia Git, modelo operacional, fluxo Project | decision/document/impact + loop operacional | não para executar os Cutovers A/B previstos; sim se desviar da regra, método de merge ou política de aprovação |
-| ambiente WSL/local | ADR-0004, 0008 | ambientes, WSL | document/impact + deployment | sim, se mudar ambiente oficial |
+| ambiente WSL/local | ADR-0004, 0008, 0021 | ambientes, WSL, AGENTS, status | decision/document/impact + deployment | não para aplicar os perfis aceitos; sim se mudar root/owner ou ambiente oficial |
 | Codex/configuração/continuidade | ADR-0005, 0017, 0018, 0020 | AGENTS, .codex, modelo operacional, fluxo Project, templates | decision/document/impact + loop operacional | sim, se mudar política, lifecycle, outcomes ou controles fora dos cutovers e da emergência já definidos |
 | CI/branch protection | ADR-0003, 0007, 0020 | estratégia Git, ambientes, roadmap | decision/impact | não para materializar os cutovers previstos; sim se mudar estratégia, controles ou ordem dos gates |
-| Docker Compose/processos | ADR-0008, 0009 | arquitetura, ambientes, roadmap | module/impact + deployment | sim, se mudar direção |
+| Docker Compose/processos | ADR-0008, 0009, 0021 | arquitetura, ambientes, roadmap, runbooks | module/impact + deployment | não para implementar os modelos decididos; sim se mudar direção ou isolamento |
+| shared-dev/worktrees/rehearsal | ADR-0004, 0008, 0010, 0014, 0021 | AGENTS, Compose, validação local, status | decision/module/impact + deployment/atividade | não para implementar `devctl`; sim se mudar owner, compartilhar recursos ou enfraquecer rollback |
 | direção de produto/fato gerencial sustentado por evidência | ADR-0012, 0013; decisão complementar pendente | north star, piloto, arquitetura, domínio gerencial | document/module/entity/impact + contexto/atividade | sim antes de promover a contrato de implementação |
 | piloto R1 Golden Month | ADR-0001, 0008, 0014; demais conforme capability | piloto vertical, UX, entrega, roadmap | document/module/entity/impact + contexto/deployment | ADR apenas quando introduzir decisão estrutural ainda não coberta |
 | importação XLSX/CSV/OFX | ADR-0010, 0013; 0015 (proposto/gate) | structured import, domínio gerencial, lineage | module/entity/impact + atividade | sim se contrato, autorização ou persistência se tornarem estruturais |

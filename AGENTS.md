@@ -16,13 +16,19 @@ Antes de executar, consultar:
 
 O portal `docs/README.md` define a matriz de autoridade. Quando documentos divergirem, o Codex nao deve combinar regras silenciosamente: deve usar a fonte primaria, registrar a contradicao e pedir checkpoint se ela alterar a execucao.
 
-Ambiente oficial atual:
+Perfis oficiais contemplados:
 
 ```text
-Windows host
-Ubuntu-20.04 WSL compartilhada
-VS Code em WSL
-Codex extension
+app-host
+└── WSL2 / Ubuntu 24.04
+    └── /srv/apps/erp-docflow
+
+personal-wsl (baseline portátil do ADR-0004)
+└── Windows host / Ubuntu 20.04 WSL
+    └── ~/projetos/erp-docflow
+
+Ambos
+└── VS Code em WSL / Codex extension
 ```
 
 O uso principal do Codex deve ocorrer pela Codex extension no VS Code remoto WSL.
@@ -35,6 +41,35 @@ Uso opcional no caminho genérico:
 cd ~/projetos/erp-docflow
 codex
 ```
+
+## Ownership do shared-dev
+
+O ADR-0021 define um único owner para o runtime cumulativo `shared-dev`:
+
+- no `app-host`, somente a root canônica `/srv/apps/erp-docflow` em `main`;
+- em `personal-wsl`, o checkout canônico configurado, com default
+  `~/projetos/erp-docflow` e nunca sob `/mnt/c` ou `/mnt/e`;
+- worktrees de slices nunca controlam o `shared-dev`; operações Compose/runtime
+  nelas ficam restritas a checks/rehearsals isolados quando o tooling
+  correspondente existir. Lint, testes e builds locais sem controle desse
+  runtime continuam permitidos pelo runbook de validação.
+
+O runtime atual em `8100/5180` é legado e nasceu da worktree
+`phase1-reproduction`; ele ainda não satisfaz o ADR-0021. Até `devctl`, guards e
+cutover serem integrados, não executar `docker compose up`, `restart`, `down`,
+`build` ou migration sobre esse project name sem Issue operacional explícita e
+revisão humana. Inspeções read-only são permitidas, sem exibir ou registrar
+valores de `.env`.
+
+Uma branch chamada `main` não concede autoridade. A futura operação deverá
+provar realpath, remote, fetch, SHA sincronizado, ahead/behind zero, árvore
+limpa, configuração presente, Compose válido, labels, mounts, portas, volumes e
+health. A worktree `preserve-local-20260804T125151Z` está preservada e não pode
+ser removida ou reciclada por conveniência.
+
+O ownership de runtime na root canônica não autoriza editar ou commitar
+diretamente em `main`. Toda mudança de código ou documentação continua seguindo
+Issue, branch/worktree, PR, CI, revisão humana e squash merge.
 
 ## Fluxo obrigatorio
 
