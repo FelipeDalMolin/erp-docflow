@@ -30,9 +30,15 @@ ADR-0001 — On-prem first
 └── ADR-0009 — Modular monolith
     ├── ADR-0010 — PostgreSQL
     ├── ADR-0011 — Object storage S3-compatible
+    │   └── ADR-0019 — MinIO no protótipo local sintético [ACEITO COM REVISÃO]
     └── ADR-0012 — DocumentEnvelope
         └── ADR-0013 — Review, acceptance e override
 ```
+
+ADR-0019 complementa a direção S3-compatible com uma exceção temporária para
+MinIO OSS single-node, isolado e com dados sintéticos. Commit, patchset,
+toolchain, digests, SBOM, scans e provas de runtime permanecem evidências da
+#40; ampliar ambiente, classe de dados ou distribuição exige nova revisão.
 
 ## Processamento documental proposto
 

@@ -16,7 +16,7 @@ Guia de revisão de impacto. Não substitui ADRs.
 | importação XLSX/CSV/OFX | ADR-0010, 0013; 0015 (proposto/gate) | structured import, domínio gerencial, lineage | module/entity/impact + atividade | sim se contrato, autorização ou persistência se tornarem estruturais |
 | modular monolith/microservices | ADR-0009; 0016 (proposto) | arquitetura, provider strategy | decision/module/impact + componentes | sim |
 | PostgreSQL/schema | ADR-0010, 0012, 0014 | data baseline, arquitetura, ambientes | entity/module/impact + domínio | sim antes de trocar banco |
-| object storage/MinIO | ADR-0011, 0012, 0014 | data baseline, arquitetura, ambientes | entity/module/impact + deployment | sim antes de storage definitivo |
+| object storage/MinIO | ADR-0011, 0012, 0014, 0019 | data baseline, arquitetura, ambientes, contrato de intake/storage | entity/module/impact + deployment | revisar ADR-0019 na #40 antes do build concreto e novamente antes de ampliar ambiente, dados ou distribuição |
 | DocumentEnvelope/versionamento | ADR-0012 | arquitetura, pipeline, data baseline, glossário | entity/module/impact + domínio/estado/sequência | sim se mudar núcleo |
 | materialização vs efetivação | ADR-0012, 0013 | arquitetura, pipeline, glossário | entity/module/impact + atividade/sequências | sim se mudar responsabilidade |
 | review/aceite/override | ADR-0013; 0015 (proposto/gate); 0016 (proposto) | pipeline, data baseline, roadmap | entity/module/impact + review sequence/estado | sim se mudar fluxo |
