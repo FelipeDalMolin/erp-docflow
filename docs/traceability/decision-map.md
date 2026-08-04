@@ -18,10 +18,21 @@ ADR-0001 — On-prem first com práticas cloud-like
 ADR-0004 — Desenvolvimento local com Windows, WSL e VS Code
 ├── ADR-0005 — Uso controlado do Codex
 └── ADR-0008 — Docker Compose para local e onprem-lab
+    └── ADR-0021 — Ownership do shared-dev e worktrees [ACEITO]
+        ├── app-host — owner exato /srv/apps/erp-docflow
+        ├── personal-wsl — owner configurado; default ~/projetos/erp-docflow
+        ├── worktrees — check/rehearsal descartáveis
+        └── shared-dev — identidade, migration e rollback controlados
 
 ADR-0001 — On-prem first
 └── ADR-0014 — Backup e restore obrigatórios
 ```
+
+ADR-0021 complementa os perfis do ADR-0004 e o Compose do ADR-0008 sem
+substituí-los. O runtime legado ainda nasce da worktree `phase1-reproduction`;
+aceitar a decisão não aplica o cutover. A futura implementação deverá provar
+owner por realpath, `main` sincronizada, labels, mounts, source SHA, configuração
+não secreta e health. Worktrees não controlam o runtime cumulativo.
 
 ## Arquitetura de produto
 

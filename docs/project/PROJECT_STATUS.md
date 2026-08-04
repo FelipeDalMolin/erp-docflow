@@ -3,7 +3,7 @@
 - **Classe:** snapshot operacional canônico
 - **Estado:** vigente
 - **Data de referência:** 2026-08-04
-- **Issue de atualização:** [#111](https://github.com/FelipeDalMolin/erp-docflow/issues/111), sob o checkpoint governante [#104](https://github.com/FelipeDalMolin/erp-docflow/issues/104)
+- **Issue de atualização:** [#113](https://github.com/FelipeDalMolin/erp-docflow/issues/113), sob o checkpoint governante [#104](https://github.com/FelipeDalMolin/erp-docflow/issues/104)
 - **Atualizar quando:** uma fase, release, gate, Epic ou condição de execução mudar
 
 Este documento responde apenas **onde o projeto está agora, qual é o próximo gate e quais evidências sustentam esse estado**. O escopo permanente está no [Roadmap](ROADMAP.md); o estado diário continua no GitHub Project, nas Issues e nos Pull Requests.
@@ -26,8 +26,10 @@ Phase 1 / R0: encerrada; entrega integrada e reproduzida
 R0 reproduzido no app-host: API/web healthy em 8100/5180, com Jubileu preservado em 8000/5173/8080
 #39/PR #103: domínio, schema, migrations, PostgreSQL interno e repositórios PDF-first integrados à main no commit ec1b558
 ADR-0019/#107/PR #108: limites do storage S3-compatible local sintético integrados no commit 372a3a6, com status Aceito com revisão
-Checkpoint pré-S2.03 #104: aprovado e em execução; ADR-0020 aceito documentalmente pela #111, sem aplicar proteção
-Próximo gate após #111: aceitar o ADR-0021 em Issue, branch e PR próprias, seguindo a sequência vinculante da #104
+ADR-0020/#111/PR #112: governança da main integrada no commit b19a720; nenhum ruleset aplicado
+Checkpoint pré-S2.03 #104: aprovado e em execução; ADR-0021 aceito documentalmente pela #113, sem cutover do runtime
+Shared-dev: owner futuro é a main canônica; runtime legado ativo ainda nasce de phase1-reproduction@83870f79
+Próximo gate após #113: aceitar o ADR-0022 em Issue, branch e PR próprias, seguindo a sequência vinculante da #104
 #40: aberta e bloqueada; branch e implementação permanecem proibidas até o gate final da #104
 Protótipo PDF-first: camada relacional implementada e testada, ainda não conectada ao runtime HTTP; storage, upload, telas e interpretação não existem
 R1 Golden Month: Epic #75 criada em Rascunho; não autorizada para implementação
@@ -85,6 +87,8 @@ As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma wate
 | hardening do harness | #88 | PR #101, commit `a9a0b247` |
 | materialização relacional PDF-first | #39 | PR #103, commit `ec1b558`: domínio, migration inicial, repositórios e testes |
 | limites do storage local sintético | #107 | ADR-0019 integrado pela PR #108 no commit `372a3a6`, com revisão futura obrigatória |
+| governança da `main` em dois cutovers | #111 | ADR-0020 integrado pela PR #112 no commit `b19a720`; nenhuma configuração externa aplicada |
+| ownership do `shared-dev` e worktrees | #113 | ADR-0021 aceito pela PR #114 nesta entrega documental; owner e guards definidos sem cutover, runtime ou tooling implementado |
 
 #65, #67 e #69 estão encerradas. Seus relatórios permanecem evidência histórica; não representam trabalho corrente.
 
@@ -164,6 +168,8 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
 - O harness da #88 foi integrado pelo PR #99 e endurecido pelo PR #101. #82/#83 ainda exigem refinamento próprio, e a avaliação Docling continua na #89. Nenhum provider foi promovido.
+- O runtime ERP em 8100/5180 permanece legado, saudável e bind-mounted a `phase1-reproduction`; não possui PostgreSQL nem identidade de source SHA. ADR-0021 define o owner/guards, mas `devctl` e cutover ainda não existem.
+- `/srv/ops/projects.yml` acerta a root canônica, mas está desatualizado sobre branch/runtime; `/srv/ops` permanece somente leitura e exige follow-up próprio.
 - Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; o ADR-0020 define o ruleset em dois cutovers, mas nenhuma mutação foi aplicada e o Cutover A permanece proibido até a aceitação dos ADRs 0019–0022, as referências de implementação e a Issue operacional própria previstas pela #104.
 
 ## Regra de atualização

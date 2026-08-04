@@ -21,6 +21,26 @@ posteriores.
 O Structural CI permanece separado e continua responsável pela estrutura do
 repositório, links e catálogos documentais.
 
+### Guard transitório do ADR-0021
+
+Backend, frontend e `docker compose config --quiet` não controlam o runtime
+compartilhado. O bloco local de PostgreSQL abaixo, porém, ainda usa o
+`compose.yml` com project name `erp_docflow_dev` e pode adotar ou alterar o
+runtime legado iniciado por outra worktree.
+
+Até `compose.check.yml`, `compose.rehearsal.yml` e `devctl` serem integrados:
+
+- não executar o bloco mutante de PostgreSQL no `app-host` nem em worktree;
+- usar os checks do GitHub Actions como evidência isolada ou abrir Issue
+  operacional para uma execução local explicitamente controlada;
+- não inventar project name, porta ou volume alternativo sem que o modelo
+  efetivo prove isolamento;
+- nunca usar `down`, `--volumes` ou `prune` contra `erp_docflow_dev` para limpar
+  uma validação.
+
+Os comandos permanecem registrados para explicar a cobertura vigente; não são
+autorização de execução no runtime compartilhado.
+
 ## Versões requeridas
 
 | Ferramenta | Versão |
@@ -78,7 +98,7 @@ ocupar as portas do host. Use `--quiet`: a representação expandida pode conter
 configuração sensível local. Para executar API/web em `8100/5180` e o PostgreSQL
 sem porta publicada, siga o [Compose de desenvolvimento](DEVELOPMENT_COMPOSE.md).
 
-## Migrations e integração PostgreSQL
+## Migrations e integração PostgreSQL — referência pendente de isolamento
 
 Os comandos abaixo usam somente o banco local sintético e não gravam bytes de
 documentos no PostgreSQL. O Docker pode baixar as imagens pinadas quando elas

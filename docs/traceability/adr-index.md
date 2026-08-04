@@ -24,21 +24,22 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 | [ADR-0018](../adr/0018-codex-envelope-lifecycle-and-outcomes.md) | Lifecycle do envelope e outcomes do Codex | Aceito | 2026-07-17 | Envelope tem lifecycle explícito; outcomes são exclusivos e distinguem espera, decisão e encerramento. | ADR-0003, ADR-0005, ADR-0006, ADR-0007, ADR-0017 | Se automação, política de merge ou uso dos outcomes mudar. |
 | [ADR-0019](../adr/0019-local-synthetic-s3-compatible-object-storage.md) | Object storage S3-compatible no protótipo local sintético | Aceito com revisão | 2026-08-04 | MinIO OSS somente no protótipo local sintético, isolado e atrás do contrato S3-compatible, com supply chain verificável. | ADR-0011 | Na #40 antes de admitir build concreto; novamente antes de onprem-lab, dado real, produção ou distribuição. |
 | [ADR-0020](../adr/0020-main-ruleset-human-review-and-merge.md) | Ruleset, revisão humana e método de merge da main | Aceito | 2026-08-04 | `main-governance` em dois cutovers: checks estritos, conversas resolvidas e squash-only; uma aprovação quando houver segundo Write+. | ADR-0003, ADR-0007, ADR-0017, ADR-0018 | Segundo colaborador Write+; contexto renomeado; mudança de merge/bypass; emergência. |
-| [ADR-0021](../adr/0021-shared-dev-and-worktree-ownership.md) | Ownership do shared-dev e isolamento por worktrees | Proposto | 2026-08-04 | Reservada a decisão sobre owner por perfil, guards, rehearsal e rollback. | ADR-0004, ADR-0008 | Antes de implementar `devctl` ou trocar o runtime. |
+| [ADR-0021](../adr/0021-shared-dev-and-worktree-ownership.md) | Ownership do shared-dev e isolamento por worktrees | Aceito | 2026-08-04 | Checkout canônico em `main` é o único owner do `shared-dev`; worktrees usam check/rehearsal isolados, com identidade e rollback verificáveis. | ADR-0004, ADR-0008, ADR-0010, ADR-0014 | Cutover; mudança de root/host/runtime; necessidade de recurso compartilhado; lacuna de rollback. |
 | [ADR-0022](../adr/0022-living-documentation-and-implementation-traceability.md) | Documentação viva e rastreabilidade da implementação | Proposto | 2026-08-04 | Reservada a decisão sobre fontes, registries, referências, UML e site derivado. | ADR-0006 | Antes das referências de implementação e Documentation CI. |
 
 ## Avaliação dos gatilhos na Phase 1
 
 | ADR | Evidência observada | Avaliação | Resultado |
 | --- | --- | --- | --- |
+| ADR-0004 | WSL pessoal continua documentada com default `~/projetos`; o `app-host` vivo usa Ubuntu 24.04 e root `/srv/apps/erp-docflow` | a diferença é de perfil operacional e ownership, não migração global de toda WSL pessoal | decisão mantida e complementada pelo ADR-0021 |
 | ADR-0007 | Structural CI integrado pelo PR #21; CI de aplicação integrada pela #37/PR #98; ADR-0020 aceito | o gatilho de revisão foi atendido e a ordem CI antes de proteção foi preservada; nenhuma proteção foi aplicada pela aceitação documental | decisão complementada pelo ADR-0020; aplicação permanece no Cutover A |
-| ADR-0008 | primeiro Compose funcional de desenvolvimento integrado por #36/PR #94, com portas do `app-host` corrigidas por #96/PR #97 (`11342db`) | API/web stateless foram reproduzidos localmente; onprem-lab, persistência e produção não foram validados | decisão mantida para desenvolvimento local; revisão de onprem-lab continua pendente |
+| ADR-0008 | Compose API/web/PostgreSQL integrado; runtime legado ainda nasce de worktree com project name e mounts compartilháveis | Compose continua a direção local, mas ownership, checks descartáveis e cutover exigem guards adicionais | decisão mantida e complementada pelo ADR-0021; onprem-lab continua pendente |
 | ADR-0009 | workspace, API de healthcheck, shell web e Compose formam o bootstrap técnico da Phase 1 | não existem módulos de produto, domínio ou processamento; não há evidência que contrarie o modular monolith | decisão mantida; gatilho completo permanece para os primeiros módulos de produto |
 
 A avaliação do ADR-0007 resultou no ADR-0020, que complementa a decisão sem
-alterá-la retroativamente. As avaliações dos ADRs 0008 e 0009 não mudam direção
-arquitetural, responsabilidade, fluxo de revisão ou implantação; portanto, não
-exigem ADR novo nem alteração retroativa dos ADRs aceitos.
+alterá-la retroativamente. A avaliação conjunta dos ADRs 0004 e 0008 resultou no
+ADR-0021, que separa perfis e ownership sem substituir a direção de WSL/Compose.
+A avaliação do ADR-0009 não exige decisão nova nem alteração retroativa.
 
 ## Observações
 
@@ -50,5 +51,6 @@ exigem ADR novo nem alteração retroativa dos ADRs aceitos.
 - ADR-0018 complementa ADR-0017 com lifecycle, evidência durável, outcomes exclusivos e condições de retomada.
 - ADR-0019 aceita apenas a exceção local sintética e exige nova evidência na #40; não autoriza onprem-lab, dado real, produção ou distribuição.
 - ADR-0020 define o ruleset em dois cutovers; sua aceitação autoriza a futura Issue operacional, mas não aplica proteção nesta PR.
-- ADR-0021 e ADR-0022 continuam reservados pelo checkpoint #104; enquanto `Proposto`, não autorizam implementação obrigatória.
+- ADR-0021 define o owner do `shared-dev`, isolamento descartável e rollback; sua aceitação não implementa `devctl` nem altera o runtime legado.
+- ADR-0022 continua reservado pelo checkpoint #104; enquanto `Proposto`, não autoriza implementação obrigatória.
 - Atualizar este índice quando ADRs forem criados, substituídos, complementados ou obsoletados.

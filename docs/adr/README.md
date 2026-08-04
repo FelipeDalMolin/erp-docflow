@@ -202,7 +202,7 @@ Quando aplicável, também deve aparecer em:
 | [ADR-0018](0018-codex-envelope-lifecycle-and-outcomes.md) | Aceito | lifecycle do envelope e outcomes exclusivos |
 | [ADR-0019](0019-local-synthetic-s3-compatible-object-storage.md) | Aceito com revisão | object storage no protótipo local sintético |
 | [ADR-0020](0020-main-ruleset-human-review-and-merge.md) | Aceito | ruleset da `main` em dois cutovers, revisão humana e squash-only |
-| [ADR-0021](0021-shared-dev-and-worktree-ownership.md) | Proposto | ownership do `shared-dev` e worktrees |
+| [ADR-0021](0021-shared-dev-and-worktree-ownership.md) | Aceito | checkout canônico como owner do `shared-dev`; worktrees isoladas |
 | [ADR-0022](0022-living-documentation-and-implementation-traceability.md) | Proposto | documentação viva e rastreabilidade da implementação |
 
 O catálogo oferece navegação. O [ADR Index](../traceability/adr-index.md) mantém relações, decisão curta e gatilho de revisão.
