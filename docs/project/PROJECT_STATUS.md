@@ -164,7 +164,7 @@ Tika/OCR/estrutura (#82–#86 e #88–#89, na Epic #28) evoluem em trilha parale
 - ADR-0015 e ADR-0016 permanecem `Proposto`; não autorizam segurança/providers reais.
 - O princípio de produto exige decisão durável na #74 antes de schema/efeito.
 - O harness da #88 foi integrado pelo PR #99 e endurecido pelo PR #101. #82/#83 ainda exigem refinamento próprio, e a avaliação Docling continua na #89. Nenhum provider foi promovido.
-- Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; ruleset/branch protection foi autorizado exclusivamente pelo checkpoint #104, mas ainda não foi aplicado.
+- Dados reais, secrets, deploy de produção e automerge continuam fora do escopo; a decisão e o cutover de ruleset/branch protection foram escopados pelo checkpoint #104, mas a mutação permanece não autorizada e não aplicada até a aceitação do ADR-0020 e a Issue operacional do Cutover A.
 
 ## Regra de atualização
 
