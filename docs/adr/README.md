@@ -198,6 +198,10 @@ Quando aplicável, também deve aparecer em:
 | [ADR-0016](0016-capability-based-document-processing-providers.md) | Proposto | capabilities e providers |
 | [ADR-0017](0017-codex-continuous-slice-loop.md) | Aceito | loop contínuo de slices |
 | [ADR-0018](0018-codex-envelope-lifecycle-and-outcomes.md) | Aceito | lifecycle do envelope e outcomes exclusivos |
+| [ADR-0019](0019-local-synthetic-s3-compatible-object-storage.md) | Proposto | object storage no protótipo local sintético |
+| [ADR-0020](0020-main-ruleset-human-review-and-merge.md) | Proposto | ruleset, revisão humana e merge da `main` |
+| [ADR-0021](0021-shared-dev-and-worktree-ownership.md) | Proposto | ownership do `shared-dev` e worktrees |
+| [ADR-0022](0022-living-documentation-and-implementation-traceability.md) | Proposto | documentação viva e rastreabilidade da implementação |
 
 O catálogo oferece navegação. O [ADR Index](../traceability/adr-index.md) mantém relações, decisão curta e gatilho de revisão.
 
