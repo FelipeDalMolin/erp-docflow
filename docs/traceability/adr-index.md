@@ -22,6 +22,10 @@ Lista dos ADRs existentes. Este mapa reflete decisões registradas em `docs/adr/
 | [ADR-0016](../adr/0016-capability-based-document-processing-providers.md) | Processamento documental por capabilities e providers | Proposto | 2026-07-10 | Adapters por capability, task graph, routing policy, benchmark e HITL. | ADR-0001, ADR-0009, ADR-0012, ADR-0013, ADR-0015 | Após primeiro perfil/benchmark e antes da Phase 3. |
 | [ADR-0017](../adr/0017-codex-continuous-slice-loop.md) | Loop contínuo de slices pelo Codex | Aceito | 2026-07-10 | Plan aprova envelope; Codex puxa slices elegíveis e pede checkpoint em fronteiras reais. | ADR-0003, ADR-0005, ADR-0006, ADR-0007 | Se automação persistente, política de merge ou conflitos exigirem revisão. |
 | [ADR-0018](../adr/0018-codex-envelope-lifecycle-and-outcomes.md) | Lifecycle do envelope e outcomes do Codex | Aceito | 2026-07-17 | Envelope tem lifecycle explícito; outcomes são exclusivos e distinguem espera, decisão e encerramento. | ADR-0003, ADR-0005, ADR-0006, ADR-0007, ADR-0017 | Se automação, política de merge ou uso dos outcomes mudar. |
+| [ADR-0019](../adr/0019-local-synthetic-s3-compatible-object-storage.md) | Object storage S3-compatible no protótipo local sintético | Proposto | 2026-08-04 | Reservada a decisão sobre limites, provenance e revisão do backend local da #40. | ADR-0011 | Antes de implementar storage real na #40. |
+| [ADR-0020](../adr/0020-main-ruleset-human-review-and-merge.md) | Ruleset, revisão humana e método de merge da main | Proposto | 2026-08-04 | Reservada a decisão sobre dois cutovers, checks, aprovação e squash-only. | ADR-0007 | Antes do Cutover A do ruleset. |
+| [ADR-0021](../adr/0021-shared-dev-and-worktree-ownership.md) | Ownership do shared-dev e isolamento por worktrees | Proposto | 2026-08-04 | Reservada a decisão sobre owner por perfil, guards, rehearsal e rollback. | ADR-0004, ADR-0008 | Antes de implementar `devctl` ou trocar o runtime. |
+| [ADR-0022](../adr/0022-living-documentation-and-implementation-traceability.md) | Documentação viva e rastreabilidade da implementação | Proposto | 2026-08-04 | Reservada a decisão sobre fontes, registries, referências, UML e site derivado. | ADR-0006 | Antes das referências de implementação e Documentation CI. |
 
 ## Avaliação dos gatilhos na Phase 1
 
@@ -43,4 +47,5 @@ retroativa dos ADRs aceitos.
 - ADR-0016 organiza a descoberta; provider padrão e thresholds dependem de benchmark.
 - ADR-0017 preserva PR/review por slice e elimina aprovação mecânica entre itens do mesmo envelope.
 - ADR-0018 complementa ADR-0017 com lifecycle, evidência durável, outcomes exclusivos e condições de retomada.
+- ADR-0019 a ADR-0022 estão reservados pelo checkpoint #104; enquanto `Proposto`, não autorizam implementação obrigatória.
 - Atualizar este índice quando ADRs forem criados, substituídos, complementados ou obsoletados.
