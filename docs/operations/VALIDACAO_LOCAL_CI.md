@@ -4,9 +4,10 @@
 - **Estado:** vigente para a fundação R0 e a persistência relacional da S2.02
 - **Atualizar quando:** versões pinadas ou comandos do Application CI mudarem
 
-Este runbook reproduz localmente, na mesma ordem, os comandos `run` executados
-pelo Application CI para backend, frontend e configuração do Compose. Execute
-todos os blocos a partir da raiz do repositório. O `cd apps/api` reproduz o
+Este runbook registra, na mesma ordem, os comandos `run` executados pelo
+Application CI para backend, frontend e configuração do Compose. Ele não manda
+executar todos os blocos em todo host: selecione somente o plano autorizado na
+tabela abaixo e parta da raiz do repositório. O `cd apps/api` reproduz o
 `working-directory` do job de backend; as actions de setup da CI são
 representadas localmente pelas versões requeridas abaixo.
 
@@ -30,7 +31,9 @@ runtime legado iniciado por outra worktree.
 
 Até `compose.check.yml`, `compose.rehearsal.yml` e `devctl` serem integrados:
 
-- não executar o bloco mutante de PostgreSQL no `app-host` nem em worktree;
+- nunca executar o bloco mutante de PostgreSQL em worktree; no `app-host`, ele
+  exige Issue operacional, revisão humana e execução somente na root
+  proprietária validada;
 - usar os checks do GitHub Actions como evidência isolada ou abrir Issue
   operacional para uma execução local explicitamente controlada;
 - não inventar project name, porta ou volume alternativo sem que o modelo
@@ -40,6 +43,19 @@ Até `compose.check.yml`, `compose.rehearsal.yml` e `devctl` serem integrados:
 
 Os comandos permanecem registrados para explicar a cobertura vigente; não são
 autorização de execução no runtime compartilhado.
+
+#### Planos de execução e evidência
+
+| Plano | Blocos locais autorizados | Evidência da integração PostgreSQL |
+| --- | --- | --- |
+| `app-host` ou qualquer worktree, antes do tooling isolado | Backend e Frontend; Configuração do Compose somente quando um `.env` sintético ignorado já estiver autorizado, sem iniciar serviços | job verde `PostgreSQL / migrations and integration` da PR/commit avaliado |
+| execução local explicitamente controlada por Issue operacional e revisão humana | somente na root proprietária validada, nunca em worktree: Backend, Frontend, Configuração do Compose e bloco PostgreSQL depois de provar ausência de adoção do `shared-dev` e cleanup exato | saída local preservada mais o job correspondente da CI |
+| GitHub Actions | jobs declarados nos workflows, com project name e recursos efêmeros da execução | próprio job verde, incluindo migration, testes e restart probe |
+
+Em qualquer worktree e no `app-host` fora do plano explicitamente controlado,
+omitir o bloco PostgreSQL por este guard é o resultado esperado, não uma
+validação falha. Não crie `.env`, project name, porta ou volume apenas para
+transformar um bloco proibido em executável.
 
 ## Versões requeridas
 
@@ -83,10 +99,12 @@ pnpm --filter @erp-docflow/web build
 
 ## Configuração do Compose
 
-Crie `.env` conforme o [runbook do Compose](DEVELOPMENT_COMPOSE.md) antes da
-validação. O arquivo é ignorado pelo Git, a senha deve ser apenas local e
-sintética e o Compose falha se qualquer componente
-`ERP_DOCFLOW_DATABASE_*` obrigatório estiver vazio.
+Somente quando o plano autorizado incluir este bloco, use um `.env` sintético e
+ignorado conforme o [runbook do Compose](DEVELOPMENT_COMPOSE.md). No `app-host`
+ou em worktree sem `.env` previamente autorizado, omita o bloco e use o job
+`Compose / configuration` da PR/commit avaliado como evidência; não crie o
+arquivo apenas para viabilizar a validação. Quando usado, o Compose falha se
+qualquer componente `ERP_DOCFLOW_DATABASE_*` obrigatório estiver vazio.
 
 ```bash
 docker compose version
@@ -142,7 +160,14 @@ procedimento local normal.
 
 ## Resultado esperado
 
-Todos os comandos devem encerrar com código `0`, migrations devem terminar no
-único head e lockfiles não podem ser modificados. Uma falha local deve ser
-corrigida e reproduzida antes do push; não se deve relaxar um check da CI apenas
-para obter resultado verde.
+Em qualquer plano, todos os comandos efetivamente autorizados e executados devem
+encerrar com código `0`, e lockfiles não podem ser modificados. No plano local
+explicitamente controlado e na CI, migrations também devem terminar no único
+head e o restart probe deve passar. Em qualquer worktree e no `app-host` fora do
+plano explicitamente controlado, a prova PostgreSQL vem do job verde da CI e a
+não execução local fica registrada como aplicação do ADR-0021, não como sucesso
+fictício.
+
+Uma falha em bloco executado deve ser corrigida e reproduzida antes do push; não
+se deve relaxar um check da CI nem violar o guard do runtime apenas para obter
+resultado verde.
