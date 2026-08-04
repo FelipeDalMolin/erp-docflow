@@ -88,7 +88,7 @@ As Phases 2–7 organizam maturidade/capabilities. Elas não constituem uma wate
 | materialização relacional PDF-first | #39 | PR #103, commit `ec1b558`: domínio, migration inicial, repositórios e testes |
 | limites do storage local sintético | #107 | ADR-0019 integrado pela PR #108 no commit `372a3a6`, com revisão futura obrigatória |
 | governança da `main` em dois cutovers | #111 | ADR-0020 integrado pela PR #112 no commit `b19a720`; nenhuma configuração externa aplicada |
-| ownership do `shared-dev` e worktrees | #113 | ADR-0021 aceito por esta entrega documental; owner e guards definidos sem cutover, runtime ou tooling implementado |
+| ownership do `shared-dev` e worktrees | #113 | ADR-0021 aceito pela PR #114 nesta entrega documental; owner e guards definidos sem cutover, runtime ou tooling implementado |
 
 #65, #67 e #69 estão encerradas. Seus relatórios permanecem evidência histórica; não representam trabalho corrente.
 
