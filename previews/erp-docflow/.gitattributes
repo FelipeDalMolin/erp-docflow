@@ -1,0 +1,2 @@
+# Preserve the reviewed snapshot and vendored checksum bytes on every platform.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

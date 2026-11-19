@@ -1,0 +1,55 @@
+/* A bounded shell with its own native scroll keeps every destination reachable. */
+.sidebar{top:0;left:0;padding:0;height:100vh;height:100dvh;overflow:hidden;z-index:30}
+.sidebar-header{flex:0 0 auto;padding:20px 14px 14px;border-bottom:1px solid #345041}
+.sidebar .brand{padding:0 6px 18px;gap:10px}
+.sidebar .brand strong{font-size:16px}
+.sidebar .brand small{font-size:9px;letter-spacing:1.5px}
+.sidebar .brandmark{width:32px;height:36px;flex:none}
+.sidebar .company-select{margin:0;padding:10px 9px;gap:8px}
+.sidebar .company-select select{font-size:13px}
+.sidebar-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:12px 12px 8px;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#7b9a87 #203d32;-webkit-overflow-scrolling:touch;scroll-padding-block:8px}
+.sidebar-scroll::-webkit-scrollbar{width:8px}
+.sidebar-scroll::-webkit-scrollbar-track{background:#203d32}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:#7b9a87;border:2px solid #203d32;border-radius:8px}
+.sidebar .nav{gap:3px;margin-bottom:14px}
+.sidebar .nav-group{font-size:10px;color:#a3b7a8;letter-spacing:1.3px;padding:0 10px;margin:8px 0}
+.sidebar .nav button{font-size:14px;line-height:1.3;min-height:44px;padding:10px;gap:10px;color:#d4e0d6;transition:background-color .12s}
+.sidebar .nav button.active{color:#fff;background:#365b48}
+.sidebar .nav button:focus-visible,.sidebar-close:focus-visible{outline-color:#d5dea9;outline-offset:-3px}
+.sidebar .nav .icon{width:19px;height:19px}
+.sidebar .nav .navcount{font-size:11px}
+.sidebar .sidebar-bottom{margin-top:12px;padding:10px 8px 8px}
+.sidebar .sidebar-bottom button{min-height:44px;font-size:12px;padding:8px 0}
+.sidebar .profile{margin-top:8px;line-height:1.4}
+.sidebar .profile small{font-size:11px}
+.sidebar-scroll-cue{flex:0 0 26px;padding:4px 12px 6px;text-align:center;font-size:11px;line-height:16px;color:#b7cdbd;background:#203d32}
+.sidebar-scroll-cue [hidden]{display:none}
+.sidebar-close,.sidebar-backdrop{display:none}
+.menu-toggle{flex-shrink:0;border-radius:7px}
+.menu-toggle:hover{background:#e7efe8}
+
+@media(max-width:1150px){
+  .sidebar-header{padding:16px 10px 12px}
+  .sidebar-scroll{padding-left:8px;padding-right:8px}
+  .sidebar .brand{padding-left:5px}
+}
+@media(max-height:700px){
+  .sidebar-header{padding-top:12px;padding-bottom:10px}
+  .sidebar .brand{padding-bottom:12px}
+  .sidebar .brand small{display:none}
+  .sidebar .nav{margin-bottom:10px}
+}
+@media(max-width:850px){
+  .topbar{position:sticky;top:0;z-index:15;box-shadow:0 1px 0 #233d3408}
+  .sidebar{width:min(300px,calc(100vw - 48px));padding:0;box-shadow:8px 0 32px #142e2526}
+  .sidebar-header{padding:14px 14px 12px}
+  .sidebar .brand{padding-left:0}
+  .sidebar .brand>div{flex:1;min-width:0}
+  .sidebar-close{display:grid;place-items:center;width:44px;height:44px;flex:none;border-radius:7px;color:#eaf2eb}
+  .sidebar-close:hover{background:#365b48}
+  .sidebar-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:25;background:#102a2266;touch-action:none}
+  .menu-toggle{display:grid;width:44px;height:44px}
+  .sidebar-scroll{padding-left:12px;padding-right:12px}
+  .sidebar .nav button{min-height:46px}
+}
+@media(prefers-reduced-motion:reduce){.sidebar,.sidebar .nav button{transition:none}}

@@ -182,3 +182,12 @@ Atualizar este snapshot no mesmo PR que:
 - integrar a primeira evidência de código de produto;
 - materializar taxonomia/automação aqui registrada como gap;
 - criar ou substituir a release-alvo do produto.
+
+
+## Prévia de interface preservada em branch — 19/11/2026
+
+A Issue #117 registra a cópia saneada do código da prévia em
+`previews/erp-docflow/`, para revisão em branch própria. A base pública começa
+vazia; extratos, dados financeiros reais e histórico Git privado foram excluídos.
+Esta preservação não integra a prévia a `apps/web`/API, não representa release
+ou deploy e não altera os gates #104/#40 ou a autorização de R1 descritos acima.

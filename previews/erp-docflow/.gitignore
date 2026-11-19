@@ -1,0 +1,23 @@
+# The static dist directory is source code here, not a build artifact.
+!dist/
+!dist/**
+# Private input/output must never be committed.
+dist/sources/
+dist/import-audit.json
+private/
+uploads/
+.openai/
+.vscode/
+.env*
+*.pdf
+*.ofx
+*.qfx
+*.qif
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.zip
+*.bak
+node_modules/
+checks/fixtures/october.js

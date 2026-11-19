@@ -1,0 +1,42 @@
+import {forecastItems,updateForecast} from './forecast-model.js?v=23';
+import {validDate} from './range-model.js?v=17';
+
+export function createForecast(a){
+  const {esc,money,fullDate,btn}=a;
+  const find=id=>forecastItems(a.state,a.company,a.NOW).find(f=>f.id===id);
+  const bank=id=>a.scope('accounts').find(b=>b.id===id)?.name||id;
+  const historyRows=ids=>ids.map(id=>a.scope('transactions').find(t=>t.id===id)).filter(Boolean).map(t=>`<div class="forecast-evidence"><div><b>${fullDate(t.date)} · ${money(t.amount)}</b><small>${esc(bank(t.account))} · ${esc(t.description)}</small></div>${btn('Abrir lançamento',`data-open="transaction" data-id="${esc(t.id)}"`)}</div>`).join('');
+  function banner(){
+    const rows=forecastItems(a.state,a.company,a.NOW).filter(f=>!f.hidden&&f.date.startsWith(a.month)),total=rows.filter(f=>f.group!=='resolved').length;
+    return `<section class="forecast-banner" aria-label="Previsões do histórico"><div><strong>${total} previsão(ões) em acompanhamento neste mês</strong><p>Tracejadas no calendário. Data e valor sugeridos por repetições do extrato; sem classificação contábil.</p></div>${btn('Previsões do mês atual','data-forecast-calendar="1"','','calendar')}<details><summary>Como as sugestões são feitas</summary><p>Repetições em pelo menos 3 dos últimos 6 meses completos, com ocorrência recente. Texto bancário, direção e valores ajudam a distinguir séries. A data e o valor centrais usam a mediana; o intervalo observado fica visível. Aplicações, resgates, rendimentos e históricos genéricos ficam fora. Um mesmo favorecido pode ter compromissos diferentes: revise as fontes.</p><p>Exibimos o mês atual e os próximos dois. As sugestões do mês ficam guardadas neste navegador para continuar o acompanhamento; as que você revisa também preservam o histórico. Os valores não entram no saldo realizado. Correspondências precisam da sua revisão, mesmo quando os valores coincidem.</p></details></section>`;
+  }
+  function dialog(kind,id){
+    if(!['forecast','forecast-edit','forecast-dismiss'].includes(kind))return null;
+    const f=find(id);if(!f)return {heading:'Previsão',body:'Esta sugestão não está disponível. Volte ao calendário para consultar o histórico atualizado.'};
+    if(kind==='forecast-edit')return {heading:'Confirmar ou ajustar previsão',body:a.formShell('Acompanhar esta previsão',f.title,`<div class="formrow"><label>Data esperada<input type="date" name="date" required value="${f.date}"></label><label>Valor esperado (R$)<input name="amount" inputmode="decimal" required value="${(f.amount/100).toFixed(2).replace('.',',')}"></label></div><label>Observação<textarea name="note" maxlength="1000" placeholder="Ex.: conferir a data com o documento.">${esc(f.decision.note||'')}</textarea></label><p>Confirma sua expectativa para este mês. Não cria dívida, obrigação financeira, classificação ou pagamento. A sugestão original permanece no histórico.</p><p class="form-error" role="alert"></p>`,kind,id,'Salvar previsão')};
+    if(kind==='forecast-dismiss')return {heading:'Descartar sugestão',body:a.formShell('Descartar neste mês',f.title,`<label>Motivo<input name="reason" required maxlength="300" placeholder="Ex.: não deve se repetir neste mês."></label><p>O histórico bancário é preservado. Você pode reabrir a sugestão em Concluídas / revisadas.</p><p class="form-error" role="alert"></p>`,kind,id,'Descartar previsão')};
+    const task=a.scope('tasks').find(t=>t.forecast===f.id&&!t.done),recognized=f.matchedTransactionId;
+    return {heading:'Previsão do histórico · sem classificação',body:`<h2>${esc(f.title)}</h2><p class="description"><span class="control-status ${f.group==='deviation'?'amber':f.group==='resolved'?'green':'blue'}">${esc(f.label)}</span></p><p>${esc(f.detail)}</p><dl class="info-grid"><div><dt>Direção</dt><dd>${f.direction>0?'Entrada prevista':'Saída prevista'}</dd></div><div><dt>Valor esperado</dt><dd>${money(f.amount)}</dd></div><div><dt>Data esperada</dt><dd>${fullDate(f.date)}</dd></div><div><dt>Faixa de acompanhamento</dt><dd>${fullDate(f.windowStart)} a ${fullDate(f.windowEnd)}</dd></div><div><dt>Valores do histórico</dt><dd>${money(f.minAmount)} a ${money(f.maxAmount)}</dd></div><div><dt>Contas de origem</dt><dd>${f.accounts.map(bank).map(esc).join(', ')}</dd></div></dl><p class="forecast-method">Sugestão original: ${fullDate(f.snapshot.date)} · ${money(f.snapshot.amount)}. Faixa observada para este mês: ${fullDate(f.snapshot.windowStart)} a ${fullDate(f.snapshot.windowEnd)}. ${esc(f.dateNote)} Base: ${f.months} meses, até ${fullDate(f.lastDate)}. A mediana não prevê reajustes ou encerramentos.</p>${f.decision.note?`<p><b>Sua observação:</b> ${esc(f.decision.note)}</p>`:''}<div class="drawer-actions">${f.hidden||recognized?btn('Reabrir previsão',`data-forecast-reopen="${esc(f.id)}"`):btn(f.decision.accepted?'Ajustar previsão':'Confirmar / ajustar previsão',`data-open="forecast-edit" data-id="${esc(f.id)}"`,'primary')}${btn('Ver no calendário',`data-forecast-date="${esc(f.date)}"`)}${!f.hidden&&!recognized?btn(task?'Abrir tarefa vinculada':'Criar tarefa vinculada',task?`data-open="task" data-id="${esc(task.id)}"`:`data-open="control-task" data-id="${esc(f.id)}"`):''}${!f.hidden&&!recognized?btn('Descartar neste mês',`data-open="forecast-dismiss" data-id="${esc(f.id)}"`):''}</div>${recognized?`<section class="drawer-section"><h3>Ocorrência reconhecida por você</h3>${historyRows([recognized])}<p>Reconhecer a ocorrência acompanha esta previsão. Não altera o status de conciliação do lançamento.</p></section>`:f.candidateIds.length?`<section class="drawer-section"><h3>Possíveis correspondências</h3><p>Compare data, valor e documento antes de reconhecer. Há apenas semelhança com o histórico.</p>${f.candidateIds.map(id=>`${historyRows([id])}${btn('Reconhecer esta ocorrência',`data-forecast-match="${esc(f.id)}" data-transaction="${esc(id)}"`)}`).join('')}</section>`:''}<section class="drawer-section"><h3>Por que apareceu no calendário?</h3><p>${f.months} ocorrências em meses distintos sustentam esta sugestão. Abra qualquer lançamento para acessar seu extrato de origem.</p>${historyRows(f.sourceIds)}</section>${f.decision.history?.length?`<details class="control-explainer"><summary>Histórico das suas decisões</summary>${f.decision.history.map(h=>`<p>${fullDate(h.date)} · ${esc(h.action)} · ${fullDate(h.fromDate)} → ${fullDate(h.toDate)} · ${money(h.toAmount)}</p>`).join('')}</details>`:''}`};
+  }
+  function finish(message){a.save();a.closeAll();a.render();a.toast(message);}
+  function calendar(date){a.setMonth(date.slice(0,7));a.selectDate(date);a.closeAll();a.navigate('home/calendar');}
+  function click(d){
+    if(d.forecastCalendar){calendar(a.NOW);return true;}
+    if(d.forecastDate){if(validDate(d.forecastDate))calendar(d.forecastDate);return true;}
+    if(d.forecastMatch){const f=find(d.forecastMatch);if(!f?.candidateIds.includes(d.transaction)){a.toast('Correspondência indisponível. Confira novamente.');return true;}updateForecast(a.state,f,{matchedTransactionId:d.transaction,action:'Ocorrência reconhecida'},a.NOW);finish('Ocorrência reconhecida nesta previsão. Conciliação preservada.');return true;}
+    if(d.forecastReopen){const f=find(d.forecastReopen);if(f){updateForecast(a.state,f,{dismissed:false,matchedTransactionId:null,action:'Previsão reaberta'},a.NOW);finish('Previsão reaberta para acompanhamento.');}return true;}
+    return false;
+  }
+  function submit(form,data){
+    const kind=form.dataset.form;if(!['forecast-edit','forecast-dismiss'].includes(kind))return false;
+    const f=find(form.dataset.id),v=k=>String(data.get(k)||'').trim(),fail=message=>{const error=form.querySelector('.form-error');if(error)error.textContent=message;else a.toast(message);return true;};
+    if(!f)return fail('Sugestão indisponível. Abra novamente pelo calendário.');
+    if(kind==='forecast-edit'){
+      const amount=a.parseAmount(v('amount'));
+      if(!validDate(v('date'))||!Number.isSafeInteger(amount)||amount<=0)return fail('Informe uma data e um valor positivo válidos.');
+      updateForecast(a.state,f,{accepted:true,date:v('date'),amount,note:v('note'),action:'Expectativa confirmada / ajustada'},a.NOW);
+    }else{if(!v('reason'))return fail('Informe o motivo do descarte.');updateForecast(a.state,f,{dismissed:true,reason:v('reason'),action:'Descartada: '+v('reason')},a.NOW);}
+    finish('Previsão atualizada, com a sugestão original preservada.');return true;
+  }
+  return {banner,dialog,click,submit};
+}

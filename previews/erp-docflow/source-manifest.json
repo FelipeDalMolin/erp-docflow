@@ -1,0 +1,342 @@
+{
+  "sourceCommit": "dc420168c36359a8601bcaf1cd2163b1807e1907",
+  "baseCommit": "1739ffbc4da7f3dbf9e55b5c66eabc091a4c0fef",
+  "issue": 117,
+  "files": [
+    {
+      "path": "dist/amchart-model.js",
+      "unchanged": true,
+      "publicSha256": "00df05ce733e06f76d9db68faf5c700de400917267b1b981dc1f0f197cedfccf"
+    },
+    {
+      "path": "dist/amchart-runtime.js",
+      "unchanged": true,
+      "publicSha256": "3996624de82bdc8aed21537d7a432a596374f233e36ff4037bca32c9c50ede0c"
+    },
+    {
+      "path": "dist/amchart-ui.js",
+      "unchanged": true,
+      "publicSha256": "8e6bdb128c757d45325f8a76181c709ae12b3dca599f8d8a39d08bf770798282"
+    },
+    {
+      "path": "dist/amchart.css",
+      "unchanged": true,
+      "publicSha256": "4ba9f729afc91502ce70d9d335ccd9b413097a48f8fde24f46f62f99dac098c5"
+    },
+    {
+      "path": "dist/app.css",
+      "unchanged": true,
+      "publicSha256": "19a75f39a3d08d8eedd2bfb7000cd23fc4888bbe69a6ee6779bfbbb9c8d48993"
+    },
+    {
+      "path": "dist/app.js",
+      "unchanged": false,
+      "publicSha256": "9e8ba045af55ac599a8d0591b149356a1e33623cbe12f0d1c1e0b29a95caeb54"
+    },
+    {
+      "path": "dist/balance-events.js",
+      "unchanged": true,
+      "publicSha256": "4caf5a52c347c3cae146ae9727b563e0eab3a00c725f60d8ccc81d1f2268fc10"
+    },
+    {
+      "path": "dist/balance-trend-model.js",
+      "unchanged": true,
+      "publicSha256": "9399bdc2cf2b46afe16e8512d8476df6bfd98a10c33fd7b1a40aa53fac892ea1"
+    },
+    {
+      "path": "dist/bank-position-model.js",
+      "unchanged": true,
+      "publicSha256": "09fd7ec1a8158276ae7058fa27c87c635f6de6deb189cb3d52eafdf36d58ae6c"
+    },
+    {
+      "path": "dist/banking-model.js",
+      "unchanged": true,
+      "publicSha256": "d45fade6dad174235512c8cfef3f2ff866843efe58a0c82d49f1206974a5350f"
+    },
+    {
+      "path": "dist/banking-ui.js",
+      "unchanged": true,
+      "publicSha256": "a368001d5b43141500bb37ba42cd4e51acbf826d1700810c0a53e0bb153045b2"
+    },
+    {
+      "path": "dist/banking.css",
+      "unchanged": true,
+      "publicSha256": "2f53872e0194b2596c2ade55d1849a6861f1e496c7a54630b08b3f2876987240"
+    },
+    {
+      "path": "dist/calendar-selection.js",
+      "unchanged": true,
+      "publicSha256": "8311e471efd44962c19fba034e818a88c0c4889b5d09084dde5e70d1229a6b21"
+    },
+    {
+      "path": "dist/calendar-ui.js",
+      "unchanged": true,
+      "publicSha256": "04eb13078f934d788bf8f4fa1786ade213024549a4403d1af5d0fc1663f862e5"
+    },
+    {
+      "path": "dist/calendar.css",
+      "unchanged": true,
+      "publicSha256": "282bade394b181bfdd66ce06abcf1590908545d6720042b3afef579580ee00eb"
+    },
+    {
+      "path": "dist/chart-correspondence-model.js",
+      "unchanged": true,
+      "publicSha256": "329e12cbd8bd7b98da60b35c1d94df9ffbe67de84494be417416c6960b751150"
+    },
+    {
+      "path": "dist/chart-navigation-model.js",
+      "unchanged": true,
+      "publicSha256": "a391f02501ca9260ee1cc9a103bb2e5eca8b607f18002cb51af48abff726e7ad"
+    },
+    {
+      "path": "dist/concept.html",
+      "unchanged": false,
+      "publicSha256": "bd0674f951938217a8f0d803ca80ff1df371f99cd2a12056ed761fc7eb22ab59"
+    },
+    {
+      "path": "dist/control-context.js",
+      "unchanged": true,
+      "publicSha256": "815ff9213ff736d8eb71b45212d6a7d76e99f633a1158f48c3e3d677befcdb86"
+    },
+    {
+      "path": "dist/control-model.js",
+      "unchanged": true,
+      "publicSha256": "05c648aab83092df4b2fa56363a07b9483d601b4a371f49313778db5cef8483e"
+    },
+    {
+      "path": "dist/control-ui.js",
+      "unchanged": true,
+      "publicSha256": "f265925c7adf4d58f66bb39f8239118c010482fa3769497bb7b90eace8b2a69e"
+    },
+    {
+      "path": "dist/control.css",
+      "unchanged": true,
+      "publicSha256": "c7a4aa9291cf1080fa164a6537f98691fbd3e7b289529dffc83339a27b3eb8de"
+    },
+    {
+      "path": "dist/daily-ui.js",
+      "unchanged": true,
+      "publicSha256": "bde3cdb9cd1cf86d941e1aab8bb9be74dbb6bf9dc76f65ab6e13a9e89f12c4c5"
+    },
+    {
+      "path": "dist/forecast-model.js",
+      "unchanged": true,
+      "publicSha256": "9cafe9a7e47e7187475b26621fa02c459d397afbde3c606f80c47013e0ac1fa4"
+    },
+    {
+      "path": "dist/forecast-ui.js",
+      "unchanged": true,
+      "publicSha256": "781de6b3f746f40f36bf9379a17d6a66dc2c11655008e2ff3d58489d2593e249"
+    },
+    {
+      "path": "dist/import-migration.js",
+      "unchanged": true,
+      "publicSha256": "eb0e8478ac7a27a10e275840c32a4e2a456eb96d9e6774f4c052d763252fee17"
+    },
+    {
+      "path": "dist/index.html",
+      "unchanged": false,
+      "publicSha256": "3d9a6422eb5dcab73f16492fc1d6d028874f9e0ba39c9fd2f7674b6bcfc8a3e0"
+    },
+    {
+      "path": "dist/intake-ui.js",
+      "unchanged": true,
+      "publicSha256": "6e412ef8583db7727e78b6e561201c3e8d2904cd82f82fbcabe07b4eb620187e"
+    },
+    {
+      "path": "dist/inventory-model.js",
+      "unchanged": true,
+      "publicSha256": "979bdb8415c54e0ecccfecc0ae2bb589f918a7996a1783fce3acd3a7614734d0"
+    },
+    {
+      "path": "dist/inventory-ui.js",
+      "unchanged": true,
+      "publicSha256": "5380dc39f0a173a3ece74760627e318e1e6759460eb8c4d4c51b472d9eff0d24"
+    },
+    {
+      "path": "dist/inventory.css",
+      "unchanged": true,
+      "publicSha256": "7140e26229c374126919f6c2ec41137d7ef62a81dd4c2e8162929782fda2056c"
+    },
+    {
+      "path": "dist/movement-group-model.js",
+      "unchanged": true,
+      "publicSha256": "fb4499a3194b857905d4f31d610658d88d0919337524517ca85d63a972cb1e21"
+    },
+    {
+      "path": "dist/movement-list-ui.js",
+      "unchanged": true,
+      "publicSha256": "e1e7b04707a5256a7ee43f3ab453f24b01c8b9630bc48343bd2679c635ad3c6d"
+    },
+    {
+      "path": "dist/overview-chart.js",
+      "unchanged": true,
+      "publicSha256": "556cbf1c0b812b21670b2416ed64e944d2e2b5b5e0a68f576d1cd9880ee72212"
+    },
+    {
+      "path": "dist/overview-model.js",
+      "unchanged": true,
+      "publicSha256": "39d2db1092d6972ab18935877877effba965adcf08a89af60397469977351369"
+    },
+    {
+      "path": "dist/overview-ui.js",
+      "unchanged": true,
+      "publicSha256": "3c84aa4e9a38af2fc5d4fcb94c420097d05ec21f7a51b7f60b4cab7200479919"
+    },
+    {
+      "path": "dist/overview.css",
+      "unchanged": true,
+      "publicSha256": "6debc89b9437cece221dcdac37c800738601aafb76b3bf59eb7be4edad242b10"
+    },
+    {
+      "path": "dist/period-ui.js",
+      "unchanged": true,
+      "publicSha256": "763d7176ddf17e6242e38c756656e877969e96eaa0783b625970df14a72a2a19"
+    },
+    {
+      "path": "dist/range-model.js",
+      "unchanged": true,
+      "publicSha256": "443d9abe83d7b99fdc32a5b5c45dbf5474b8226a427f345d3d42acd258a7812d"
+    },
+    {
+      "path": "dist/sidebar.css",
+      "unchanged": true,
+      "publicSha256": "58254791dc48bd6ab78320919b129735f6b5954c8ab63781bf693c21190f9f8a"
+    },
+    {
+      "path": "dist/sidebar.js",
+      "unchanged": true,
+      "publicSha256": "46922356eb3fb5e7bb0af28bbb63ad5e94299ded5408d7a61f9a0ede5544e43d"
+    },
+    {
+      "path": "dist/signed-flow-model.js",
+      "unchanged": true,
+      "publicSha256": "eed146e1e41ddd6ba888c76d6062836e2baf59bdaa0f5debf87121b80ccbeb46"
+    },
+    {
+      "path": "dist/statement-model.js",
+      "unchanged": true,
+      "publicSha256": "bd799763e40f36da22c5f887d8b6532032b3fe30d6acd2f9ecd46727195da422"
+    },
+    {
+      "path": "dist/statement-ui.js",
+      "unchanged": false,
+      "publicSha256": "0cd3eed1c494fbbacf4a5759046f2d1904f571ddc1a40bf2cb736742a8570b77"
+    },
+    {
+      "path": "dist/statements.css",
+      "unchanged": true,
+      "publicSha256": "68704bf72cb3038bf59233a8927a35f1354fcc9285591414be8f1860d3a031bd"
+    },
+    {
+      "path": "dist/workbook-model.js",
+      "unchanged": true,
+      "publicSha256": "0a76ded7bd1cee8b55b1afc6ae4ee71c397f118ec707c4e25bafa86050be1918"
+    },
+    {
+      "path": "dist/workbook.css",
+      "unchanged": true,
+      "publicSha256": "807a26831799252596b4eb05a8858d9178a8789d33be02a0cc850f3833d4a413"
+    },
+    {
+      "path": "dist/workspace-model.js",
+      "unchanged": false,
+      "publicSha256": "560a2631e337fc2ca82d088719fc21cb456c3d5bf0cb19ac4a18945b0c9fa504"
+    },
+    {
+      "path": "dist/workspace-ui.js",
+      "unchanged": true,
+      "publicSha256": "c68833ac078edec72e17494bbf82c1b74988e0e3a14758e2a9a5e226b8619dda"
+    },
+    {
+      "path": "dist/workspace.css",
+      "unchanged": true,
+      "publicSha256": "7da72efd8b409f9c778fae74dfb65643ad7ecc460f5427613f2e399c4e3cddbb"
+    },
+    {
+      "path": "dist/system/index.html",
+      "unchanged": false,
+      "publicSha256": "1e9f68a229230c52ae317309fab422da5ccb6282e8dd259320316870a8c7c36e"
+    },
+    {
+      "path": "dist/vendor/amcharts5-5.22.0/index.js",
+      "unchanged": true,
+      "publicSha256": "45afbaa29ce09cba51f2e5cd91080d294cf98d2add15166134896a0a641cf1b1"
+    },
+    {
+      "path": "dist/vendor/amcharts5-5.22.0/LICENSE",
+      "unchanged": true,
+      "publicSha256": "17b8e009294049525318735a7fb5fe3cff4a98d72b3d5bbbf9f9d68cbe70f07b"
+    },
+    {
+      "path": "dist/vendor/amcharts5-5.22.0/locales/pt_BR.js",
+      "unchanged": true,
+      "publicSha256": "9b7701703c597faa74e6956ac3d301e60061da00405a1994ba71325f2584f592"
+    },
+    {
+      "path": "dist/vendor/amcharts5-5.22.0/manifest.json",
+      "unchanged": true,
+      "publicSha256": "f0a7906618958edd50cd2082ab7ba41997c47d67274d408739ba6c5b5f6e99cb"
+    },
+    {
+      "path": "dist/vendor/amcharts5-5.22.0/xy.js",
+      "unchanged": true,
+      "publicSha256": "77d06b2d3e883ec5a2d391ed06a29a409d28d9a1e626b21e700b5fdfcb6753de"
+    },
+    {
+      "path": "checks/balance-events.mjs",
+      "unchanged": true,
+      "publicSha256": "130fa7e6d731e1f7a3102c9bf31e27977c9f3fb45a998c82a024481988732956"
+    },
+    {
+      "path": "checks/banking.mjs",
+      "unchanged": true,
+      "publicSha256": "c926a5d6e99c2c63458fe0514c1465fdd76d770e02c10924f11940c95a30f7ad"
+    },
+    {
+      "path": "checks/domain.mjs",
+      "unchanged": true,
+      "publicSha256": "fa969894bc09929aa740b59267ac0e052665479f5c9809cfb2964ce3ce604953"
+    },
+    {
+      "path": "checks/inventory.mjs",
+      "unchanged": true,
+      "publicSha256": "6aadfeca2399900baf285aebf3ce3a064d2ac397d57b9d30a13b9fce56d9e9c4"
+    },
+    {
+      "path": "checks/overview.mjs",
+      "unchanged": true,
+      "publicSha256": "981806e089091bb44109ec14b6f6f71ca41dd0c3fc6b170624f6343808d7bb58"
+    },
+    {
+      "path": "checks/range-ui.mjs",
+      "unchanged": true,
+      "publicSha256": "0bafc13ff491f03a88d28955bf8906055d489087d443814cd94597118792be74"
+    },
+    {
+      "path": "checks/range.mjs",
+      "unchanged": true,
+      "publicSha256": "d8fcf58d11ad6fd1618e48cad7b42c22fe2b717600b83af30f5b5da05fd00d6e"
+    },
+    {
+      "path": "checks/sidebar.mjs",
+      "unchanged": true,
+      "publicSha256": "fa9c80f84e95106c7a8c69681d35afe51aae4cb2304a8576bec6b156d1431e5e"
+    },
+    {
+      "path": "checks/workbook.mjs",
+      "unchanged": true,
+      "publicSha256": "b6ce3596bc09cc97027c6a51c52cc810d6051db96c29e1bbd5a42780e7c41c84"
+    },
+    {
+      "path": "checks/workspace.mjs",
+      "unchanged": true,
+      "publicSha256": "6f83626ad389c22bcf19630b3a05e835863df800714dbe3e4dd36df8eab7c5e7"
+    },
+    {
+      "path": "checks/fixtures/demo.js",
+      "unchanged": false,
+      "publicSha256": "ee570df62c06d25b252e9ed59604f5872eeeb76838f8e57eca80422b863b162a"
+    }
+  ]
+}
