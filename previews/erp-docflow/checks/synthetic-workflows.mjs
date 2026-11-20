@@ -1,0 +1,51 @@
+import assert from 'node:assert/strict';
+import {SEED} from '../dist/data.js';
+import {recurringPatterns,forecastItems,updateForecast} from '../dist/forecast-model.js';
+import {obligationControl,ensureControlTask} from '../dist/control-model.js';
+import {mergeImportedState} from '../dist/import-migration.js';
+import {newCalendarSelection,setCalendarRange,calendarDayPage} from '../dist/calendar-selection.js';
+
+// All cases below are constructed here, independently of any bank statements.
+const now='2026-11-18',state=structuredClone(SEED),company='example';
+state.accounts.push({id:'test-account',company,name:'Conta fictícia',opening:0,statement:{period:{start:'2026-01-01',end:now}}});
+const tx=(id,date,extra={})=>({id,company,account:'test-account',date,amount:-10000,description:'PAGAMENTO FORNECEDOR EXEMPLO LTDA',history:'PAGAMENTO',details:['FORNECEDOR EXEMPLO LTDA'],imported:true,movementType:'bank-movement',...extra});
+state.transactions.push(tx('s1','2026-08-10'),tx('s2','2026-09-10'));
+assert.equal(recurringPatterns(state,company,now).length,0);
+state.transactions.push(tx('s3','2026-10-10'));
+assert.equal(recurringPatterns(state,company,now).length,1);
+let f=forecastItems(state,company,now).find(x=>x.month==='2026-11');
+assert.equal(f.amount,10000);assert.equal(f.group,'deviation');
+state.accounts[0].statement.period.end='2026-10-31';
+assert.match(forecastItems(state,company,now).find(x=>x.id===f.id).label,/falta extrato/);
+state.transactions.push(tx('foreign','2026-11-10',{company:'other'}),tx('wrong','2026-11-10',{amount:10000}));
+assert.equal(forecastItems(state,company,now).find(x=>x.id===f.id).candidateIds.length,0);
+state.transactions.push(tx('match','2026-11-11'));
+f=forecastItems(state,company,now).find(x=>x.id===f.id);assert.deepEqual(f.candidateIds,['match']);
+const ledgerBefore=JSON.stringify(state.transactions);
+updateForecast(state,f,{matchedTransactionId:'match'},now);
+assert.equal(forecastItems(state,company,now).find(x=>x.id===f.id).group,'resolved');
+assert.equal(JSON.stringify(state.transactions),ledgerBefore);
+
+const o={id:'test-obligation',company,account:'test-account',kind:'out',title:'Compromisso fictício',party:'Contraparte de teste',due:'2026-11-10',competence:'2026-11',items:[{name:'Exemplo',amount:10000}]};
+state.obligations.push(o);
+assert.equal(obligationControl(state,o,now).group,'verify');
+state.accounts[0].statement.period.end=now;
+assert.equal(obligationControl(state,o,now).group,'overdue');
+state.transactions.push(tx('partial','2026-11-09',{amount:-4000,obligation:o.id,confirmed:false}));
+assert.equal(obligationControl(state,o,now).paid,0);
+state.transactions.at(-1).confirmed=true;
+assert.equal(obligationControl(state,o,now).remaining,6000);
+const item=obligationControl(state,o,now),task=ensureControlTask(state,item,{title:'Conferir exemplo',due:now,owner:'Teste'},now);
+assert.equal(ensureControlTask(state,item,{title:'Conferir exemplo',due:now,owner:'Teste'},now).id,task.id);
+assert.equal(state.tasks.length,1);task.done=true;assert.equal(obligationControl(state,o,now).remaining,6000);
+
+const previous=structuredClone(state),fresh=structuredClone(state);
+previous.dataset.id='synthetic-v1';fresh.dataset.id='synthetic-v2';
+previous.transactions[0].category='Categoria de teste';fresh.transactions[0].amount=-20000;
+const merged=mergeImportedState(previous,fresh);
+assert.equal(merged.transactions.length,fresh.transactions.length);
+assert.equal(merged.transactions[0].category,'Categoria de teste');assert.equal(merged.transactions[0].amount,-20000);
+assert.equal(merged.tasks[0].id,task.id);assert.deepEqual(mergeImportedState(merged,fresh),merged);
+const selection=newCalendarSelection('2026-11-19');setCalendarRange(selection,'2026-12-03','2026-11-28');
+assert.equal(selection.start,'2026-11-28');assert.equal(selection.end,'2026-12-03');
+console.log('PASS synthetic workflows: recurrence, coverage, explicit recognition, partial payment, linked tasks, duplicate-safe migration and inclusive calendar range.');

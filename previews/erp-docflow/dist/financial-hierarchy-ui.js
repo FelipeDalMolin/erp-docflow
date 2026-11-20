@@ -1,0 +1,15 @@
+import {financialPresentation,presentationHTML} from './record-presentation.js?v=34';
+import {bankTone,flowDirection} from './visual-theme.js?v=34';
+import {financialHierarchy,CLASSIFICATION_STATES} from './financial-hierarchy.js?v=30';
+import {PURPOSES} from './classification-model.js?v=29';
+
+export function financialHierarchyHTML(a,transactions,{includeInitial=true,showNotice=true}={}){
+  const {esc,money,fullDate}=a;
+  const tree=financialHierarchy(a.state,a.company,transactions,{includeInitial});
+  const record=e=>{
+    const t=e.transaction,presentation=financialPresentation(a.state,'transaction',t,a.NOW),obligation=a.get('obligations',t.obligation),account=a.get('accounts',t.account);
+    const target=t.imported?{kind:'transaction',id:t.id}:obligation?{kind:'obligation',id:obligation.id}:{kind:'day',id:t.date};
+    return `<button class="fh-record" data-flow="${flowDirection(t.amount)}" data-bank-tone="${bankTone(account)}" data-open="${target.kind}" data-id="${esc(target.id)}"><span><b class="record-title ${presentation.complete?'is-reconciled':''}">${esc(obligation?.party||t.description)}</b><small>${fullDate(t.date)} · ${esc(account?.name||'Conta')} · ${esc(CLASSIFICATION_STATES[e.status])}</small>${e.line?`<small>${esc([PURPOSES[e.line.purpose]||'Natureza a definir',a.state.companies.find(c=>c.id===e.line.belongsTo)?.name,e.line.competence,e.line.note].filter(Boolean).join(' · '))}</small>`:''}${e.part?`<small class="fh-part">Parcela ${e.index}/${e.parts} deste lançamento · valor bancário ${money(t.amount)}</small>`:''}${presentationHTML(a,presentation,{compact:true})}</span><strong class="${t.amount<0?'outgoing':'incoming'}">${money(e.amount*(t.amount<0?-1:1))}</strong></button>`;
+  };
+  return `<div class="financial-hierarchy">${showNotice?`<p class="fh-note">Entradas / Saídas · Classificação · Lançamentos. ${includeInitial?'Inclui classificações iniciais identificadas para revisão.':'Classificações iniciais não incluídas: valores mantidos em A classificar.'} Composições divididas mostram somente o valor de cada parcela; os totais bancários permanecem iguais.</p>`:''}${tree.filter(d=>d.count).map(d=>`<details class="fh-direction" data-flow="${d.sign>0?'incoming':'outgoing'}" open><summary><span>${d.label}<small>${d.count} lançamento(s)</small></span><strong class="${d.sign>0?'incoming':'outgoing'}">${money(d.total*d.sign)}</strong></summary><div>${d.groups.map(g=>`<details class="fh-category"><summary><span>${esc(g.label)}<small>${g.count} lançamento(s)${g.initial?' · '+g.initial+' inicial(is)':''}${g.reviewed?' · '+g.reviewed+' revisado(s)':''}</small></span><strong>${money(g.total*d.sign)}</strong></summary><div>${g.entries.slice(0,8).map(record).join('')}${g.entries.length>8?`<details class="fh-more"><summary>Ver mais ${g.entries.length-8} item(ns)</summary>${g.entries.slice(8).map(record).join('')}</details>`:''}</div></details>`).join('')}</div></details>`).join('')||'<p class="fh-note">Nenhum lançamento neste período.</p>'}</div>`;
+}

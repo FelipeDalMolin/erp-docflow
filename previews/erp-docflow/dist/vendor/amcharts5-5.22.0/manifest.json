@@ -1,0 +1,31 @@
+{
+  "version": "5.22.0",
+  "downloadedAt": "2026-11-18",
+  "licenseMode": "Free with unmodified amCharts branding",
+  "files": [
+    {
+      "file": "index.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/amcharts5/5.22.0/index.js",
+      "bytes": 483796,
+      "sha256": "45afbaa29ce09cba51f2e5cd91080d294cf98d2add15166134896a0a641cf1b1"
+    },
+    {
+      "file": "xy.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/amcharts5/5.22.0/xy.js",
+      "bytes": 194343,
+      "sha256": "77d06b2d3e883ec5a2d391ed06a29a409d28d9a1e626b21e700b5fdfcb6753de"
+    },
+    {
+      "file": "locales/pt_BR.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/amcharts5/5.22.0/locales/pt_BR.js",
+      "bytes": 4912,
+      "sha256": "9b7701703c597faa74e6956ac3d301e60061da00405a1994ba71325f2584f592"
+    },
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/amcharts/amcharts5/master/LICENSE",
+      "bytes": 1730,
+      "sha256": "17b8e009294049525318735a7fb5fe3cff4a98d72b3d5bbbf9f9d68cbe70f07b"
+    }
+  ]
+}

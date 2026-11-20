@@ -1,0 +1,117 @@
+/* Semantic layer shared by every view; the palette lives in visual-theme.js. */
+:root{--green:#254f40;--muted:var(--df-muted);--line:var(--df-line);--paper:var(--df-surface);--amber:var(--df-warning);--red:var(--df-expense-text);accent-color:var(--df-selection)}
+body{color:var(--df-text)}
+body :is(.incoming,.income strong,.bc-in,.entry-row>th,.entry-row>td){color:var(--df-income-text)}
+body :is(.outgoing,.expense strong,.bc-out,.exit-row>th,.exit-row>td){color:var(--df-expense-text)}
+[data-flow="incoming"]{--flow:var(--df-income);--flow-text:var(--df-income-text);--flow-soft:var(--df-income-soft);--flow-line:var(--df-income-line)}
+[data-flow="outgoing"]{--flow:var(--df-expense);--flow-text:var(--df-expense-text);--flow-soft:var(--df-expense-soft);--flow-line:var(--df-expense-line)}
+[data-flow="neutral"]{--flow:var(--df-balance);--flow-text:var(--df-balance-text);--flow-soft:var(--df-balance-soft);--flow-line:var(--df-line)}
+[data-flow="incoming"][data-bank-tone="bb"]{--flow:var(--df-income-bb)}
+[data-flow="outgoing"][data-bank-tone="bb"]{--flow:var(--df-expense-bb)}
+.flow-value,[data-flow]>.flow-value{color:var(--flow-text);font-variant-numeric:tabular-nums}
+body :is(.pill,.control-status,.activity-kind,.day-item-status){border-radius:5px;font-size:12px;line-height:1.5;padding:4px 7px;font-weight:500}
+body :is(.pill,.control-status).green{color:var(--df-complete);background:var(--df-complete-soft)}
+body :is(.pill,.control-status).amber{color:var(--df-warning);background:var(--df-warning-soft)}
+body :is(.pill,.control-status).red{color:var(--df-danger);background:var(--df-danger-soft)}
+body :is(.pill,.control-status).blue{color:var(--df-info);background:var(--df-info-soft)}
+body .control-row.red{border-left-color:var(--df-danger)}
+body .control-row.amber{border-left-color:var(--df-warning)}
+body .control-row.blue{border-left-color:var(--df-info)}
+body .control-row.green{border-left-color:var(--df-complete)}
+/* The edge follows the subject/direction; the status remains on its label. */
+body .control-row[data-flow]{border-left-color:var(--flow)}
+body .control-row[data-control-kind="task"]{border-left-color:var(--df-task)}
+body .control-row[data-control-kind="coverage"]{border-left-color:var(--df-info)}
+body .control-counters .red strong{color:var(--df-danger)}
+body .control-counters .amber strong{color:var(--df-warning)}
+body .control-counters .blue strong{color:var(--df-info)}
+.control-counters button.selected{outline:2px solid var(--df-selection);outline-offset:-2px;background:var(--df-selection-soft)}
+body :is(.segments,.home-views){background:var(--df-surface-soft);border:1px solid var(--df-line);border-radius:8px}
+body :is(.segments,.home-views) button.active{color:var(--df-selection);background:var(--df-selection-soft);box-shadow:inset 0 0 0 1px #356b9a35}
+body :is(button,a,input,select,textarea):focus-visible{outline:3px solid var(--df-selection);outline-offset:3px}
+body :is(.panel,.calendar-shell,.ov-chart-panel,.activity-row,.control-row){border-radius:10px;border-color:var(--df-line)}
+body :is(.ov-summary .ov-closing,.day-balance-mini,.book-totals .balance){background:var(--df-balance-soft);color:var(--df-balance-text)}
+body .ov-record-icon{background:var(--df-income-soft);color:var(--df-income)}
+body .ov-record-icon.out{background:var(--df-expense-soft);color:var(--df-expense)}
+body .am-key.am-in{background:var(--df-income)}
+body .am-key.am-out{background:var(--df-expense)}
+body .am-key.am-balance{background:var(--df-balance)}
+body .am-values .outgoing{color:var(--df-expense-text)}
+body .am-bank-values{color:var(--df-balance-text)}
+.fh-direction[data-flow]>summary{background:var(--flow-soft);border-left:3px solid var(--flow)}
+.fh-direction[data-flow]>summary>span,.fh-direction[data-flow] .fh-category>summary>strong{color:var(--flow-text)}
+.fh-record[data-flow],.ov-record[data-flow]{border-left:3px solid var(--flow);padding-left:14px}
+body .activity-value.income strong{color:var(--df-income-text)}
+body .activity-value.expense strong{color:var(--df-expense-text)}
+body .activity-row[data-flow]:not(.task){border-left-color:var(--flow)}
+body .activity-row.forecast .activity-kind{color:var(--df-forecast);background:var(--df-forecast-soft)}
+body .activity-row.task .activity-kind{color:var(--df-task);background:var(--df-task-soft)}
+body :is(.forecast-banner,.activity-totals .forecast){background:var(--df-forecast-soft);border-color:var(--df-forecast)}
+body .forecast-banner strong{color:var(--df-forecast)}
+body .cash-sheet .forecast-row :is(th,td){background:var(--df-forecast-soft);color:var(--df-forecast)}
+body .cash-sheet .planned-row :is(th,td){background:var(--df-warning-soft);color:var(--df-warning)}
+body .cash-sheet .selected-col{background:var(--df-selection-soft);box-shadow:inset 1px 0 var(--df-selection),inset -1px 0 var(--df-selection)}
+body .cash-sheet .today-col{background:var(--df-today)}
+body .cash-sheet .today-col.selected-col{background:var(--df-selection-soft)}
+body .cash-sheet :is(.closing-row,.opening-row) :is(th,td){color:var(--df-balance-text)}
+body .sheet-today-chip{background:var(--df-today);color:var(--df-text)}
+/* Reconciliation and remaining work are independent; only the title is struck. */
+.record-title.is-reconciled,.cal-event.is-reconciled .event-copy>b{text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:currentColor}
+.record-status-line{display:flex;align-items:center;gap:5px 9px;flex-wrap:wrap;margin-top:6px;text-align:left;white-space:normal;font-size:12px;line-height:1.45}
+.record-reconciliation{color:var(--df-muted);font-size:12px;font-weight:500}
+.record-reconciliation.is-complete{color:var(--df-complete)}
+.record-warning{display:inline-flex;align-items:flex-start;gap:5px;color:var(--df-warning);background:var(--df-warning-soft);border:1px solid var(--df-warning-line);border-radius:5px;padding:3px 5px;font-size:12px;line-height:1.4;white-space:normal;text-decoration:none}
+.record-warning-icon{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.record-state-panel{padding:12px 14px;background:var(--df-surface-soft);border:1px solid var(--df-line);border-radius:8px;margin:14px 0}
+/* Calendar: direction owns the left edge and amount; type owns its label. */
+body .calendar-filter.realized.active{background:var(--df-balance-soft);color:var(--df-balance-text)}
+body .calendar-filter.obligation.active{background:var(--df-warning-soft);color:var(--df-warning)}
+body .calendar-filter.task.active{background:var(--df-task-soft);color:var(--df-task)}
+body .calendar-filter.forecast.active{background:var(--df-forecast-soft);color:var(--df-forecast)}
+body :is(.calendar-filter.realized .event-dot,.event-dot.realized){background:var(--df-balance)}
+body :is(.calendar-filter.obligation .event-dot,.event-dot.obligation){background:var(--df-warning)}
+body :is(.calendar-filter.task .event-dot,.event-dot.task){background:var(--df-task)}
+body :is(.calendar-filter.forecast .event-dot,.event-dot.forecast){background:var(--df-forecast)}
+body .cal-event[data-flow]{border-radius:6px;border:1px solid var(--df-line);border-left:3px solid var(--flow,var(--df-task));background:var(--flow-soft,var(--df-task-soft));color:var(--df-text);opacity:1;gap:6px}
+body .cal-event.forecast{border-style:dashed;border-left-style:solid}
+body .cal-event.task{--flow:var(--df-task);--flow-soft:var(--df-task-soft)}
+body .cal-event[data-flow] .event-dot{background:var(--flow)}
+body .cal-event.task .event-dot{background:var(--df-task)}
+body .cal-event .event-copy{flex:1;min-width:0}
+body .cal-event .event-copy>b{font-size:12px;line-height:1.5;color:var(--df-text);font-weight:600}
+body .cal-event .event-copy>small{font-size:12px;line-height:1.5;color:var(--df-muted)}
+body .cal-event .event-copy .event-amount{color:var(--flow-text,var(--df-task));font-weight:600;font-variant-numeric:tabular-nums}
+.event-meta{display:flex;flex-wrap:wrap;gap:4px 8px;margin:0 0 4px;font-size:12px;color:var(--df-muted)}
+.event-type{font-weight:600;color:var(--df-balance-text)}
+.obligation .event-type{color:var(--df-warning)}
+.forecast .event-type{color:var(--df-forecast)}
+.task .event-type{color:var(--df-task)}
+body .cal-event:has(.control-status.red),body .cal-event:has(.control-status.amber){border-left-color:var(--flow,var(--df-task));background:var(--flow-soft,var(--df-task-soft))}
+body .cal-event .control-status{max-width:100%;white-space:normal}
+body .cal-event.is-done .event-copy>b{opacity:1}
+body .calendar-cell-events .cal-event[data-flow]{margin:4px 0;padding:7px 5px;background:var(--flow-soft,var(--df-task-soft))}
+.calendar-cell-events .event-meta{font-size:11px;line-height:1.3;gap:3px}
+.calendar-cell-events .event-meta .event-bank{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calendar-cell-events .record-status-line{gap:4px;margin-top:4px}
+.calendar-cell-events .record-warning{border:0;background:transparent;padding:0;font-size:11px}
+body :is(.calendar-period-items,.calendar-detail-items,.calendar-agenda) .cal-event .event-copy>b{font-size:14px;white-space:normal}
+body :is(.calendar-period-items,.calendar-detail-items,.calendar-agenda) .cal-event .event-copy>small{font-size:13px}
+body .calendar-day-money .incoming,body .calendar-period-totals .incoming{color:var(--df-income-text)}
+body .calendar-day-money .outgoing,body .calendar-period-totals .outgoing{color:var(--df-expense-text)}
+.calendar-semantics{padding:12px 20px;border-top:1px solid var(--df-line);border-bottom:1px solid var(--df-line);background:var(--df-surface);display:flex;flex-wrap:wrap;gap:10px 18px;font-size:12px;line-height:1.5;color:var(--df-muted)}
+.calendar-semantics>span{display:inline-flex;align-items:center;gap:6px}
+.calendar-semantics i{display:inline-block;width:10px;height:10px;border-radius:2px;background:currentColor}
+.calendar-semantics .semantic-strike{text-decoration:line-through;color:var(--df-complete)}
+.calendar-completion-guide{margin:12px 0;font-size:13px;line-height:1.6;color:var(--df-muted)}
+.calendar-completion-guide summary{cursor:pointer;color:var(--df-text);padding:7px 0}
+body .calendar-cell.is-today{background:var(--df-today)}
+body .calendar-cell.in-range{background:var(--df-selection-soft)}
+body .calendar-cell.focused-day{outline-color:var(--df-selection)}
+body .calendar-cell.range-start,body .calendar-cell.range-end{background:#d5e6f4}
+body .mobile-day-dots i{width:6px;height:6px}
+body .mobile-day-dots i[data-flow="incoming"]{background:var(--df-income)}
+body .mobile-day-dots i[data-flow="outgoing"]{background:var(--df-expense)}
+body .mobile-day-dots i.task{background:var(--df-task)}
+body .mobile-day-dots i.forecast{background:var(--df-forecast)}
+body .mobile-day-dots i.has-warning{background:var(--df-warning);border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%);width:8px;height:7px}
+@media(max-width:600px){.calendar-semantics{padding:12px 14px;gap:9px 14px}.record-status-line{font-size:12px}.calendar-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.calendar-filters button{justify-content:flex-start}.calendar-detail-items .cal-event,.calendar-period-items .cal-event{padding:12px}.event-meta{font-size:12px}.calendar-period-totals{grid-template-columns:1fr 1fr}}
