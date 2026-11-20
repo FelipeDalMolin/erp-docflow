@@ -191,3 +191,12 @@ A Issue #117 registra a cópia saneada do código da prévia em
 vazia; extratos, dados financeiros reais e histórico Git privado foram excluídos.
 Esta preservação não integra a prévia a `apps/web`/API, não representa release
 ou deploy e não altera os gates #104/#40 ou a autorização de R1 descritos acima.
+
+
+### Atualização da prévia em branch — 20/11/2026
+
+A mesma Issue #117/PR draft #118 recebe a interface v35: classificação/composição,
+plano contábil revisável, hierarquia financeira, consulta futura sem extrato,
+obrigações/atividades e padrão visual de conciliação e pendências. A base pública
+continua vazia, sem classificações derivadas dos dados reais. Esta atualização
+não integra `apps/web`/API, não publica Site nem altera os gates acima.

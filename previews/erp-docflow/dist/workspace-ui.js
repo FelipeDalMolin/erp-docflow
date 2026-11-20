@@ -1,6 +1,6 @@
-import {createCalendar} from './calendar-ui.js?v=26';
+import {createCalendar} from './calendar-ui.js?v=34';
 import {documentReferences} from './inventory-model.js?v=17';
-import {ensureProfiles} from './workspace-model.js?v=25';
+import {ensureProfiles} from './workspace-model.js?v=34';
 
 export function createWorkspace(a){
   const {esc,money,date,fullDate,icon,btn,pill,link,panel,empty}=a;

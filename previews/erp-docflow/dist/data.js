@@ -5,7 +5,7 @@ export const SEED = {
     "id": "public-preview-empty-v1",
     "kind": "empty",
     "defaultMonth": "2026-11",
-    "defaultDate": "2026-11-19",
+    "defaultDate": "2026-11-20",
     "notice": "Prévia de código · sem dados financeiros",
     "transactionCount": 0
   },

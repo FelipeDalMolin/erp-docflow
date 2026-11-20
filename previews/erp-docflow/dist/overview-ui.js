@@ -1,5 +1,5 @@
-import {createMovementList} from './movement-list-ui.js?v=19';
-import {createAmChartPanel} from './amchart-ui.js?v=21';
+import {createMovementList} from './movement-list-ui.js?v=34';
+import {createAmChartPanel} from './amchart-ui.js?v=34';
 import {fitStatementRange,statementCoverage} from './statement-model.js?v=19';
 import {withBalanceEvents} from './balance-events.js?v=19';
 import {overviewData} from './overview-model.js?v=19';
@@ -11,7 +11,7 @@ export function createOverview(a){
   const preferences=new Map();let currentData,fullData,error='',activeCompany=null;
   const movements=createMovementList(a,{settings,refresh});
   const chart=createAmChartPanel(a,{settings,data:()=>fullData,refresh,zoom:selectZoom,select:selectArea});
-  function settings(){if(activeCompany!==a.company){error='';activeCompany=a.company;}if(!preferences.has(a.company))preferences.set(a.company,{range:a.state.dataset?.overviewRange||fitStatementRange(a.state,a.company,presetRange('month',a.month+'-18'))||a.state.dataset?.period||presetRange('month',a.month+'-18'),preset:a.state.dataset?.overviewRange?'year':'month',ids:a.scope('accounts').map(x=>x.id),projection:true,tx:'all',all:false,movementGroup:'type',expandedGroups:[],completeGroups:[],chartZoomRange:null,chartSelectionRange:null,chartYRange:null,chartMode:'zoom',chartComposition:'bank',chartHidden:[],chartWheel:false,chartDay:null,chartBar:null,chartMovement:null,chartBasis:a.state.dataset?'reported':'cash'});return preferences.get(a.company);}
+  function settings(){if(activeCompany!==a.company){error='';activeCompany=a.company;}if(!preferences.has(a.company))preferences.set(a.company,{range:a.state.dataset?.overviewRange||fitStatementRange(a.state,a.company,presetRange('month',a.month+'-18'))||a.state.dataset?.period||presetRange('month',a.month+'-18'),preset:a.state.dataset?.overviewRange?'year':'month',ids:a.scope('accounts').map(x=>x.id),projection:true,tx:'all',all:false,movementGroup:'category',includeInitial:true,expandedGroups:[],completeGroups:[],chartZoomRange:null,chartSelectionRange:null,chartYRange:null,chartMode:'zoom',chartComposition:'bank',chartHidden:[],chartWheel:false,chartDay:null,chartBar:null,chartMovement:null,chartBasis:a.state.dataset?'reported':'cash'});return preferences.get(a.company);}
   function activeRange(){const s=settings();return s.chartDay?{start:s.chartDay,end:s.chartDay}:s.chartSelectionRange||s.chartZoomRange||s.range;}
   function data(range=activeRange()){return withBalanceEvents(overviewData(a.state,a.company,range,settings().ids),a.state,a.company,range);}
   function selectZoom(range){

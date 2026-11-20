@@ -24,7 +24,7 @@ node checks/run.mjs
 ## Origem e limites
 
 - Base GitHub: `1739ffbc4da7f3dbf9e55b5c66eabc091a4c0fef`.
-- Código local de referência: `dc420168c36359a8601bcaf1cd2163b1807e1907`, de 19/11/2026.
+- Código local de referência: `c6818ea22439e382870f4f83f8878e3af703c77a`, de 20/11/2026 (v35).
 - O histórico privado não foi copiado. Um novo commit contém apenas arquivos revisados.
 - `apps/web`, backend, persistência e gates do produto não foram integrados a esta prévia.
 - Não há login de aplicação, sincronização entre dispositivos, OCR real, conector bancário
@@ -58,3 +58,21 @@ seleção distinta do zoom e vínculos explícitos dos lançamentos às fontes.
 Previsão não é dívida, sugestão não é conciliação e concluir tarefa não liquida obrigação.
 Para gráficos, consulte a documentação compatível com amCharts 5.22.0 e os hashes em
 `dist/vendor/amcharts5-5.22.0/manifest.json`; não remova a marca da biblioteca.
+
+## Atualização de 20/11/2026 — v35
+
+A mesma branch agora preserva classificação e divisão dos movimentos, cadastro e
+correspondência do plano contábil, hierarquia Entradas/Saídas → Classificação →
+Lançamentos, períodos futuros sem extrato e página de obrigações com atividades.
+Inclui contexto e classificação nos cards, cores consistentes por direção/banco,
+título riscado por conciliação financeira e alertas documentais independentes.
+
+O lote de classificações aplicadas aos dados reais foi substituído por um lote
+vazio. O catálogo público conserva classificações genéricas editáveis, sem hashes,
+localizações ou correspondências da planilha privada; a referência a uma associação
+específica foi generalizada. As decisões e o catálogo originais permanecem no Site.
+O comportamento da interface foi preservado; os dados iniciais públicos continuam
+vazios. A conversão previsão → obrigação e a Inbox continuam etapas futuras.
+
+Regras visuais: [PADRAO-VISUAL.md](docs/PADRAO-VISUAL.md).
+Consulta e projeção: [FLUXO-PLANEJAMENTO.md](docs/FLUXO-PLANEJAMENTO.md).

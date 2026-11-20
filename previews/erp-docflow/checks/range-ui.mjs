@@ -20,7 +20,7 @@ change('data-range-start','2026-07-10');change('data-range-end','2026-08-05');sh
 const snapshot=()=>Object.fromEntries(Object.entries(sheet.summary()).map(([key,value])=>[key,Array.isArray(value)?value.map(x=>x.id).sort():value]));
 const summary=snapshot();
 for(const key of ['monthly','yearly','daily']){sheet.click({sheetPeriod:key});assert.deepEqual(snapshot(),summary);}
-sheet.click({sheetToggle:'real:all:incoming'});sheet.click({bookExport:'1'});
+sheet.click({sheetToggle:'real:all:incoming:category:unclassified'});sheet.click({bookExport:'1'});
 assert.match(download.content,/"Período";"10\/07\/2026";"05\/08\/2026"/);
 assert.match(download.content,/Ateliê Luna/);assert.doesNotMatch(download.content,/Marina Studio/);
 change('data-range-start','2026-09-01');sheet.click({sheetApply:'1'});

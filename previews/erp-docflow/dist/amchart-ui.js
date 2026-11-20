@@ -1,6 +1,6 @@
 import {chartDays,chartRangeResult,chartBarTransactions} from './amchart-model.js?v=21';
 import {chartMovementReferences} from './chart-correspondence-model.js?v=21';
-import {loadAmCharts,createFinanceChart,financeSeries} from './amchart-runtime.js?v=21';
+import {loadAmCharts,createFinanceChart,financeSeries} from './amchart-runtime.js?v=34';
 import {moveDate,validDate} from './range-model.js?v=19';
 import {CHART_MODES,navigateChartRange} from './chart-navigation-model.js?v=19';
 

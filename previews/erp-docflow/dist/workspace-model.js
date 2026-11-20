@@ -1,3 +1,5 @@
+import {financialPresentation} from './record-presentation.js?v=34';
+import {flowDirection} from './visual-theme.js?v=34';
 import {remaining,total} from './data.js?v=17';
 import {monthDays} from './workbook-model.js?v=17';
 import {obligationControl,taskControl} from './control-model.js?v=23';
@@ -25,18 +27,19 @@ function collectCalendarEvents(state,company,matches,filters) {
   const enabled={realized:true,obligation:true,task:true,forecast:true,completed:false,...filters};
   const events=[];
   if(enabled.realized)for(const t of state.transactions.filter(t=>t.company===company&&matches(t.date))) {
-    const o=state.obligations.find(o=>o.id===t.obligation&&o.company===company);
+    const o=state.obligations.find(o=>o.id===t.obligation&&o.company===company),presentation=financialPresentation(state,'transaction',t,filters.asOf);
     events.push({id:'movement:'+t.id,date:t.date,type:'realized',title:o?.party||t.description,
       detail:o?.title||t.description,amount:t.amount,kind:t.imported?'transaction':'obligation',target:t.imported?t.id:t.obligation,sequence:t.sourceSequence||0,account:t.account,
-      label:t.amount>=0?'Recebido':'Pago',done:true});
+      label:t.amount>=0?'Recebido':'Pago',done:presentation.complete,presentation,direction:flowDirection(t.amount)});
   }
   if(enabled.obligation)for(const o of state.obligations.filter(o=>o.company===company&&matches(o.due))) {
     const monitoring=filters.asOf?obligationControl(state,o,filters.asOf):null;
     if(filters.asOf&&!monitoring)continue;
     const balance=monitoring?monitoring.remaining:remaining(state,o),done=monitoring?monitoring.group==='resolved':balance===0;
-    if(!enabled.completed&&done)continue;
+    const presentation=financialPresentation(state,'obligation',o,filters.asOf);
+    if(!enabled.completed&&done&&!presentation.warnings.length)continue;
     events.push({id:'due:'+o.id,date:o.due,type:'obligation',title:o.title,detail:o.party,
-      amount:balance||total(o),kind:'obligation',target:o.id,done,urgency:monitoring?.group,
+      amount:(balance||total(o))*(o.kind==='in'?1:-1),kind:'obligation',target:o.id,done,presentation,account:o.account,direction:o.kind==='in'?'incoming':'outgoing',urgency:monitoring?.group,
       label:monitoring?.label||(balance===0?'Liquidada':o.kind==='in'?'A receber':'A pagar')});
   }
   if(enabled.task)for(const t of state.tasks.filter(t=>t.company===company&&matches(t.due))) {
@@ -45,7 +48,7 @@ function collectCalendarEvents(state,company,matches,filters) {
       kind:'task',target:t.id,done:t.done,urgency:filters.asOf?taskControl(t,filters.asOf).group:undefined,label:t.done?'Concluída':'Tarefa'});
   }
   if(enabled.forecast&&filters.asOf)for(const f of forecastItems(state,company,filters.asOf).filter(f=>matches(f.date)&&!f.hidden&&(enabled.completed||f.group!=='resolved'))){
-    events.push({id:f.id,date:f.date,type:'forecast',title:f.title,detail:f.months+' meses de histórico · sem classificação',amount:f.amount*f.direction,kind:'forecast',target:f.id,done:f.group==='resolved',urgency:f.group,label:f.label});
+    events.push({id:f.id,date:f.date,type:'forecast',title:f.title,detail:f.months+' meses de histórico · sem classificação',amount:f.amount*f.direction,kind:'forecast',target:f.id,done:f.group==='resolved',direction:f.direction>0?'incoming':'outgoing',account:f.accounts?.length===1?f.accounts[0]:null,urgency:f.group,label:f.label});
   }
   const order={realized:0,obligation:1,task:2,forecast:3};
   return events.sort((x,y)=>x.date.localeCompare(y.date)||order[x.type]-order[y.type]||(x.account||'').localeCompare(y.account||'')||(x.sequence||0)-(y.sequence||0)||x.title.localeCompare(y.title,'pt-BR'));

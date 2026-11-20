@@ -1,3 +1,5 @@
+import {classificationStatus,getClassification} from './classification-model.js?v=29';
+
 const clean=value=>typeof value==='string'?value.trim().replace(/\s+/g,' '):'';
 const normal=value=>clean(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
 
@@ -18,6 +20,15 @@ export function movementTypeLabel(t){
 }
 
 export function movementCategoryLabel(t,state){
+  const company=t.company||(state.accounts||[]).find(a=>a.id===t.account)?.company;
+  const composition=state.classification&&getClassification(state,company,t.id);
+  if(composition){
+    const status=classificationStatus(state,company,t);
+    if(!['reviewed','initial'].includes(status))return 'Classificação em rascunho';
+    const catalog=state.classification.catalogs[company]||[];
+    const categories=new Set(composition.lines.map(l=>catalog.find(c=>c.id===l.category)?.label||'Classificação indisponível'));
+    return (categories.size===1?[...categories][0]:'Composição mista · '+categories.size+' classificações')+(status==='initial'?' · inicial':'');
+  }
   const direct=clean(t.category);if(direct)return direct;
   const obligation=t.confirmed&&(state.obligations||[]).find(o=>o.id===t.obligation&&o.company===t.company);
   const items=obligation?.items||[];
@@ -26,7 +37,7 @@ export function movementCategoryLabel(t,state){
   return categories.size===1?[...categories.values()][0]:'Composição mista · a detalhar';
 }
 
-// Each transaction occurs once. Mixed obligations remain whole until an allocation exists.
+// The bank list keeps each transaction once. Split amounts are shown in the classification summary.
 export function groupMovements(transactions,state,mode='type'){
   const groups=new Map();
   for(const t of transactions){

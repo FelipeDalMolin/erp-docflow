@@ -1,19 +1,18 @@
-# Verificação da cópia pública — 19/11/2026
+# Verificação da cópia pública — 20/11/2026
 
-- Node 24.15.0: 13 arquivos de testes concluídos, incluindo 12 rotas da aplicação
-  com base vazia, diálogos, restauração e isolamento do armazenamento do navegador.
-- Sintaxe de todos os arquivos JavaScript e verificações de dados fictícios aprovadas.
-- Nenhum PDF, OFX, planilha, arquivo de fonte bancária ou relatório real de importação.
-- Comparação local com identificadores de contas, fontes, hashes e lançamentos das
-  bases privadas não encontrou correspondências no conteúdo preparado para envio.
-  Os valores usados nessa comparação não foram adicionados ao repositório.
-- Biblioteca amCharts 5.22.0 e licença conferidas pelos hashes do manifesto.
-- Origem de cada arquivo copiado registrada em `source-manifest.json`; arquivos
-  marcados como modificados contêm ajustes de apresentação, saneamento ou formatação.
-- Apenas a pasta da prévia e uma nota em `docs/project/PROJECT_STATUS.md` integram
-  esta entrega. O histórico local privado não é ancestral do commit de entrega.
+- Referência de interface: v35, commit local `c6818ea22439e382870f4f83f8878e3af703c77a`.
+- Node 24.22.1: 15 arquivos de testes públicos, com base vazia e dados sintéticos.
+- Cobertura: 12 rotas, bootstrap/restauração, isolamento do armazenamento, classificação
+  e composição, calendário, períodos, gráficos, documentos, bancos, tarefas e
+  estados de conciliação/documentação. `node checks/run.mjs` executa o conjunto.
+- Sintaxe JavaScript, imports estáticos, manifesto e hashes amCharts 5.22.0 conferidos.
+- Lote inicial de classificações vazio; catálogo público sem origem ou mapeamentos
+  da planilha privada. A auditoria local compara identificadores, fontes, hashes,
+  nomes e referências privadas sem publicar os marcadores utilizados.
+- Documentos originais, contas/movimentos reais, evidências de classificação,
+  relatórios de importação, configurações de hosting e histórico privado excluídos.
+- Mudanças restritas à prévia e à nota factual em `docs/project/PROJECT_STATUS.md`.
 
-Limites: navegação e eventos foram verificados com DOM controlado. Não houve teste
-visual em navegador, homologação Android/iOS, teste bancário ou publicação do Site.
-Testes dependentes dos extratos privados não acompanham a cópia pública e seus
-resultados históricos não são apresentados como validação desta branch.
+A evidência desta cópia usa testes sintéticos e DOM controlado. Os testes privados
+que dependem dos extratos não foram copiados. Não houve homologação mobile, bancária,
+integração com backend, merge ou novo deploy do Site nesta entrega.

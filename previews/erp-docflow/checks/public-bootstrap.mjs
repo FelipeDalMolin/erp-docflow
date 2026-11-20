@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
 import {SEED} from '../dist/data.js';
+import {INITIAL_CLASSIFICATION} from '../dist/classification-initial-data.js';
+import {INDEXADOR_SOURCE,INDEXADOR_CATEGORIES} from '../dist/classification-reference.js';
 
 assert.equal(SEED.dataset.kind,'empty');
+assert.deepEqual(INITIAL_CLASSIFICATION.decisions,[]);
+assert.deepEqual(INITIAL_CLASSIFICATION.rules,{});
+assert.deepEqual(INITIAL_CLASSIFICATION.source,{});
+assert.equal(INDEXADOR_SOURCE.file,'Catálogo de exemplo');
+assert.ok(!INDEXADOR_SOURCE.sha256);
+assert.ok(INDEXADOR_CATEGORIES.every(c=>c.source.sheet==='Modelo público'&&!c.source.range));
 assert.equal(SEED.companies.length,1);
 for(const key of ['accounts','transactions','archivedTransactions','assets','contracts','obligations','documents','tasks','reviewed'])assert.deepEqual(SEED[key],[],key);
 const elements=new Map(),listeners=new Map(),windowEvents=new Map();

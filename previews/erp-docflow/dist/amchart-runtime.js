@@ -1,3 +1,4 @@
+import {financeColor} from './visual-theme.js?v=34';
 import {dateStamp,DAY_MS,zoomDateRange} from './amchart-model.js?v=21';
 import {CHART_MODES,cursorDateRange,wheelPolicy} from './chart-navigation-model.js?v=19';
 
@@ -18,15 +19,15 @@ export function loadAmCharts(){
 }
 
 export const FINANCE_SERIES=[
-  {field:'balance',group:'balance',label:'Saldo identificado',color:0x677f90,opacity:.16},
-  {field:'incoming',group:'incoming',label:'Entradas',color:0x237c5b,opacity:.85},
-  {field:'outgoing',group:'outgoing',label:'Saídas',color:0xc45440,opacity:.85}
+  {field:'balance',group:'balance',label:'Saldo identificado',color:financeColor('balance'),opacity:.16},
+  {field:'incoming',group:'incoming',label:'Entradas',color:financeColor('incoming'),opacity:.85},
+  {field:'outgoing',group:'outgoing',label:'Saídas',color:financeColor('outgoing'),opacity:.85}
 ];
 export function financeSeries(accounts=[],composition='total'){
   if(composition!=='bank')return FINANCE_SERIES;
   return [FINANCE_SERIES[0],...['incoming','outgoing'].flatMap(group=>accounts.map((account,index)=>({
     field:group+'_'+index,group,bankIndex:index,label:(group==='incoming'?'Entradas':'Saídas')+' · '+account.name,
-    color:(group==='incoming'?[0x237c5b,0x7eac65]:[0xbd4e3c,0xe28b68])[index%2],opacity:.88,stacked:index>0
+    color:financeColor(group,account),opacity:.88,stacked:index>0
   })))];
 }
 
