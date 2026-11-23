@@ -1,0 +1,34 @@
+@startuml
+' Issue #119 | ADR-0009, ADR-0010 e ADR-0012
+' Modelo conceitual proposto. Apenas o núcleo documental tem persistência parcial na main.
+title Que evidências sustentam uma contribuição do ERP?
+hide methods
+class "Contribuição de relatório" as Contrib
+class "Versão do fato gerencial" as Fact
+class "Valor de campo / item" as Field
+class "Referência de evidência" as Ev
+class "Ocorrência de importação e célula" as Cell
+class "Movimento de extrato" as Bank
+class "Declaração manual" as Manual
+class "Região de versão documental" as Region
+class "Decisão de revisão" as Decision
+class "Snapshot aceito" as Snap
+Contrib --> Fact : inclui versão aplicável
+Fact "1" -- "1..*" Field : contém
+Field "0..*" -- "0..*" Ev : sustentado por
+Ev --> Cell : fonte estruturada
+Ev --> Region : fonte documental
+Ev --> Bank : fonte bancária
+Ev --> Manual : fonte manual
+Decision --> Ev : referências examinadas
+Decision "1" -- "0..1" Snap : produz em caso de aceite
+note right of Ev
+Cada referência escolhe um tipo de origem e versão.
+Um valor pendente pode não ter evidência.
+Confirmação exige as fontes previstas para a finalidade.
+end note
+note bottom of Snap
+Hipótese para o perfil de revisão humana.
+Efeito financeiro exige comando autorizado próprio.
+end note
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+' Issue #119 | ADRs de referência: ADR-0010, ADR-0016 (proposta) e ADR-0019
+' Estado local observado, núcleo relacional no código e etapas propostas.
+title Do recebimento de arquivo à decisão de negócio
+start
+partition "v43 | comportamento local" {
+  :Receber arquivo e calcular hash;
+  if (Registro local encontrado na empresa?) then (sim)
+    :Reabrir registro existente;
+  else (não)
+    :Gravar bytes e registrar documento;
+    :Preparar plano de leitura e tarefa;
+  endif
+}
+partition "Encaixe proposto | backend de recepção" {
+  :Reservar ou recuperar ocorrência por chave e escopo;
+  if (Chave com conteúdo divergente?) then (sim)
+    :Exibir conflito rastreável;
+    stop
+  endif
+  :Preservar bytes e verificar por releitura (#40);
+  :Usar materialização relacional já definida em #39;
+  :Mostrar original e estado no Inbox (#41 e #42);
+}
+partition "Etapas futuras | processamento e autoridade" {
+  if (Perfil elegível?) then (sim)
+    :Registrar tentativa e artefato;
+    :Revisar evidências da versão;
+    if (Efeito autorizado por decisão própria?) then (sim)
+      :Registrar efeito idempotente;
+    endif
+  else (não)
+    :Mostrar motivo e manter original acessível;
+  endif
+}
+stop
+@enduml

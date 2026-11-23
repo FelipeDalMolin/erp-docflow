@@ -1,0 +1,33 @@
+@startuml
+' Issue #119 | ADRs de referência: ADR-0010 e ADR-0012
+' Visão estática da prévia v43 e da main 1739ffb. Integração pendente.
+title Onde vivem os dados hoje
+package "Prévia v43 | navegador" {
+  [Home e calendário] as Home
+  [Caixa e planejamento] as Flow
+  [Contratos e obrigações] as Business
+  [Documentos e revisão] as Docs
+  database "Estado local\nregistros, vínculos e decisões" as Local
+  database "IndexedDB\nbytes dos uploads por ID" as Bytes
+  artifact "Fontes embarcadas" as Builtin
+  Home --> Local
+  Flow --> Local
+  Business --> Local
+  Docs --> Local
+  Docs --> Bytes
+  Flow --> Builtin
+}
+package "DocFlow main | código existente" {
+  [Materialização documental] as Core
+  database "PostgreSQL\n6 tabelas documentais" as DB
+  Core --> DB : reserva, materialização e auditoria
+}
+note bottom of Local
+A exportação JSON cobre o estado local.
+Uploads precisam também dos bytes do IndexedDB.
+end note
+note bottom of Core
+A prévia e o núcleo são independentes nesta revisão.
+Conectar as leituras do Caixa é trabalho proposto.
+end note
+@enduml

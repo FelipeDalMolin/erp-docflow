@@ -21,7 +21,8 @@ docs/uml/
 ├── 03-application/
 ├── 04-domain/
 ├── 05-sequence/
-└── 06-state/
+├── 06-state/
+└── 07-erp/
 ```
 
 ## 3. Catálogo atual
@@ -49,6 +50,18 @@ docs/uml/
 | [process-review-accept-planned.puml](05-sequence/process-review-accept-planned.puml) | sequência | provider, validação, revisão e aceite |
 | [document-envelope-state-planned.puml](06-state/document-envelope-state-planned.puml) | estados | ciclo candidato do envelope |
 | [processing-job-state-planned.puml](06-state/processing-job-state-planned.puml) | estados | ciclo candidato de job e retry |
+
+### Conciliação do ERP v43 — Issue #119
+
+Estas vistas complementam o catálogo planejado. A primeira descreve o estado observado; as outras explicitam a fronteira entre experiência existente e integração proposta. A matriz e os critérios estão na [conciliação funcional](../product/CONCILIACAO_ERP_V43.md).
+
+| Pergunta | Diagrama |
+|---|---|
+| Onde vivem registros e originais hoje? | [Estado atual da prévia e do núcleo](07-erp/estado-atual-v43.puml) |
+| Como preservar as contribuições da barra até a origem? | [Consulta e paridade do Caixa](07-erp/caixa-consulta-paridade.puml) |
+| Como um pagamento parcial afeta Caixa e Competência? | [Reconhecimento e alocação](07-erp/financeiro-reconhecimento-alocacao.puml) |
+| Quando o arquivo pode produzir um efeito no ERP? | [Recepção e revisão do Inbox](07-erp/inbox-recepcao-revisao.puml) |
+| Como explicar o valor de um item pelas suas fontes? | [Contribuição e evidência](07-erp/contribuicao-evidencia.puml) |
 
 ## 4. Tipos previstos
 

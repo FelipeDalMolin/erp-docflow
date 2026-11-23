@@ -1,0 +1,34 @@
+@startuml
+' Issue #119 | ADRs de referência: ADR-0009, ADR-0010 e ADR-0012
+' Síntese funcional v43 e proposta de encaixe. Não declara runtime implantado.
+title Como explicar a diferença entre caixa e competência
+hide methods
+class "Item econômico" as Item
+class "Reconhecimento\nproposto" as Recon {
+  período e precisão
+  valor, método e versão
+}
+class "Cobrança / parcela" as Charge
+class "Movimento bancário" as Mov
+class "Liquidação" as Settle
+class "Alocação confirmada" as Alloc {
+  valor, vigência e decisão
+}
+class "Evidência de origem" as Evid
+Item "1" -- "0..*" Recon : reconhecido por período
+Item -- Charge : composição da obrigação
+Mov -- Settle : embasamento bancário
+Settle "1" -- "0..*" Alloc : distribui
+Charge "1" -- "0..*" Alloc : recebe
+Item "1" -- "0..*" Alloc : identifica o destino
+Item -- Evid : origem econômica
+Mov -- Evid : origem bancária
+note bottom of Alloc
+Um movimento pode estar no caixa antes da alocação.
+Cada alocação parcial é explícita e reversível.
+end note
+note bottom of Recon
+Competência mensal preserva sua precisão.
+Modelo conceitual. A main ainda precisa de contrato físico.
+end note
+@enduml
