@@ -1,0 +1,25 @@
+@startuml
+' Issue #119 | ADRs de referência: ADR-0009, ADR-0010 e ADR-0012
+' Síntese funcional v43 e proposta de encaixe. Não declara runtime implantado.
+title Fluxo de Caixa | consulta e paridade
+actor Gestor
+participant "Tela de Caixa" as Tela
+participant "Consulta do período\n(proposta)" as Consulta
+participant "Leitura v43\n(adaptador proposto)" as Local
+participant "API de leitura\n(proposta)" as API
+Gestor -> Tela: escolher empresa, contas e período
+Tela -> Consulta: contexto, data de corte e inclusão de iniciais
+alt referência da prévia
+  Consulta -> Local: buscar contribuições e fontes
+  Local --> Consulta: IDs, centavos e cobertura
+else ensaio com fonte persistente
+  Consulta -> API: repetir a consulta sobre dados sintéticos
+  API --> Consulta: IDs, centavos e cobertura
+end
+Consulta --> Tela: totais, saldo ou desconhecido, contribuições
+Gestor -> Tela: abrir barra, detalhar movimento, seguir fonte
+note over Tela,Consulta
+Gráfico, grade e exportação usam o mesmo conjunto de contribuições.
+O zoom e a seleção de período têm funções distintas.
+end note
+@enduml

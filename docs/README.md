@@ -20,6 +20,10 @@ O estado atual do projeto e o próximo gate estão em [Status do projeto](projec
 5. [Runbook VS Code, WSL, Git e GitHub CLI](operations/FLUXO_VSCODE_GIT_GITHUB_CLI.md)
 6. [`AGENTS.md`](../AGENTS.md), quando houver uso do Codex
 
+### Consultar o comportamento do ERP na prévia v43
+
+[Conciliação entre a prévia e o produto](product/CONCILIACAO_ERP_V43.md) · [cenários de aceite](product/ACEITE_ERP_V43.md). A conciliação distingue comportamentos observados, contratos existentes e incrementos propostos.
+
 ### Entender produto e arquitetura planejada
 
 1. [North Star do produto](product/PRODUCT_NORTH_STAR.md)
