@@ -2,6 +2,8 @@
 
 **Referência funcional de 23/11/2026 · Issue #119 · proposta para revisão de produto e engenharia.** A v43 é a referência do comportamento privado. A comparação do núcleo usa a revisão `1739ffb` da main. A v35 saneada da [PR #118](https://github.com/FelipeDalMolin/erp-docflow/pull/118) é uma referência pública anterior. Os arquivos deste guia descrevem funcionamentos. Os exemplos são fictícios.
 
+Para conduzir o próximo ciclo, usar o [plano de desenvolvimento e adequações](PLANO_DESENVOLVIMENTO_ERP.md). Ele reúne as entregas do Caixa e do Inbox, as dependências da importação e da persistência e os critérios para o piloto em outro host.
+
 ## O que muda no plano
 
 O trabalho do site fornece a primeira especificação concreta de um ERP multiempresa. Quem usa o Caixa quer explicar um valor do gráfico até o lançamento e a fonte. Quem usa o Inbox precisa acompanhar o que chegou e por que um documento produziu, ou ainda aguarda, uma decisão. O DocFlow traz identidade do original, versões, evidência e decisões auditáveis para sustentar essas duas jornadas.
