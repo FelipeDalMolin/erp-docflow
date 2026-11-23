@@ -1,0 +1,11 @@
+caso,variacao,empresa_movimento,conta_movimento,obrigacao_vinculada,data_movimento,centavos_movimento,vinculo_confirmado,corte,pendente_detalhe,pendente_planejamento,pendente_controle
+B01,controle positivo,E1,C1,O1,2026-12-09,-4000,true,2026-12-10,6000,6000,6000
+B02,vínculo sugerido,E1,C1,O1,2026-12-09,-4000,false,2026-12-10,6000,10000,10000
+B03,movimento posterior ao corte,E1,C1,O1,2026-12-11,-4000,true,2026-12-10,6000,6000,10000
+B04,conta inexistente,E1,INEXISTENTE,O1,2026-12-09,-4000,true,2026-12-10,6000,10000,6000
+B05,empresa ausente na transação,,C1,O1,2026-12-09,-4000,true,2026-12-10,6000,6000,10000
+B06,sinal de entrada para obrigação de saída,E1,C1,O1,2026-12-09,4000,true,2026-12-10,6000,10000,10000
+B07,outra empresa explícita,E2,C1,O1,2026-12-09,-4000,true,2026-12-10,6000,10000,10000
+B08,outra conta válida da mesma empresa,E1,C2,O1,2026-12-09,-4000,true,2026-12-10,6000,6000,6000
+B09,sem vínculo com a obrigação,E1,C1,,2026-12-09,-4000,true,2026-12-10,10000,10000,10000
+B10,data inválida,E1,C1,O1,2026-02-30,-4000,true,2026-12-10,6000,6000,10000

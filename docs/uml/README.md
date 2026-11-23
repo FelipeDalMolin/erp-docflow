@@ -61,6 +61,7 @@ Estas vistas complementam o catálogo planejado. A primeira descreve o estado ob
 | Como preservar as contribuições da barra até a origem? | [Consulta e paridade do Caixa](07-erp/caixa-consulta-paridade.puml) |
 | Como um pagamento parcial afeta Caixa e Competência? | [Reconhecimento e alocação](07-erp/financeiro-reconhecimento-alocacao.puml) |
 | Quando o arquivo pode produzir um efeito no ERP? | [Recepção e revisão do Inbox](07-erp/inbox-recepcao-revisao.puml) |
+| Como explicar o valor de um item pelas suas fontes? | [Contribuição e evidência](07-erp/contribuicao-evidencia.puml) |
 
 ## 4. Tipos previstos
 

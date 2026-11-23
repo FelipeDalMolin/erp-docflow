@@ -69,3 +69,7 @@ As etapas 0 e 1 e o desenho da fila podem avançar enquanto os controles de #104
 - [Contrato de recepção e storage](../architecture/INTAKE_PERSISTENCE_STORAGE_CONTRACT.md), [estratégia de providers](../architecture/PROVIDER_STRATEGY.md) e [migração que materializa as seis tabelas](../../apps/api/migrations/versions/20260803_0001_document_materialization.py)
 
 O mapa deve ser revisado quando uma tela, uma regra de cálculo, uma fonte de dados ou uma fronteira de persistência mudar. Em cada revisão registrar versão observada, issue, cenário impactado e evidência do teste. A passagem de comportamento proposto para implementado exige revisão do código e resultado do cenário correspondente.
+
+## Levantamento por estrutura e decisão
+
+O [levantamento das 21 estruturas e 13 sobreposições](ESTRUTURAS_E_RESPONSABILIDADES_V43.md) identifica os consumidores e registra um ensaio sintético da baixa. O [plano de adaptação documental](ADAPTACAO_DOCUMENTAL_ERP.md) define responsabilidades, vínculos, tipos de evidência e critérios para a primeira fatia.
