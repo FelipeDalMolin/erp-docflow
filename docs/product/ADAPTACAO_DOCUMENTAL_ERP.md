@@ -77,3 +77,7 @@ A matriz orienta o mapeamento das fontes. As famílias aqui são casos de trabal
 - **Autoridade de revisão.** Ratificar zero decisões em um caso aberto, snapshot por versão/finalidade aceita e política de supersessão. Definir quem pode revisar documento e quem pode autorizar efeito financeiro.
 
 [Mapa das 21 estruturas e conflitos](ESTRUTURAS_E_RESPONSABILIDADES_V43.md) · [Diagrama da contribuição à evidência](../uml/07-erp/contribuicao-evidencia.puml) · [Contrato de linhagem](../architecture/EVIDENCE_TO_REPORT_LINEAGE.md) · [Domínio financeiro](../architecture/MANAGERIAL_FINANCIAL_DOMAIN.md)
+
+## Correspondência entre campos do perfil e do ERP
+
+O [contrato de correspondência do perfil payable com a v43](CONTRATO_EXTRACAO_ERP_V43.md) descreve as oito observações, suas evidências, o consumidor de cada campo e as alterações necessárias em cada lado. O ensaio associado reproduz a conferência das 28 referências sintéticas do repositório.

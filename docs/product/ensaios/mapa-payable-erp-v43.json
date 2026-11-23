@@ -1,0 +1,177 @@
+{
+  "map_id": "payable-v1alpha-erp-v43",
+  "map_version": "0.1.0-proposta",
+  "status": "proposta_documental",
+  "profile_id": "payable_document_pt_br",
+  "profile_version": "v1alpha",
+  "payload_schema_id": "payable_document",
+  "payload_schema_version": "v1alpha",
+  "site_reference": "v43",
+  "automatic_erp_writes": false,
+  "scope": "As chaves semantic_key nomeiam observações ou propostas de domínio. v43_reference identifica um consumidor, nunca um destino de escrita automática. null indica ausência de destino equivalente confirmado.",
+  "field_mapping": [
+    {
+      "source_path": "document_type",
+      "label": "Tipo documental",
+      "semantic_key": "extraction.document_type",
+      "disposition": "catalog_translation",
+      "v43_reference": "documents[].type",
+      "review_rule": "Converter a classe aceita para a taxonomia de Documentos após revisar o papel do arquivo. OTHER exige escolha ou manutenção como outro.",
+      "do_not_assign": [
+        "documents[].mime",
+        "documents[].format",
+        "obligations[].kind"
+      ]
+    },
+    {
+      "source_path": "fields.document_number",
+      "label": "Número do documento",
+      "semantic_key": "document.business_number",
+      "disposition": "new_attribute",
+      "v43_reference": null,
+      "review_rule": "Guardar o identificador informado no documento e seu emitente/escopo; usar para busca de candidatos, mantendo zeros e formatação originais.",
+      "do_not_assign": [
+        "documents[].id",
+        "contracts[].number",
+        "transactions[].bankDocument"
+      ]
+    },
+    {
+      "source_path": "fields.issuer_name",
+      "label": "Nome do emitente",
+      "semantic_key": "document.issuer.observed_name",
+      "disposition": "party_resolution",
+      "v43_reference": "obligations[].party",
+      "review_rule": "Mostrar o emitente observado. Sugerir a contraparte da obrigação somente com papel definido e decisão explícita, inclusive quando o emitente for a própria empresa.",
+      "do_not_assign": [
+        "documents[].company",
+        "companies[].name",
+        "contracts[].party"
+      ]
+    },
+    {
+      "source_path": "fields.issuer_tax_id",
+      "label": "Identificador fiscal do emitente",
+      "semantic_key": "document.issuer.observed_tax_id",
+      "disposition": "new_attribute",
+      "v43_reference": null,
+      "review_rule": "Manter identificador como texto; validar estrutura e dígitos; buscar candidato a contraparte no escopo autorizado. Conservar o valor lido e o motivo de eventual rejeição.",
+      "do_not_assign": [
+        "companies[].profile.registration",
+        "documents[].company",
+        "obligations[].party"
+      ]
+    },
+    {
+      "source_path": "fields.issued_on",
+      "label": "Data de emissão",
+      "semantic_key": "document.issue_date",
+      "disposition": "new_attribute",
+      "v43_reference": null,
+      "review_rule": "Guardar a emissão com precisão de dia. Diferenciar da entrada no acervo. Confirmar conflito cronológico e respeitar inaplicabilidade por tipo.",
+      "do_not_assign": [
+        "documents[].date",
+        "obligations[].competence",
+        "transactions[].date"
+      ]
+    },
+    {
+      "source_path": "fields.due_on",
+      "label": "Vencimento informado",
+      "semantic_key": "charge.due_date",
+      "disposition": "conditional_proposal",
+      "v43_reference": "obligations[].due",
+      "review_rule": "Propor o vencimento de uma cobrança identificada. Se houver várias parcelas, escolher a parcela e verificar sua fonte. Divergência com contrato abre revisão.",
+      "do_not_assign": [
+        "obligations[].expectedDate",
+        "obligations[].competence",
+        "contracts[].due",
+        "transactions[].date"
+      ]
+    },
+    {
+      "source_path": "fields.total_amount",
+      "label": "Valor total do documento",
+      "semantic_key": "document.gross_amount",
+      "disposition": "compare_aggregate",
+      "v43_reference": "obligations[].items[].amount",
+      "review_rule": "Ler o decimal positivo de duas casas e converter exatamente em centavos após validar a moeda BRL. Comparar com a soma dos itens da cobrança escolhida; não distribuir o valor. Nesta relação o caminho da v43 é uma coleção de operandos de comparação.",
+      "do_not_assign": [
+        "transactions[].amount",
+        "transactions[].confirmed",
+        "contracts[].base",
+        "classification.records.lines[].amount"
+      ]
+    },
+    {
+      "source_path": "fields.currency",
+      "label": "Moeda do valor observado",
+      "semantic_key": "document.currency",
+      "disposition": "new_attribute",
+      "v43_reference": null,
+      "review_rule": "Associar a moeda ao total observado e ao contexto monetário do ERP; o perfil admite BRL ou ausência conforme aplicabilidade. Se ausente, não assumir BRL para autorizar valor.",
+      "do_not_assign": [
+        "transactions[].amount",
+        "obligations[].items[].amount"
+      ]
+    }
+  ],
+  "applicability": {
+    "PRESENT": "Conservar bruto, normalizado e ao menos uma evidência; validar antes de propor qualquer uso.",
+    "MISSING": "Manter ausência e motivo; se exigido pelo tipo, criar pendência.",
+    "NOT_APPLICABLE": "Mostrar que o campo não se aplica; aceitar a condição apenas de acordo com o rule pack.",
+    "AMBIGUOUS": "Manter o trecho e as evidências com normalizado nulo; pedir decisão."
+  },
+  "route_by_document_type": {
+    "INVOICE": "Revisar candidatos a documento e valores de cobrança; identificar entidade, papel e origem antes de propor inclusão ou associação.",
+    "PAYMENT_SLIP": "Procurar cobrança existente por candidatos no escopo; relacionar como meio de cobrança, considerando boleto e fatura da mesma obrigação.",
+    "RECEIPT": "Registrar evidência de possível realização; conciliação e alocação dependem de dados e decisões independentes.",
+    "OTHER": "Revisar tipo, guardar no acervo ou encaminhar a outro perfil; valores presentes não pressupõem obrigação."
+  },
+  "context_outside_extraction": [
+    "tenant_id",
+    "economic_entity_id",
+    "document_id",
+    "document_version_id",
+    "file_object_id",
+    "job_id",
+    "attempt_id",
+    "capability_execution_id",
+    "extraction_result_id",
+    "profile_version",
+    "mapping_version"
+  ],
+  "manual_or_other_authority": [
+    "obligations[].company",
+    "obligations[].account",
+    "obligations[].kind",
+    "obligations[].competence",
+    "obligations[].contract",
+    "obligations[].asset",
+    "obligations[].items[].nature",
+    "classification.records.lines[].belongsTo",
+    "classification.records.lines[].category",
+    "classification.records.lines[].purpose",
+    "classification.records.lines[].costCenter",
+    "classification.records.lines[].parcel",
+    "transactions[].confirmed"
+  ],
+  "proposed_display_choices": {
+    "INVOICE": {
+      "candidate": "Fatura",
+      "requires_choice": "Pode exigir Nota fiscal conforme documento e taxonomia local."
+    },
+    "PAYMENT_SLIP": {
+      "candidate": "Cobrança",
+      "requires_choice": "Guardar o subtipo boleto; sugerir vínculo com obrigação existente."
+    },
+    "RECEIPT": {
+      "candidate": "Recibo",
+      "requires_choice": "Comprovante e recibo podem desempenhar papéis diferentes na obrigação."
+    },
+    "OTHER": {
+      "candidate": "Outro",
+      "requires_choice": "Encaminhar à revisão para Contrato, Demonstrativo ou outro tipo aplicável."
+    }
+  }
+}
